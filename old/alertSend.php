@@ -1,10 +1,8 @@
-<?
+<?php
 /* 
  * Send email alerts hourly for the price of BTC and LTC
  */
-
-require_once('btce-api.php');
-include('include/mysql.php');
+require_once('include/api_btc_e.php');
 include('include/config.php');
 
 $api = new BTCeAPI(

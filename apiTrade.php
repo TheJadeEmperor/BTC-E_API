@@ -1,9 +1,5 @@
-<?
+<?php
 include('apiPrices.php');
-
-$acctInfo = $api->apiQuery('getInfo');
-$acctFunds = $acctInfo['return']['funds'];
-
 
 function whichCurrency($pair) {
     switch($pair) {
@@ -42,85 +38,157 @@ function sendMail($sendEmailBody) {
     }
     
     $emailTo = 'louie.benjamin@gmail.com'; 
-    echo mail($emailTo, $subject, $sendEmailBody, $headers);
+    mail($emailTo, $subject, $sendEmailBody, $headers);
+}
+
+function makeTrade($tradeAmt, $pair, $action, $latestPrice) {
+    
+    global $api;
+    
+    if($action == 'buy') {
+        
+        try {
+            $tradeResult = $api->makeOrder($tradeAmt, $pair, BTCeAPI::DIRECTION_BUY, $latestPrice);
+        } 
+        catch(BTCeAPIInvalidParameterException $e) {
+            echo $e->getMessage();
+        } 
+        catch(BTCeAPIException $e) {
+            echo $e->getMessage();
+        }
+    }
+    else { //sell
+       
+        try {
+            $tradeResult = $api->makeOrder($tradeAmt, $pair, BTCeAPI::DIRECTION_SELL, $latestPrice);  
+        } 
+        catch(BTCeAPIInvalidParameterException $e) {
+            echo $e->getMessage();
+        } 
+        catch(BTCeAPIException $e) {
+            echo $e->getMessage();
+        }
+    }
+
+    if ($tradeResult['success'] == 1) {
+        echo $msg = $action.' '.$tradeAmt.' of '.$pair.' at price '.$latestPrice;
+        sendMail($msg);
+    };
 }
 
 
+$debug = $_GET['debug'];
 
-$sel = 'SELECT * FROM '.$context['tradesTable'].' WHERE status="A" order by id';
-$res = mysql_query($sel, $conn) or die(mysql_error());
+if($debug == 1) {
+    echo '<< debug mode >>'; $newline = '<br>';
+}
+else {
+    $newline = "\n";
+}
 
-while($t = mysql_fetch_assoc($res)) {
-    $action = $t['action'];
-    $pair = $t['pair'];
-    $price = $t['price']; 
-    $amount = $t['amount'];
+//get options from api_options
+$queryO = $c->query('SELECT * FROM '.$context['optionsTable'].' ORDER BY opt');
+
+echo $newline.$newline.'api_options';
+foreach($queryO as $opt){ 
+    echo $newline.$opt['opt'].': '.$opt['setting'];
+
+    $btc_e_option[$opt['opt']] = $opt['setting'];
+}
+
+
+$acctInfo = $api->apiQuery('getInfo');
+$acctFunds = $acctInfo['return']['funds'];
+
+
+//$currency = whichCurrency($pair);
+
+$currency = $btc_e_option['btc_e_currency'];
+$pair = $currency.'_usd';
+
+//database field
+$price_field = 'btce_'.$currency; 
+
+$queryMA = $c->query('SELECT (AVG('.$price_field.')) AS ma_7 FROM '.$context['pricesTable'].' WHERE count <= 7');
+foreach($queryMA as $row) { 
+    $ma_7 = $row['ma_7']; }
+
+$queryMA = $c->query('SELECT (AVG('.$price_field.')) AS ma_30 FROM '.$context['pricesTable'].' WHERE count <= 30');
+foreach($queryMA as $row) { 
+    $ma_30 = $row['ma_30']; }
+
+
+
+$latestPrice = $allPrices[$pair]['lastPrice'];
+$btcPrice =  $allPrices['btc_usd']['lastPrice'];
+$ltcPrice =  $allPrices['ltc_usd']['lastPrice'];
+
+//sum total of account balance in all currencies
+$totalBalance = $acctFunds['usd'] + $acctFunds['btc'] * $btcPrice + $acctFunds['ltc'] * $ltcPrice;
+
+//how much btc/ltc you can buy
+$tradable['btc'] = number_format($acctFunds['usd']/$btcPrice, 8); 
+$tradable['ltc'] = number_format($acctFunds['usd']/$ltcPrice, 8); 
+
+
+echo $newline.$newline;
+echo 'current prices: '.$newline.'btc: '.$btcPrice.' - ltc: '.$ltcPrice.$newline.$newline;
+echo 'account balance: '.$totalBalance.$newline;
+echo 'btc: '.$acctFunds['btc'].' - ltc '.$acctFunds['ltc'];
+echo 'usd: '.$acctFunds['usd'].$newline.$newline;
+echo 'tradeable btc: '.$tradable['btc'].' - tradeable ltc: '.$tradable['ltc'].$newline;
+echo '7_hour_sma: '.$ma_7.$newline;
+echo '30_hour_sma: '.$ma_30.$newline.$newline;
+
+
+if($btc_e_option['btc_e_trading'] == 1) {
+    echo 'btc_e trading is on'.$newline;
+}
+else {
+    echo 'btc_e trading is off'.$newline;
+}
+
+//new stuff
+/*
+echo 'top 0.5% of sma_7: '.($ma_7 + $ma_7 * 0.005).' -
+    bottom 0.5% of sma_7: '.($ma_7 - $ma_7 * 0.005).$newline.$newline;
+*/
+
+if($btc_e_option['btc_e_trading'] == 1)
+if($ma_7 > $ma_30) { //buy signal
+   
+    if($debug == 1)
+        $tradeAmt = '0.01';
+    else
+        $tradeAmt = $tradable[$currency]; 
     
-    $currency = whichCurrency($pair); 
+    echo '[buy] [tradeAmt '.$tradeAmt.'] ['.$pair.']'.$newline;
+              
+    if($debug != 1) //do not trade in debug mode
+    if($acctFunds['usd'] > 0) {
+        makeTrade($tradeAmt, $pair, 'buy', $latestPrice); 
+    }
+    else {
+        echo 'No balance to trade';
+    }
+}
+else if ($ma_7 < $ma_30) { //sell signal
+    
+    if($debug == 1)
+        $tradeAmt = 0.01;
+    else
+        $tradeAmt = $acctFunds['btc']; //amount of btc in the account
+            
+    echo '[sell] [tradeAmt '.$tradeAmt.'] ['.$pair.'] '.$newline;
+          
+    if($debug != 1) //do not trade in debug mode
+    if($acctFunds['btc'] > 0) {
+        makeTrade($tradeAmt, $pair, 'sell', $latestPrice);
+    }
+    else {
+        echo 'No balance to trade';
+    }
+}
 
-//echo 'buyAmt ';
-    $buyAmt = $sellAmt = $amount;
-            
-    foreach($allPrices as $cPair => $priceType) {
-        if($pair == $cPair) {
-            echo $pair.' '; 
-            
-            if($action == 'buy') {
-                echo '[buyAmt '.$buyAmt.'] [target price: <= '.$price.'] [buy price: '.$priceType['buyPrice'].'] ';
-                
-                if($priceType['buyPrice'] <= $price) {
-                    echo ' buy - true ';
-                    //make trade
-                    try {
-                        $tradeResult = $api->makeOrder($buyAmt, $pair, BTCeAPI::DIRECTION_BUY, $price);  
-                    }
-                    catch(BTCeAPIInvalidParameterException $e) {
-                        echo $e->getMessage();
-                    } catch(BTCeAPIException $e) {
-                        echo $e->getMessage();
-                    }
-                    
-                    var_dump($tradeResult);
-                    
-                    $msg = 'Trade successful: Buy '.$buyAmt.' of '.$currency.' at price '.$price;
-                    
-                    if ($tradeResult['success'] == 1) {
-                        sendMail($msg);
-                    };
-                }
-                else echo ' buy - false ';
-            } //if
-            else { //sell
-                echo '[sellAmt '.$sellAmt.'] [target price: >= '.$price.'] [sell price: '.$priceType['sellPrice'].'] ';
-                
-                if($priceType['sellPrice'] >= $price ) {
-                    echo ' sell - true ';
-                    //make trade
-                    try {
-                        $tradeResult = $api->makeOrder($sellAmt, $pair, BTCeAPI::DIRECTION_SELL, $price);  
-                    }
-                    catch(BTCeAPIInvalidParameterException $e) {
-                        echo $e->getMessage();
-                    } catch(BTCeAPIException $e) {
-                        echo $e->getMessage();
-                    }
-                    
-                    var_dump($tradeResult); 
-            
-                    $msg = 'Trade successful: Sell '.$buyAmt.' of '.$currency.' at price '.$price;
 
-                    if ($tradeResult['success'] == 1) {
-                        sendMail($msg);
-                    }; 
-                }
-                else echo ' sell - false ';
-            } //else
-            
-            echo '<br /><br />';
-        } //if
-        
-    } //foreach
-} //while
-
-//echo '<table>'.$apiTrades.'</table>';
 ?>

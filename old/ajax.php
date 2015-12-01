@@ -1,5 +1,4 @@
-<?
-include('mysql.php');
+<?php
 include('ez_sql_core.php');
 include('ez_sql_mysql.php');
 include('config.php');

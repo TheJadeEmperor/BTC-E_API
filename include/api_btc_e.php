@@ -1,9 +1,6 @@
 <?php
 /**
  * API-call related functions
- *
- * @author marinu666
- * @license MIT License - https://github.com/marinu666/PHP-btce-api
  */
 class BTCeAPI {
     
