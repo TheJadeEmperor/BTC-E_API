@@ -43,8 +43,7 @@ $bitfinex_ltc = $allPrices['bitfinex_ltc']->last_price;
 
 
 date_default_timezone_set ( 'America/New_York' );
-$time = date('h:i', time());
-
+$time = date('h:i a', time());
 
 //shift all prices down 1 count
 $upd = 'UPDATE '.$context['pricesTable'].'
@@ -54,19 +53,28 @@ SET api_prices.btce_btc = old.btce_btc, api_prices.btce_ltc = old.btce_ltc,
 api_prices.bitfinex_btc = old.bitfinex_btc, api_prices.bitfinex_ltc = old.bitfinex_ltc, 
 api_prices.time = old.time';
 
-$affected_rows = $db->exec($upd);
+$db->exec($upd);
 
 echo 'time: '.$time." \n";
-echo $affected_rows." records were updated\n";
+echo '[BTC-E] [BTC: '.$btcPrice.'] [LTC: '.$ltcPrice.']'."\n";
+echo '[Bitfinex] [BTC: '.$bitfinex_btc.'] [LTC: '.$bitfinex_ltc.']'."\n";
 
+if(empty($btcPrice)) {
+    $btcPrice = $bitfinex_btc;
+}
+
+if(empty($ltcPrice)) {
+    $ltcPrice = $bitfinex_ltc;
+}
 
 //input latest prices into count = 1
-$upd = "UPDATE ".$context['pricesTable']." SET time = '$time', 
+$upd = "UPDATE ".$context['pricesTable']." SET time = now(), 
     btce_btc = '$btcPrice', 
     btce_ltc = '$ltcPrice', 
     bitfinex_btc = '$bitfinex_btc',        
     bitfinex_ltc = '$bitfinex_ltc'
     WHERE count = 1";
+
 $db->exec($upd);
 
 ?>

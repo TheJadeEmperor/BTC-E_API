@@ -1,0 +1,2 @@
+OKCoin Intl. apiKey:  c77564c7-c953-42b0-88b7-a89d7cc763ae
+OKCoin Intl. secretKey:  D5904A61A81569EEC87F3BEA2790020C

@@ -2,6 +2,7 @@
 include('include/config.php');
 
 
+
 function priceRow($pair) {
     
     global $allPrices;
@@ -68,10 +69,6 @@ $currencyPair = array('btc_usd', 'ltc_usd', 'ltc_btc', 'eur_usd');
  
 foreach($currencyPair as $cPair) {
     $allPrices[$cPair] = getPriceData($cPair);
-   //// $allPrices[$cPair]['buyPrice'] = getPriceData($cPair);
-  //  $allPrices[$cPair]['sellPrice'] = getPriceData($cPair);
-  //  $allPrices[$cPair]['highPrice'] = getPriceData($cPair);
-  //  $allPrices[$cPair]['lowPrice'] = getPriceData($cPair);
 }
 
 
@@ -93,11 +90,11 @@ if($_POST['submit_options']) {
         UPDATE '.$context['optionsTable'].' set
             setting = "'.$btc_e_balance.'" WHERE opt = "btc_e_balance";
         UPDATE '.$context['optionsTable'].' set
-            setting = "'.$bitfinex_e_currency.'" WHERE opt = "bitfinex_e_currency";
+            setting = "'.$bitfinex_currency.'" WHERE opt = "bitfinex_currency";
         UPDATE '.$context['optionsTable'].' set
-            setting = "'.$bitfinex_e_balance.'" WHERE opt = "bitfinex_e_balance";
+            setting = "'.$bitfinex_balance.'" WHERE opt = "bitfinex_balance";
         UPDATE '.$context['optionsTable'].' set
-            setting = "'.$bitfinex_e_trading.'" WHERE opt = "bitfinex_e_trading";
+            setting = "'.$bitfinex_trading.'" WHERE opt = "bitfinex_trading";
     ';
    
     try {
@@ -109,12 +106,13 @@ if($_POST['submit_options']) {
     }
 }
 
-$queryO = $c->query('SELECT * FROM '.$context['optionsTable'].' ORDER BY opt');
+$queryO = $db->query('SELECT * FROM '.$context['optionsTable'].' ORDER BY opt');
 
 foreach($queryO as $opt){ 
-    echo $opt['opt'].' '.$opt['setting'].'<br>';
+    //echo $opt['opt'].' '.$opt['setting'].'<br>';
 
     $btc_e_option[$opt['opt']][$opt['setting']] = 'selected';
+    $bitfinex_option[$opt['opt']][$opt['setting']] = 'selected';
     
     if($opt['opt'] == 'btc_e_balance') {
         $btc_e_balance = $opt['setting'];
@@ -139,8 +137,8 @@ $btc_e_currency_dropdown = '<select name="btc_e_currency">
 
 
 $bitfinex_trading_dropdown = '<select name="bitfinex_trading">
-    <option '.$bitfinex_option['bitfinex_trading'][1].'>btc</option>
-    <option '.$bitfinex_option['bitfinex_trading'][0].'>ltc</option>
+    <option '.$bitfinex_option['bitfinex_trading'][1].'>1</option>
+    <option '.$bitfinex_option['bitfinex_trading'][0].'>0</option>
 </select>';
 
 $bitfinex_currency_dropdown = '<select name="bitfinex_currency">
@@ -148,7 +146,7 @@ $bitfinex_currency_dropdown = '<select name="bitfinex_currency">
     <option '.$bitfinex_option['bitfinex_currency']['ltc'].'>ltc</option>
 </select>';
 
-$queryP = $db->query('SELECT * FROM api_prices'); 
+$queryP = $db->query('SELECT * FROM api_prices order by count desc'); 
 
 foreach($queryP as $p) { 
     $priceHistory .= '<tr>
@@ -196,14 +194,12 @@ foreach($queryT as $t) {
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
 
 <!-- Latest compiled and minified JavaScript -->
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+<!--<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>-->
 
 <link rel="stylesheet" href="//code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css" />
 
 <script src="http://code.jquery.com/jquery-latest.min.js" type='text/javascript' /></script>
 <script src="include/jquery-ui/ui/jquery-ui.js"></script>
-
-<!--<script src="include/bootstrap/js/bootstrap.js"></script>-->
 <style>
     body {
         margin: 5px 15px;
@@ -396,23 +392,19 @@ foreach($queryT as $t) {
                             <tr>
                                 <td>Bitfinex Trading</td>
                                 <td>
-                                    0
                                     <?=$bitfinex_trading_dropdown?>
                                 </td>
                             </tr>
                             <tr>
                                 <td>Bitfinex Currency</td> 
                                 <td>
-                                    N/A
-                                    
                                     <?=$bitfinex_currency_dropdown?>
                                 </td>
                             </tr>
                             <tr>
                                 <td>% of Balance</td> 
                                 <td>
-                                    N/A
-                                    <!--<input type="text" name="bitfinex_balance" value="<?=$bitfinex_balance?>" />-->
+                                    <input type="text" name="bitfinex_balance" value="<?=$bitfinex_balance?>" />
                                 </td>
                             </tr>
                         </table>
@@ -434,8 +426,10 @@ foreach($queryT as $t) {
             <h3>Price Chart</h3>
             <input type="button" class="btn btn-warning priceTable" value="Prices History" />
             
-            <h3>apiTrade.php Debug Mode</h3>
-            <a href="apiTrade.php?debug=1" target="_blank"><input type="button" class="btn btn-warning" value="apiTrade.php" /></a>
+            <h3>apiTrade Debug Mode</h3>
+            <a href="apiTrade.php?debug=1" target="_blank"><input type="button" class="btn btn-warning" value="apiTrade.php" /></a> &nbsp;
+            
+            <a href="apiTradeBitfinex.php?debug=1" target="_blank"><input type="button" class="btn btn-warning" value="apiTradeBitfinex.php" /></a>
             
         </td>
         <td width="60px"></td>

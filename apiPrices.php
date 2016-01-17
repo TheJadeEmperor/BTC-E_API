@@ -2,14 +2,14 @@
 require_once('include/api_btc_e.php');
 include('include/config.php');
 
+date_default_timezone_set('America/New_York');
 
 global $context;
 global $api;
 global $allPrices;
-
 $allPrices = array(); 
 
-$context['tradesTable'] = 'api_trades';
+$context['tradeDataTable'] = 'api_trade_data';
 $context['pricesTable'] = 'api_prices';
 $context['optionsTable'] = 'api_options';
 
@@ -28,6 +28,6 @@ foreach($currencyPair as $cPair) {
     $allPrices[$cPair]['lowPrice'] = $api->getLowPrice($cPair);
 }
 
-$acctInfo = $api->apiQuery('getInfo');
+//$acctInfo = $api->apiQuery('getInfo');
 
 ?>

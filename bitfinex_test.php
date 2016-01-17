@@ -1,54 +1,26 @@
 <?php
+include_once('include/api_bitfinex.php');
+include('include/config.php');
+
+define('API_KEY','lhB8h0aZSH8v49CbIM6Ib3bee6tHQ8aZZbmbTjf2OYM');
+define('API_SECRET','VHcTwmMwEoy2jBhGvMcldBZ5dy9OjosKuynmut05dcw');
+$call = new Bitfinex(API_KEY, API_SECRET);
+
+
 function array_debug($array) {
     echo '<pre>';
     print_r($array);
     echo '</pre>';
 }
 
-function message($message) {
-    echo "MESSAGE: $message<br />";
-}
 
-function daily_rate($rate) {
-    return round($rate/365, 4);
-}
+$acc = $call->margin_infos();
 
+array_debug($acc);
 
+$marginUSD = $acc[0]['margin_limits'][0]['tradable_balance'];
 
-include_once('include/api_bitfinex.php');
+$output .= 'tradable btc: '.number_format($tradable['btc'], 4).' - tradable ltc: '.number_format($tradable['ltc'], 4).'';
 
-
-$config = array();
-$config['api_key'] = 'jRBpU2fpCAkVUNbCL6BJMuTMlh6MZJax4BKKZUBmNK8';
-$config['api_secret'] = 'SzZjbv90Ch57qVXhp3tpf2RjA4CzsnfKaY9SayYc80y';
-
-$bfx = new Bitfinex($config['api_key'], $config['api_secret']);
-
-
-$balances = $bfx->get_balances();
-
-
-//array_debug($balances);
-
-//buy
-//$res = $bfx->make_trade('0.01', 'btcusd', 'buy', '200');
-
-
-//sell
-//$res = $bfx->make_trade('0.01', 'btcusd', 'sell', '200');
-//array_debug($res);
-
-//short
-$res = $bfx->make_trade('0.01', 'btcusd', 'short', '1');
-array_debug($res);
-
-
-$r = $bfx->get_positions($data);
-array_debug($r);
-
-$cl = $bfx->claim_position($position_id);
-array_debug($cl);
-
-exit; 
-
+echo $output; 
 ?>

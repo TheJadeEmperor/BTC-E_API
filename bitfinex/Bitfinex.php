@@ -26,43 +26,31 @@ class Bitfinex {
 		);
 	}
 
-	public function new_order($data) // to add new order
+	public function new_order($data)   // to add new order
 	{
 		$data['request']='/'.$this->api_version.'/order/new';
 		return $this->process_request($data);
 	}
 
-	public function active_orders()	// to get active orders
+	public function active_orders()		// to get active orders
 	{
 		$data['request']='/'.$this->api_version.'/orders';
 		return $this->process_request($data);
 	}
 
-        public function margin_infos() // to get account information
-	{
-		$data['request']='/'.$this->api_version.'/margin_infos';
-		return $this->process_request($data);
-	}
-        
-	public function acc_info() // to get account information
+	public function acc_info()		// to get account information
 	{
 		$data['request']='/'.$this->api_version.'/account_infos';
 		return $this->process_request($data);
 	}
-        
-        public function get_balances()// to get account information
-	{
-		$data['request']='/'.$this->api_version.'/balances';
-		return $this->process_request($data);
-	}
 
-	public function active_positions() // to get active positions
+	public function active_positions()		// to get active positions
 	{
 		$data['request']='/'.$this->api_version.'/positions';
 		return $this->process_request($data);
 	}
 
-	public function claim_positions($data) // to get claim positions
+	public function claim_positions($data)		// to get claim positions
 	{
 		$data['request']='/'.$this->api_version.'/position/claim';   
 		return $this->process_request($data);
