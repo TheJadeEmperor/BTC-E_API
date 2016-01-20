@@ -148,13 +148,15 @@ $output .= '7_hour_sma: '.number_format($ma_7, 4).' - 30_hour_sma: '.number_form
 $active_pos = $call->active_positions();
 $position_id = $active_pos[0]['id'];
 
+/*
 if($position_id) {
     $tradeAmt = abs($active_pos[0]['amount']); 
 }
 else { 
     $tradeAmt = $tradable[$currency];
 }
-
+*/
+$tradeAmt = 27;
 
 if($bitfinex_option['bitfinex_trading'] == 1)
 if($ma_7 > $ma_30) { //uptrend signal
@@ -195,7 +197,6 @@ if($ma_7 > $ma_30) { //uptrend signal
                 update_last_action($last_action_data);
             }
         }
-        
     }
 }//uptrend
 else if ($ma_7 < $ma_30) { //downtrend signal

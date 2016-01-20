@@ -1,8 +1,6 @@
 <?php
 include('include/config.php');
 
-
-
 function priceRow($pair) {
     
     global $allPrices;
