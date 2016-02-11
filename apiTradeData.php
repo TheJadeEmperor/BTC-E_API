@@ -1,5 +1,7 @@
 <?php
 include('include/config.php'); 
+include('include/api_btc_e.php');
+include('include/api_bitfinex.php');
 
 $debug = $_GET['debug'];
 
@@ -50,7 +52,37 @@ foreach($queryD as $row){
     $output .= $newline.$newline.$queryCreate.$newline.$newline.$queryInsert.$newline.$newline.$queryDrop.$newline.$newline;
 //}
     
+    //get daily balances from BTC-E & Bitfinex
+    
+    //connect to BTC-E
+    $btceCall = new BTCeAPI(BTCE_API_KEY, BTCE_API_SECRET); 
 
+    $acctInfo = $btceCall->apiQuery('getInfo');
+    $acctFunds = $acctInfo['return']['funds'];
+    
+    $btcPrice = $btceCall->getLastPrice('btc_usd');
+    $ltcPrice = $btceCall->getLastPrice('ltc_usd');
+    
+    //sum total of account balance in all currencies
+    $totalBalance = $acctFunds['usd'] + $acctFunds['btc'] * $btcPrice + $acctFunds['ltc'] * $ltcPrice;
+    $balanceBTCE = number_format($totalBalance, 2); //account balance
+    
+    //connect to Bitfinex
+    $bitfinexCall = new Bitfinex(BITFINEX_API_KEY, BITFINEX_API_SECRET); 
+    $acctFunds = $bitfinexCall->get_balances(); 
+    $acctUSD = $acctFunds[7]['amount'];
+    
+    $balanceBitfinex = number_format($acctUSD, 2); //account balance
+    
+    //update api_balance table    
+    $queryBalance = 'INSERT INTO '.$context['balanceTable'].' (date, balance_btce, balance_bitfinex) VALUES ("'.date('Y-m-d', time()).'", "'.$balanceBTCE.'", "'.$balanceBitfinex.'");';
+
+    $db->query($queryBalance);
+
+    
+    $output .= 'BTCE balance: '.$balanceBTCE.' '.$newline.' Bitfinex balance: '.$balanceBitfinex.$newline.$newline;
+    
+    
 echo $output;
 
 print_r($db->errorInfo());

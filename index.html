@@ -1,0 +1,397 @@
+<head>
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+
+<!-- Optional theme -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
+
+<!-- JQueryUI -->
+<link rel="stylesheet" href="//code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css" />
+
+<script src="http://code.jquery.com/jquery-latest.min.js" type='text/javascript' /></script>
+<script src="include/jquery-ui/ui/jquery-ui.js"></script>
+<style>
+    body {
+        margin: 5px 20px;
+    }
+</style>
+<script>
+    function fillForm(id) {
+        //alert(id);
+        $.getJSON("<?=$read_call?>&id="+id+"", function( data ) {
+            
+            $.each( data, function( key, val ) {
+                if(data.hasOwnProperty(key))
+                    $('input[name='+key+']').val(val);
+
+                if(key == 'id') $('input[name=idButton]').val(val);
+
+                if(key == 'action') {
+                    $('select[name="action"]').find('option[value="'+val+'"]').attr("selected",true);
+                }
+                else if(key == 'pair') {
+                    $('select[name="pair"]').find('option[value="'+val+'"]').attr("selected",true);
+                }
+            });
+        });
+    }
+    
+    function deleteRow(id) {
+        if (confirm("Are you sure you want to delete record "+id+"?")) {
+            $.ajax({
+                type: "GET",
+                url: "<?=$delete_call?>&id="+id,
+                success: function() {
+                    alert('Deleted record '+id);
+                    location.reload();
+                }
+            })
+        }    
+    }
+    
+    function createRow() {
+        $.ajax({
+            type: "POST",
+            url: "<?=$create_call?>",
+            data: $('#updateForm').serialize(),
+            success: function(msg) {
+                alert('server msg: '+msg);
+                location.reload();
+            }
+        });
+    }
+    
+    function copyValue() {
+        var file = $("#file").val();
+        var subject = file.substring(5 ,file.length - 5);
+        $("#subject").val(subject);
+    }
+ 
+    $(document).ready(function () {
+        $('#priceTable').hide();
+        $('#bitfinexHistory').hide();
+        $('#btceHistory').hide();
+        $('#apiTradeData').hide();
+        $('#apiBalance').hide();
+        
+        $(".bitfinexHistory").click(function () {
+            $("#bitfinexHistory").dialog({
+                modal: true,
+                width: 880,
+                position: 'top',
+                show: {
+                    effect: "explode",
+                    duration: 500
+                },
+                hide: {
+                    effect: "explode",
+                    duration: 500
+                },
+                buttons: {
+                    Close: function() {
+                        $( this ).dialog( "close" );
+                    },                        
+                }
+            });
+        });
+        
+        
+        $(".btceHistory").click(function () {
+            $("#btceHistory").dialog({
+                modal: true,
+                width: 880,
+                position: 'top',
+                show: {
+                    effect: "explode",
+                    duration: 500
+                },
+                hide: {
+                    effect: "explode",
+                    duration: 500
+                },
+                buttons: {
+                    Close: function() {
+                        $( this ).dialog( "close" );
+                    },                        
+                }
+            });
+        });
+        
+       
+        $(".priceTable").click(function() {
+            $("#priceTable").dialog({
+                modal: true,
+                width: 700,
+                position: 'top',
+                show: {
+                    effect: "explode",
+                    duration: 500
+                },
+                hide: {
+                    effect: "explode",
+                    duration: 500
+                },
+                buttons: {
+                    Close: function() {
+                        $(this).dialog("close");
+                    }
+                }
+            })
+        })
+        
+        $(".apiTradeData").click(function() {
+            $("#apiTradeData").dialog({
+                modal: true,
+                width: 750,
+                position: 'top',
+                show: {
+                    effect: "explode",
+                    duration: 500
+                },
+                hide: {
+                    effect: "explode",
+                    duration: 500
+                },
+                buttons: {
+                    Close: function() {
+                        $(this).dialog("close");
+                    }
+                }
+            })
+        })
+        
+        $(".apiBalance").click(function() {
+            $("#apiBalance").dialog({
+                modal: true,
+                width: 550,
+                position: 'top',
+                show: {
+                    effect: "explode",
+                    duration: 500
+                },
+                hide: {
+                    effect: "explode",
+                    duration: 500
+                },
+                buttons: {
+                    Close: function() {
+                        $(this).dialog("close");
+                    }
+                }
+            })
+        })
+        
+    });
+    </script>
+</head>    
+<body>
+<br />
+
+<table>
+    <tr valign="top">
+        <td width="">
+    
+            <form method="POST">
+            <div id="login-overlay" class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title" id="myModalLabel"><b>BTC-E Options</b></h4><br />
+
+
+                        <table class="table" border="0">
+                        <tr>
+                            <td>BTC-E Trading On/Off</td>
+                            <td>
+                                <?=$btc_e_trading_dropdown?>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>BTC-E Currency</td>
+                            <td>
+                                <?=$btc_e_currency_dropdown?>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>% of Balance to Trade</td>
+                            <td>
+                                <input type="text" name="btc_e_balance" value="<?=$btc_e_balance?>" /> (not used)
+                            </td>
+                        </tr>
+                        </table>
+              
+                        <input type="submit" class="btn btn-success btn-block" name="submit_options" value="Update" />
+                </div>
+            </div>
+        </div>
+        
+        <div id="login-overlay" class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="myModalLabel"><b>Bitfinex Options</b></h4><br />
+                        <table class="table">
+                            <tr>
+                                <td>Bitfinex Trading</td>
+                                <td>
+                                    <?=$bitfinex_trading_dropdown?>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Bitfinex Currency</td> 
+                                <td>
+                                    <?=$bitfinex_currency_dropdown?>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>% of Balance</td> 
+                                <td>
+                                    <input type="text" name="bitfinex_balance" value="<?=$bitfinex_balance?>" /> (not used)
+                                </td>
+                            </tr>
+                        </table>
+                        <input type="submit" class="btn btn-success btn-block" name="submit_options" value="Update" />
+                </div>
+            </div>
+        </div>
+        </form>
+    
+        <div id="login-overlay" class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="myModalLabel"><b>View Prices History</b></h4><br />
+                      
+            <input type="button" class="btn btn-warning btceHistory" value="BTC-E 2hr" />
+ 
+            &nbsp;
+            <input type="button" class="btn btn-warning bitfinexHistory" value="Bitfinex 2hr" />
+            
+            &nbsp;
+            <input type="button" class="btn btn-warning priceTable" value="Current Price Chart" />
+            
+            &nbsp;
+            <input type="button" class="btn btn-warning apiBalance" value="Daily Balance" />
+            
+            <h3>apiTrade Debug Mode</h3>
+            <a href="apiTradeBTCE.php?debug=1" target="_blank"><input type="button" class="btn btn-warning" value="apiTradeBTCE.php" /></a> &nbsp;
+            
+            <a href="apiTradeBitfinex.php?debug=1" target="_blank"><input type="button" class="btn btn-warning" value="apiTradeBitfinex.php" /></a>  &nbsp;
+            
+            <input type="button" class="btn btn-warning apiTradeData" value="apiTradeData" />
+            
+            &nbsp;
+            
+            <a href="apiTestBitfinex.php?debug=1" target="_blank">apiTestBitfinex</a>
+                </div>
+            </div>
+        </div>
+    
+        </td>
+        <td width="30px"></td>
+        <td>
+            
+            <div id="btc_e_links">
+            <h3>BTC-E Links</h3>
+            <pre class="xdebug-var-dump">
+            <table class="">
+                <tr valign="top">
+                    <td>
+                        <a href="https://btc-e.com/" target="_blank">Main Site</a>
+                        <br /><br />
+                        <a href="https://btc-e.com/profile#orders_history" target="_blank">Orders History</a>
+                        <br /><br />
+                        <a href="https://btc-e.com/profile#trade_history" target="_blank">Trade history</a> 
+                        <br /><br />                        
+                    </td>
+                    <td>
+                        <a href="https://btc-e.com/profile#funds" target="_blank">Account Funds</a> 
+                        <br /><br />
+                        <a href="https://btc-e.com/profile#funds/deposit_coin/1" target="_blank">Deposit Coins</a>
+                        <br /><br />
+                        <a href="https://btc-e.com/profile#funds/withdraw_coin/1" target="_blank">Withdraw Coins</a>
+                        <br /><br />
+                    </td>
+                </tr>
+            </table>
+            </pre>
+            </div>
+            
+            <div id="bitfinex_links">
+            <h3>Bitfinex Links</h3>
+            <pre class="xdebug-var-dump">
+            <table>
+                <tr valign="top">
+                    <td>
+                        <a href="https://www.bitfinex.com/trading/index/ltcusd" target="_blank">Margin LTC</a>
+                        <br /><br />
+                        
+                        <a href="https://www.bitfinex.com/trading/index/btcusd" target="_blank">Margin BTC</a>
+                        <br /><br />
+                        
+                        <a href="https://www.bitfinex.com/account/api" target="_blank">API Keys</a>
+                    </td>
+                    <td width="18px"></td>
+                    <td>
+                        <a href="https://www.bitfinex.com/account/deposit" target="_blank">Deposit Coins</a>
+                        <br /><br />
+                        
+                        <a href="https://www.bitfinex.com/account/withdraw" target="_blank">Withdraw Coins</a>
+                        <br /><br />
+                        
+                        <a href="https://www.bitfinex.com/managewallets" target="_blank">Manage Wallets</a>
+                    </td>
+                </tr>
+                </table>
+            </pre>
+            </div>
+            
+            <div id="bitcoin_wisdom_links">
+            <h3>Bitcoin Wisdom Links</h3>
+            <pre class="xdebug-var-dump">
+            <table class="">
+                <tr valign="top">
+                    <td>
+                        
+                        <a href="https://bitcoinwisdom.com/markets/btce/btcusd" target="_blank">/markets/btce/btcusd</a>
+                        <br /><br />
+                        
+                        <a href="https://bitcoinwisdom.com/markets/btce/ltcusd" target="_blank">/markets/btce/ltcusd</a>
+                        
+                        <br /><br />
+                        
+                        <a href="https://bitcoinwisdom.com/markets/bitfinex/btcusd" target="_blank">/markets/bitfinex/btcusd</a>
+                         
+                        <br /><br />
+                        
+                        <a href="https://bitcoinwisdom.com/markets/bitfinex/ltcusd" target="_blank">/markets/bitfinex/ltcusd</a>
+                    </td>
+                </tr>
+            </table>
+            </pre>
+        </td>
+    </tr>
+</table>
+
+
+<p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p>
+
+<form id="priceTable" title="BTC-E Price Table">
+    <?=priceTable($allPrices)?>
+</form>
+
+<form id="btceHistory" title="Price History">
+    <?=$btceHistory?>
+</form>
+
+
+<form id="bitfinexHistory" title="Price History">
+    <?=$bitfinexHistory?>
+</form>
+
+
+<form id="apiTradeData" title="apiTradeData">
+    <?=$apiTradeData?>
+</form>
+
+
+<form id="apiBalance" title="Daily Balances">
+    <?=$apiBalance?>
+</form>
