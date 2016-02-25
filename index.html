@@ -68,7 +68,7 @@
     }
  
     $(document).ready(function () {
-        $('#priceTable').hide();
+        $('#bitfinexEMA').hide();
         $('#bitfinexHistory').hide();
         $('#btceHistory').hide();
         $('#apiTradeData').hide();
@@ -117,32 +117,12 @@
             });
         });
         
-       
-        $(".priceTable").click(function() {
-            $("#priceTable").dialog({
-                modal: true,
-                width: 700,
-                position: 'top',
-                show: {
-                    effect: "explode",
-                    duration: 500
-                },
-                hide: {
-                    effect: "explode",
-                    duration: 500
-                },
-                buttons: {
-                    Close: function() {
-                        $(this).dialog("close");
-                    }
-                }
-            })
-        })
+        
         
         $(".apiTradeData").click(function() {
             $("#apiTradeData").dialog({
                 modal: true,
-                width: 750,
+                width: 800,
                 position: 'top',
                 show: {
                     effect: "explode",
@@ -181,6 +161,27 @@
             })
         })
         
+        $(".bitfinexEMA").click(function() {
+            $("#bitfinexEMA").dialog({
+                modal: true,
+                width: 750,
+                position: 'top',
+                show: {
+                    effect: "explode",
+                    duration: 500
+                },
+                hide: {
+                    effect: "explode",
+                    duration: 500
+                },
+                buttons: {
+                    Close: function() {
+                        $(this).dialog("close");
+                    }
+                }
+            })
+        })
+        
     });
     </script>
 </head>    
@@ -192,6 +193,7 @@
         <td width="">
     
             <form method="POST">
+                <!--
             <div id="login-overlay" class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -223,6 +225,7 @@
                 </div>
             </div>
         </div>
+                -->
         
         <div id="login-overlay" class="modal-dialog">
             <div class="modal-content">
@@ -242,10 +245,21 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td>% of Balance</td> 
+                                <td>Bitfinex Balance</td>
                                 <td>
-                                    <input type="text" name="bitfinex_balance" value="<?=$bitfinex_balance?>" /> (not used)
+                                    <input type="text" name="bitfinex_balance" size="2" value="<?=$bitfinex_balance?>" />
                                 </td>
+                            </tr>
+                            <tr>
+                                <td>Stop Loss Options</td>  
+                            </tr>
+                            <tr>
+                                <td>Stop Loss Range %</td>
+                                <td><input type="text" name="bitfinex_sl_range" size="2" value="<?=$bitfinex_sl_range?>" /></td>
+                            </tr>
+                            <tr>
+                                <td>Pump and Dump %</td>
+                                <td><input type="text" name="bitfinex_pd_percent" size="2" value="<?=$bitfinex_pd_percent?>" /></td>
                             </tr>
                         </table>
                         <input type="submit" class="btn btn-success btn-block" name="submit_options" value="Update" />
@@ -258,28 +272,25 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h4 class="modal-title" id="myModalLabel"><b>View Prices History</b></h4><br />
-                      
-            <input type="button" class="btn btn-warning btceHistory" value="BTC-E 2hr" />
+                    
+            <!--<input type="button" class="btn btn-info btceHistory" value="BTC-E 30m" />&nbsp;-->
  
-            &nbsp;
-            <input type="button" class="btn btn-warning bitfinexHistory" value="Bitfinex 2hr" />
+            <input type="button" class="btn btn-warning bitfinexHistory" value="Bitfinex 30m" />
             
             &nbsp;
-            <input type="button" class="btn btn-warning priceTable" value="Current Price Chart" />
+            <input type="button" class="btn btn-warning bitfinexEMA" value="Bitfinex EMA" />
             
             &nbsp;
-            <input type="button" class="btn btn-warning apiBalance" value="Daily Balance" />
+            <input type="button" class="btn btn-warning apiBalance" value="apiBalance" />
             
             <h3>apiTrade Debug Mode</h3>
-            <a href="apiTradeBTCE.php?debug=1" target="_blank"><input type="button" class="btn btn-warning" value="apiTradeBTCE.php" /></a> &nbsp;
             
-            <a href="apiTradeBitfinex.php?debug=1" target="_blank"><input type="button" class="btn btn-warning" value="apiTradeBitfinex.php" /></a>  &nbsp;
+            <a href="apiTradeBitfinex.php?debug=1" target="_blank"><input type="button" class="btn btn-warning" value="apiTradeBitfinex" /></a>  &nbsp;
+            
+            <a href="apiTestBitfinex.php?debug=1" target="_blank"><input type="button" class="btn btn-warning" value="apiTestBitfinex" /></a> &nbsp;
             
             <input type="button" class="btn btn-warning apiTradeData" value="apiTradeData" />
             
-            &nbsp;
-            
-            <a href="apiTestBitfinex.php?debug=1" target="_blank">apiTestBitfinex</a>
                 </div>
             </div>
         </div>
@@ -287,43 +298,18 @@
         </td>
         <td width="30px"></td>
         <td>
-            
-            <div id="btc_e_links">
-            <h3>BTC-E Links</h3>
-            <pre class="xdebug-var-dump">
-            <table class="">
-                <tr valign="top">
-                    <td>
-                        <a href="https://btc-e.com/" target="_blank">Main Site</a>
-                        <br /><br />
-                        <a href="https://btc-e.com/profile#orders_history" target="_blank">Orders History</a>
-                        <br /><br />
-                        <a href="https://btc-e.com/profile#trade_history" target="_blank">Trade history</a> 
-                        <br /><br />                        
-                    </td>
-                    <td>
-                        <a href="https://btc-e.com/profile#funds" target="_blank">Account Funds</a> 
-                        <br /><br />
-                        <a href="https://btc-e.com/profile#funds/deposit_coin/1" target="_blank">Deposit Coins</a>
-                        <br /><br />
-                        <a href="https://btc-e.com/profile#funds/withdraw_coin/1" target="_blank">Withdraw Coins</a>
-                        <br /><br />
-                    </td>
-                </tr>
-            </table>
-            </pre>
-            </div>
-            
+      
             <div id="bitfinex_links">
             <h3>Bitfinex Links</h3>
             <pre class="xdebug-var-dump">
             <table>
                 <tr valign="top">
                     <td>
-                        <a href="https://www.bitfinex.com/trading/index/ltcusd" target="_blank">Margin LTC</a>
-                        <br /><br />
                         
                         <a href="https://www.bitfinex.com/trading/index/btcusd" target="_blank">Margin BTC</a>
+                        <br /><br />
+                        
+                        <a href="https://www.bitfinex.com/history/orders" target="_blank">Order History</a>
                         <br /><br />
                         
                         <a href="https://www.bitfinex.com/account/api" target="_blank">API Keys</a>
@@ -342,6 +328,7 @@
                 </table>
             </pre>
             </div>
+            
             
             <div id="bitcoin_wisdom_links">
             <h3>Bitcoin Wisdom Links</h3>
@@ -366,6 +353,34 @@
                 </tr>
             </table>
             </pre>
+                  
+            <div id="btc_e_links">
+            <h3>BTC-E Links</h3>
+            <pre class="xdebug-var-dump">
+            <table>
+                <tr valign="top">
+                    <td>
+                        <a href="https://btc-e.com/" target="_blank">Main Site</a>
+                        <br /><br />
+                        <a href="https://btc-e.com/profile#orders_history" target="_blank">Orders History</a>
+                        <br /><br />
+                        <a href="https://btc-e.com/profile#trade_history" target="_blank">Trade history</a> 
+                        <br /><br />                        
+                    </td>
+                    <td>
+                        <a href="https://btc-e.com/profile#funds" target="_blank">Account Funds</a> 
+                        <br /><br />
+                        <a href="https://btc-e.com/profile#funds/deposit_coin/1" target="_blank">Deposit Coins</a>
+                        <br /><br />
+                        <a href="https://btc-e.com/profile#funds/withdraw_coin/1" target="_blank">Withdraw Coins</a>
+                        <br /><br />
+                    </td>
+                </tr>
+            </table>
+            </pre>
+            </div>
+            
+            
         </td>
     </tr>
 </table>
@@ -386,6 +401,9 @@
     <?=$bitfinexHistory?>
 </form>
 
+<form id="bitfinexEMA" title="Bitfinex EMA">
+    <?=$bitfinexEMA?>
+</form>
 
 <form id="apiTradeData" title="apiTradeData">
     <?=$apiTradeData?>

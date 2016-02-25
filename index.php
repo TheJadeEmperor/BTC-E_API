@@ -1,13 +1,80 @@
 <?php
+include('include/api_database.php');
 include('include/config.php');
-//include('include/api_btc_e.php');
+
+
+$price_field = 'bitfinex_btc';
+
+$candleData = new Database($db);
+$candleData->get_candles($price_field);
+
+$percentDiff = $candleData->get_percent_diff();
+
+$recordedATH = $candleData->get_recorded_ATH();
+$recordedATL = $candleData->get_recorded_ATL();
+
+
+$k21 = 2/(21+1);
+$k10 = 2/(10+1);
+
+$q = 'select time, bitfinex_btc from api_prices_30m order by count desc';
+$res = $db->query($q);
 
 $array = array();
-$queryMA = $db->query('SELECT * FROM '.$context['pricesTable'].' WHERE count <= 60
-    order by count desc');
-foreach($queryMA as $row) { 
-   array_push($array, $row['btce_btc']); 
+$arrayPrice = array();
+foreach($res as $row) {
+    array_push($array, $row);
+    array_push($arrayPrice, $row['bitfinex_btc']);
 }
+
+
+$ema10 = $ema21 = 0;
+for($count=1; $count<60; $count++) {
+
+    //$array[$count]['time'] = date("Y-m-d H:i:s", strtotime('+2 hours', strtotime($array[$count]['time'])) );
+    $bitfinex_btc = $array[$count]['bitfinex_btc'];
+    if($count > 9) {
+        $last_10 = array_slice($arrayPrice, $count-10, 10, true);
+        $sma10 = array_sum ($last_10)/10;
+        
+        if($ema10 == 0) $ema10 = $sma10;
+        else $ema10 = $k10 * ($bitfinex_btc - $ema10) + $ema10;
+        
+        if($count > 20) {
+            $last_21 = array_slice($arrayPrice, $count-21, 21, true);
+            $sma21 = array_sum ($last_21)/21;
+            
+            if($ema21 == 0) $ema21 = $sma21;
+            else $ema21 = $k21 * ($bitfinex_btc - $ema21) + $ema21;
+        }
+    }
+
+    $sma10 = number_format($sma10, 2);
+    $ema10 = number_format($ema10, 2);
+    $sma21 = number_format($sma21, 2);
+    $ema21 = number_format($ema21, 2);
+    
+    $emaTable .= '<tr>
+        <td>'.$count.'</td>
+        <td>'.$array[$count]['time'].'</td>
+        <td>'.$array[$count]['bitfinex_btc'].'</td>
+        <td title="SMA-10: '.$sma10.'">'.$ema10.'</td>  
+        <td title="SMA-21: '.$sma21.'">'.$ema21.'</td>
+    </tr>';    
+}
+
+$bitfinexEMA = '<table class="table">
+<tr>
+    <th>count</th>
+    <th>day</th>
+    <th>price</th>
+     
+    <th>10 day ema</th>
+     
+    <th>21 day ema</th>
+</tr>
+'.$emaTable.'
+</table>';
 
 
 function priceRow($pair) {
@@ -80,28 +147,25 @@ foreach($currencyPair as $cPair) {
 
 //changing the trade options 
 if($_POST['submit_options']) {
-    $btc_e_currency = $_POST['btc_e_currency'];
-    $btc_e_balance = $_POST['btc_e_balance'];
-    $btc_e_trading = $_POST['btc_e_trading'];
     $bitfinex_currency = $_POST['bitfinex_currency'];
     $bitfinex_balance = $_POST['bitfinex_balance'];
     $bitfinex_trading = $_POST['bitfinex_trading'];
+    $bitfinex_sl_range = $_POST['bitfinex_sl_range'];
+    $bitfinex_pd_percent = $_POST['bitfinex_pd_percent'];
     
     //do multiple queries in one call
     $db->setAttribute(PDO::ATTR_EMULATE_PREPARES, 0);
     
-    $queryO = 'UPDATE '.$context['optionsTable'].' SET
-            setting = "'.$btc_e_currency.'" WHERE opt = "btc_e_currency";               
-        UPDATE '.$context['optionsTable'].' set
-            setting = "'.$btc_e_trading.'" WHERE opt = "btc_e_trading";
-        UPDATE '.$context['optionsTable'].' set
-            setting = "'.$btc_e_balance.'" WHERE opt = "btc_e_balance";
-        UPDATE '.$context['optionsTable'].' set
+    $queryO = 'UPDATE '.$context['optionsTable'].' set
             setting = "'.$bitfinex_currency.'" WHERE opt = "bitfinex_currency";
         UPDATE '.$context['optionsTable'].' set
             setting = "'.$bitfinex_balance.'" WHERE opt = "bitfinex_balance";
         UPDATE '.$context['optionsTable'].' set
             setting = "'.$bitfinex_trading.'" WHERE opt = "bitfinex_trading";
+        UPDATE '.$context['optionsTable'].' set
+            setting = "'.$bitfinex_sl_range.'" WHERE opt = "bitfinex_sl_range";
+        UPDATE '.$context['optionsTable'].' set
+            setting = "'.$bitfinex_pd_percent.'" WHERE opt = "bitfinex_pd_percent";
     ';
    
     try {
@@ -117,50 +181,38 @@ if($_POST['submit_options']) {
 $queryO = $db->query('SELECT * FROM '.$context['optionsTable'].' ORDER BY opt');
 
 foreach($queryO as $opt) { 
-    $btc_e_option[$opt['opt']][$opt['setting']] = 'selected';
-    $bitfinex_option[$opt['opt']][$opt['setting']] = 'selected';
-    
-    if($opt['opt'] == 'btc_e_balance') {
-        $btc_e_balance = $opt['setting'];
-    }
-    else if($opt['opt'] == 'bitfinex_balance') {
-        $bitfinex_balance = $opt['setting'];
-    }
+    if($opt['opt'] == 'bitfinex_trading' || $opt['opt'] == 'bitfinex_currency')
+        $bitfinexOption[$opt['opt']][$opt['setting']] = 'selected';
+    else
+        $bitfinexOption[$opt['opt']] = $opt['setting'];
 }
 
-//print_r($btc_e_trading_option);//
-
-$btc_e_trading_dropdown = '<select name="btc_e_trading">
-    <option '.$btc_e_option['btc_e_trading'][1].'>1</option>
-    <option '.$btc_e_option['btc_e_trading'][0].'>0</option>
-</select>
-';
-
-$btc_e_currency_dropdown = '<select name="btc_e_currency">
-    <option '.$btc_e_option['btc_e_currency']['btc'].'>btc</option>
-    <option '.$btc_e_option['btc_e_currency']['ltc'].'>ltc</option>
-</select>';
+$bitfinex_sl_range = $bitfinexOption['bitfinex_sl_range'];
+$bitfinex_balance = $bitfinexOption['bitfinex_balance'];
+$bitfinex_pd_percent = $bitfinexOption['bitfinex_pd_percent'];
 
 
 $bitfinex_trading_dropdown = '<select name="bitfinex_trading">
-    <option '.$bitfinex_option['bitfinex_trading'][1].'>1</option>
-    <option '.$bitfinex_option['bitfinex_trading'][0].'>0</option>
+    <option '.$bitfinexOption['bitfinex_trading'][1].'>1</option>
+    <option '.$bitfinexOption['bitfinex_trading'][0].'>0</option>
 </select>';
 
 $bitfinex_currency_dropdown = '<select name="bitfinex_currency">
-    <option '.$bitfinex_option['bitfinex_currency']['btc'].'>btc</option>
-    <option '.$bitfinex_option['bitfinex_currency']['ltc'].'>ltc</option>
+    <option '.$bitfinexOption['bitfinex_currency']['btc'].'>btc</option>
+    <option '.$bitfinexOption['bitfinex_currency']['ltc'].'>ltc</option>
 </select>';
 
+
 $price_change = array();
-$queryP = $db->query('SELECT * FROM api_prices order by count desc'); 
+$queryP = $db->query('SELECT * FROM '.$context['pricesTable30m'].' order by count desc'); 
 
 foreach($queryP as $priceRow) { 
     array_push($price_change, $priceRow);
 }
 
+$c = 70;
 foreach($price_change as $i => $p) {
-
+    
     $exchangeCurrency = array('btce_btc', 'btce_ltc', 'bitfinex_btc', 'bitfinex_ltc');
             
     foreach($exchangeCurrency as $ec) {
@@ -177,26 +229,16 @@ foreach($price_change as $i => $p) {
             }
         }
     }
-    
-    $btceHistory .= '<tr>
-        <td>'.$p['time'].'</td>
-        <td>'.number_format($p['btce_btc'], 4).' '.$diff['btce_btc'].'</td>
-        <td>'.number_format($p['btce_ltc'], 4).' '.$diff['btce_ltc'].'</td>
-    </tr>';
-    
+   
     $bitfinexHistory .= '<tr>
         <td>'.$p['time'].'</td>
+        <td>'.$c.'</td>
         <td>'.number_format($p['bitfinex_btc'], 4).' '.$diff['bitfinex_btc'].'</td>
         <td>'.number_format($p['bitfinex_ltc'], 4).' '.$diff['bitfinex_ltc'].'</td>
     </tr>';
+    
+    $c--;
 }
- 
-$btceHistory = '<table class="table">
-    <tr><td>time</td>
-    <td>bitfinex_btc</td>
-    <td>bitfinex_ltc</td>
-    </tr>
-'.$btceHistory.'</table>';
 
 
 $bitfinexHistory = '<table class="table">
@@ -205,8 +247,6 @@ $bitfinexHistory = '<table class="table">
     <td>bitfinex_ltc</td>
     </tr>
 '.$bitfinexHistory.'</table>';
-
-
 
 
 
@@ -238,15 +278,14 @@ $apiTradeData = '<table class="table">
 $queryB = $db->query('SELECT *, date_format(date, "%m/%d/%Y") as date FROM api_balance order by date desc');
 
 foreach($queryB as $b) {
-    $balanceBTCE = number_format($b['balance_btce'], 2);
+    //$balanceBTCE = number_format($b['balance_btce'], 2);
     $balanceBitfinex = number_format($b['balance_bitfinex'], 2);
     
-    $combinedTotal = $b['balance_btce'] + $b['balance_bitfinex'];
-    $combinedTotal = number_format($combinedTotal);
+    $combinedTotal = $b['balance_bitfinex'];
+    $combinedTotal = number_format($combinedTotal, 2);
     $apiBalance .= '<tr>
         <td>'.$b['date'].'</td>
-        <td>$'.$b['balance_btce'].'</td>
-        <td>$'.$b['balance_bitfinex'].'</td>
+        <td>$'.$balanceBitfinex.'</td>
         <td>$'.$combinedTotal.'</td>
         </tr>';
 }
@@ -254,7 +293,6 @@ foreach($queryB as $b) {
 $apiBalance = '<table class="table">
     <tr>
         <td>Date</td>
-        <td>BTCE (USD)</td>
         <td>Bitfinex (USD)</td>
         <td>Total</td>
     </tr>'.$apiBalance.'</table>';

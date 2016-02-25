@@ -72,7 +72,7 @@ if($bitfinex_btc == 0) { //if bitfinex crashes, get price from btc-e
 }
 
 //input latest prices into count = 1
-$upd = "UPDATE ".$context['pricesTable30m']." SET time = now(), 
+$upd = "UPDATE ".$context['pricesTable30m']." SET time = '".date("Y-m-d H:i:s", time())."', 
     btce_btc = '$btcPrice', 
     btce_ltc = '$ltcPrice', 
     bitfinex_btc = '$bitfinex_btc',        

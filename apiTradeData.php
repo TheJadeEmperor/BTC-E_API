@@ -22,19 +22,19 @@ foreach($queryD as $row){
     $output .= $newline;  
 }
 
-//if($debug != 1) {
+
     //back up api_prices table with today's date as the name
     $md = date('m_d', time());
-    $newTable = $context['pricesTable'].'_'.$md;
+    $newTable = $context['pricesTable30m'].'_'.$md;
 
-    $queryCreate = 'CREATE TABLE '.$newTable.' LIKE '.$context['pricesTable'].';';
+    $queryCreate = 'CREATE TABLE '.$newTable.' LIKE '.$context['pricesTable30m'].';';
     $db->exec($queryCreate);
     
     $queryCount = 'SELECT COUNT(*) as count FROM '.$newTable.';';
     $resCount = $db->query($queryCount);
     foreach($resCount as $countRows){}
         
-    $queryInsert = 'INSERT '.$newTable.' SELECT * FROM '.$context['pricesTable'].';';
+    $queryInsert = 'INSERT '.$newTable.' SELECT * FROM '.$context['pricesTable30m'].';';
     
     if($countRows['count'] == 0) { //make sure there are no rows in the new table
         $db->query($queryInsert);
@@ -42,45 +42,46 @@ foreach($queryD as $row){
     
     //delete table from 4 days ago
     $x_days_ago = date('m_d', mktime(0, 0, 0, date("m") , date("d") - 4, date("Y")));
-    $oldTable = $context['pricesTable'].'_'.$x_days_ago;
+    $oldTable = $context['pricesTable30m'].'_'.$x_days_ago;
     
-    $queryDrop = 'DROP TABLE IF EXISTS '.$oldTable.'';
+    $queryDrop = 'DROP TABLE IF EXISTS '.$oldTable.';';
     $db->query($queryDrop);
     
-   
-    
-    $output .= $newline.$newline.$queryCreate.$newline.$newline.$queryInsert.$newline.$newline.$queryDrop.$newline.$newline;
-//}
-    
-    //get daily balances from BTC-E & Bitfinex
-    
-    //connect to BTC-E
-    $btceCall = new BTCeAPI(BTCE_API_KEY, BTCE_API_SECRET); 
 
-    $acctInfo = $btceCall->apiQuery('getInfo');
-    $acctFunds = $acctInfo['return']['funds'];
+    $output .= $newline.$newline.$queryCreate.$newline.$newline.$queryInsert.$newline.$newline.$queryDrop.$newline.$newline;
     
-    $btcPrice = $btceCall->getLastPrice('btc_usd');
-    $ltcPrice = $btceCall->getLastPrice('ltc_usd');
-    
-    //sum total of account balance in all currencies
-    $totalBalance = $acctFunds['usd'] + $acctFunds['btc'] * $btcPrice + $acctFunds['ltc'] * $ltcPrice;
-    $balanceBTCE = number_format($totalBalance, 2); //account balance
-    
+    //get daily balances from Bitfinex
+
     //connect to Bitfinex
     $bitfinexCall = new Bitfinex(BITFINEX_API_KEY, BITFINEX_API_SECRET); 
-    $acctFunds = $bitfinexCall->get_balances(); 
-    $acctUSD = $acctFunds[7]['amount'];
+    $acctFunds = $bitfinexCall->get_balances(); //call get_balances function
+    $acctUSD = $acctFunds[8]['amount']; //USD balance
     
     $balanceBitfinex = number_format($acctUSD, 2); //account balance
     
-    //update api_balance table    
-    $queryBalance = 'INSERT INTO '.$context['balanceTable'].' (date, balance_btce, balance_bitfinex) VALUES ("'.date('Y-m-d', time()).'", "'.$balanceBTCE.'", "'.$balanceBitfinex.'");';
-
-    $db->query($queryBalance);
-
+    $todaysDate = date('Y-m-d', time());
     
-    $output .= 'BTCE balance: '.$balanceBTCE.' '.$newline.' Bitfinex balance: '.$balanceBitfinex.$newline.$newline;
+    //check for existing entries for today's date
+    $queryCount = 'SELECT COUNT(*) as count FROM '.$context['balanceTable'].' WHERE date="'.$todaysDate.'";';
+    $resCount = $db->query($queryCount);
+    foreach($resCount as $countRows){}
+    
+   
+    //update api_balance table    
+    $queryBalance = 'INSERT INTO '.$context['balanceTable'].' (date, balance_bitfinex) VALUES ("'.$todaysDate.'", "'.$balanceBitfinex.'");';
+
+    if($countRows['count'] == 0) { //make sure there are no rows for today's date
+        $db->query($queryBalance); //insert balance data into db
+    }
+    else { //more than 1 row for today - delete all rows except 1 row
+        $queryDelete = 'DELETE FROM '.$context['balanceTable'].' WHERE date="'.$todaysDate.'"
+            LIMIT '.($countRows['count'] - 1).';';
+        $db->query($queryDelete);
+    }
+    
+    //echo $countRows['count'];
+    
+    $output .= 'Bitfinex balance: '.$balanceBitfinex.$newline.$newline;
     
     
 echo $output;
