@@ -33,7 +33,7 @@ function update_last_action($last_action_data) {
 
     global $db, $context;
     
-    $queryD = 'INSERT INTO '.$context['tradeDataTable'].' SET 
+    $queryD = 'UPDATE '.$context['tradeDataTable'].' SET 
         last_action="'.$last_action_data['last_action'].'",
         last_price="'.$last_action_data['last_price'].'",            
         trade_signal="'.$last_action_data['trade_signal'].'",
@@ -56,6 +56,8 @@ global $rangePercent; //stop loss range %
 global $pumpPercent; 
 global $dumpPercent; 
 global $bitfinexBalance;
+$pumpPercent = 3.8;
+$dumpPercent = -3.8;
 
 $debug = $_GET['debug'];
 $bitfinexAPI = new Bitfinex(BITFINEX_API_KEY, BITFINEX_API_SECRET);
@@ -80,17 +82,22 @@ foreach($optionsArray as $thisOpt) {
     $output .= ' '.$thisOpt.': '.$bitfinexOptions[$thisOpt].' | ';
 }
     
+if($bitfinexTrading == 1) {
+    $output .= 'Bitfinex trading is ON';
+}
+else {
+    $output .= 'Bitfinex trading is OFF';
+}
 
 $currency = $bitfinexOptions['bitfinex_currency']; //currency defined in api_options
 $symbol = strtoupper($currency.'usd'); //currency symbol used for making orders
 $rangePercent = $bitfinexOptions['bitfinex_sl_range']; //stop loss range
 $bitfinexBalance = $bitfinexOptions['bitfinex_balance']; //% of balance to initially trade
-$bitfinex_pd_percent = $bitfinexOptions['bitfinex_pd_percent']; //% trend of pump and dump
-$pumpPercent = $bitfinex_pd_percent;
-$dumpPercent = -$bitfinex_pd_percent;
-        
+
 //database price field
 $price_field = 'bitfinex_'.$currency; 
+
+
 $btcPrice = getBitfinexPrice('btc'); //current market BTC price
 $ltcPrice = getBitfinexPrice('ltc'); //current market LTC price
 
@@ -104,6 +111,9 @@ else {
 $acctFunds = $bitfinexAPI->get_balances(); 
 $acctMargin = $bitfinexAPI->margin_infos(); 
 
+//array_debug($acctFunds);
+
+
 //funds in margin balance
 $acctBTC = $acctFunds[4]['amount'];
 $acctLTC = $acctFunds[5]['amount'];
@@ -115,18 +125,22 @@ $marginUSD = $acctMargin[0]['margin_limits'][0]['tradable_balance'];
 $tradable['btc'] = number_format($marginUSD/$btcPrice, 4); 
 $tradable['ltc'] = number_format($marginUSD/$ltcPrice, 4); 
 
-
-if($bitfinexTrading == 1) {
-    $output .= 'Bitfinex trading is ON';
-}
-else {
-    $output .= 'Bitfinex trading is OFF';
-}
 $output .= $newline.$newline;
 $output .= 'account balance: '.number_format($acctUSD, 2).' '.$newline;
 $output .= 'margin: '.number_format($marginUSD, 4).' | ';
 $output .= 'tradeable btc: '.$tradable['btc'].' | tradeable ltc: '.$tradable['ltc'].$newline.$newline;
 $output .= 'current prices: | btc: '.number_format($btcPrice, 4).' | ltc: '.number_format($ltcPrice, 4).$newline.$newline;
+
+
+//get api_trade_data
+$queryT = 'SELECT * FROM '.$context['tradeDataTable'].' WHERE currency = "'.$currency.'"
+    AND exchange = "bitfinex"';
+$resT = $db->query($queryT);
+
+foreach($resT as $t) { 
+    $last_updated = $t['last_updated'];
+    $trade_signal = $t['trade_signal'];
+}
 
 $candleData->get_candles($price_field); //get all candle data from db
 
@@ -145,10 +159,14 @@ else {
     $emaTrend = 'Cross Under';
 }
 
+
 //get ATH & ATL for stop loss calculations
-$ATH = $candleData->get_recorded_ATH(); //ATH = all time high
-$ATL = $candleData->get_recorded_ATL(); //ATL = all time low
-$range = abs($ATH - $ATL);
+$recordedATH = $candleData->get_recorded_ATH(); //ATH = all time high
+$recordedATL = $candleData->get_recorded_ATL(); //ATL = all time low
+
+//adjust the ATH and ATL by 0.5%
+$ATH = $recordedATH + $recordedATH * 0.005;
+$ATL = $recordedATL - $recordedATL * 0.005;
 
 //get overall trend for 24 candles (12 hours)
 $percentDiff = $candleData->get_percent_diff(); //determine if trend is pump or dump
@@ -175,10 +193,19 @@ $position = array(
 if(is_array($position)) { //active position
     $positionID = $position['id'];
     
-    if($position['pl'] >= 0.05) { //profiting position
-        $tradeAmt = ($marginUSD/$latestPrice) * 0.90; //use the remaining 90% of balance
-        
-        $output .= ' | Green Zone | ';
+    if($position['pl'] >= 0.05) {
+        $tradeAmt = ($marginUSD/$latestPrice) * 0.95; //use the remaining balance
+    }
+}
+else { //No positions active
+    $position['pl'] = 0; //make sure pl is defined 
+}
+
+
+if($positionID) { //if there is an active position
+    //if profiting, trade the rest of the balance
+    if($position['pl'] > 0.05) {
+        $output .= ' | green zone | ';
 
         if($position['amount'] < 0) { //short
             $newTrade = $bitfinexAPI->margin_short_pos($symbol, $latestPrice, $tradeAmt);
@@ -190,54 +217,54 @@ if(is_array($position)) { //active position
         }   
     }
 }
-else { //No positions active
-    $position['pl'] = 0; //make sure pl is defined 
-}
-
 
 //set the stop losses for different trends
 if($percentDiff > $pumpPercent) { //during a pump, the stop loss is the ema-21 line
-    $stopHigh = $stopLow = $ema21; 
+    $stopHigh = $ema21; 
+    $stopLow = $ema21;
     $SLType = 'EMA-21';
 }
 else if($percentDiff < $dumpPercent) { //during a dump, the stop loss is the ema-21 line
-    $stopHigh = $stopLow = $ema21; 
+    $stopHigh = $ema21; 
+    $stopLow = $ema21;
     $SLType = 'EMA-21';
 }
 else { //normal trend
-    
     $rangePercent = $rangePercent/100; //% of the range bet. ATH and ATL
 
-    $stopHigh = $ATH - ($range * $rangePercent);
-    $stopLow = $ATL + ($range * $rangePercent);
+    $stopHigh = $ATH - $ATH * (abs($percentDiff) * $rangePercent)/100;
+    $stopLow = $ATL + $ATL * (abs($percentDiff)* $rangePercent)/100;
     $SLType = 'Range'; 
-    
-    if($latestPrice < $stopHigh && $latestPrice > $stopLow) { //no trend
-        $isNoTrend = 1;
-    }
-    else {
-        $isNoTrend = 0;
-    }
-    
-    //echo $isNoTrend;
 }
 
-//$stopHigh = $ema21; 
-//$stopLow = $ema21;
-//$SLType = 'EMA-21';
-
+if($position['amount'] > 0) { //long
+    if($position['base'] > $stopHigh) { //default stop loss is position's base
+        
+        $stopHigh = $position['base'] - 0.01;
+        $SLType = 'Base';
+    }
+}
+else if ($position['amount'] < 0) { //short
+    if($position['base'] < $stopLow) { //default stop loss is position's base
+        
+        $stopLow = $position['base'] + 0.01;
+        $SLType = 'Base';
+    }
+}
 
 $stopHigh = number_format($stopHigh, 2);
 $stopLow = number_format($stopLow, 2);
 
 
 $output .= ' ema-10: '.$ema10.' | ema-21: '.$ema21.' | '.$emaTrend.$newline.$newline;
-$output .= 'Recorded ATH: '.$ATH.' | long stop loss: '.$stopHigh.' ('.$SLType.')'; 
-$output .= $newline.'Recorded ATL: '.$ATL.' | short stop loss: '.$stopLow.' ('.$SLType.')';
+
+$output .= 'Recorded ATH: '.$recordedATH.' | Adjusted ATH: '.number_format($ATH, 2).' | long stop loss: '.$stopHigh.' ('.$SLType.')'; 
+$output .= $newline.'Recorded ATL: '.number_format($recordedATL, 2).' | Adjusted ATL: '.number_format($ATL, 2).' | short stop loss: '.$stopLow.' ('.$SLType.')';
+
 $output .= $newline.$newline.' 24 candle trend | '.number_format($percentDiff, 2).'% | ';
 
-if($isNoTrend == 0) //prevent trading during side trends
-if($crossOver == 1 && $latestPrice > $ema21) { //uptrend
+
+if($latestPrice > $ATH && $crossOver == 1) { //uptrend - price is above ATH
     $output .= $trade_signal = 'Uptrend ';
     
     //default uptrend action - close short pos & open long pos
@@ -250,12 +277,13 @@ if($crossOver == 1 && $latestPrice > $ema21) { //uptrend
         }
     }
 
-    if(!isset($positionID))
+  
     if($marginUSD > $acctUSD) {
-        $newTrade = $bitfinexAPI->margin_long_pos($symbol, $latestPrice, $tradeAmt);  //new long position    
+        $newTrade = $bitfinexAPI->margin_long_pos($symbol, $latestPrice, $tradeAmt);  //new long position
     }
+
 } //uptrend
-else if($crossUnder == 1 && $latestPrice < $ema21) { //downtrend
+else if($latestPrice < $ATL && $crossUnder == 1) { //downtrend - price is below ATL
 
     $output .= $trade_signal = 'Downtrend ';
     $action = 'Sell';
@@ -270,44 +298,46 @@ else if($crossUnder == 1 && $latestPrice < $ema21) { //downtrend
         }
     }
  
-    if(!isset($positionID))
+    
     if($marginUSD > $acctUSD) {
         $newTrade = $bitfinexAPI->margin_short_pos($symbol, $latestPrice, $tradeAmt); //new short position
     }
+ 
 } //downtrend
-else if($percentDiff > $pumpPercent) { //pump - a constant uptrend for a short burst of time
-    $output .= $trade_signal = 'Pumping ';
-}
-else if($percentDiff < $dumpPercent) { //dump - a constant downtrend for a short burst of time
-    $output .= $trade_signal = 'Dumping ';
-}
-else {
-    $output .= $trade_signal = 'No trend ';
+else { //not uptrend or downtrend
+    
+    if($percentDiff > 4) { //pump - a constant uptrend for a short burst of time
+        $output .= $trade_signal = 'Pumping ';
+    }
+    else if($percentDiff < -4) { //dump - a constant downtrend for a short burst of time
+        $output .= $trade_signal = 'Dumping ';
+    }
+    else { //default is no trend
+        $output .= $trade_signal = 'No trend ';
+    }
 }
 
-echo $newTrade;
-
-$output .= ' | tradeAmt: '.number_format($tradeAmt, 4).' | posAmt: '.number_format($posAmt, 4).' '.$currency.'';
+$output .= ' | tradeAmt: '.number_format($tradeAmt, 4).' '.$currency.'';
 
 if($positionID && $position['amount'] > 0) { //if long pos open
     if($latestPrice <= $stopHigh) { //uptrend stop loss
         //close long pos
         $action = $trade_signal = 'Sell'; 
-        $output .= $SLMsg = ' | Long SL Exit'; 
+        $output .= ' | long SL exit'; 
 
         $newTrade = $bitfinexAPI->margin_short_pos($symbol, $latestPrice, $posAmt);
-        
     } //stop loss
 }
 else if($positionID && $position['amount'] < 0) { //if short pos open
     if($latestPrice >= $stopLow) { //downtrend stop loss
         //close short pos
         $action = $trade_signal = 'Buy';
-        $output .= $SLMsg = ' | Short SL Exit';
+        $output .= ' | short SL exit';
 
         $newTrade = $bitfinexAPI->margin_long_pos($symbol, $latestPrice, $posAmt); 
     } //stop loss 
 }
+
 
 if($newTrade['is_live'] == 1) {   
     $last_action_data = array(
@@ -317,7 +347,7 @@ if($newTrade['is_live'] == 1) {
         'currency' => $currency,
     );
     
-    $sendMailBody = $action.' '.$tradeAmt.' '.$currency.' at '.$latestPrice.' '.$SLMsg.' ('.date('h:i A', time()).')';
+    $sendMailBody = $action.' '.$tradeAmt.' '.$currency.' at '.$latestPrice.' ('.date('h:i A', time()).')';
     
     $candleData->sendMail($sendMailBody);
     update_last_action($last_action_data);

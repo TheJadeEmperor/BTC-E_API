@@ -1,23 +1,28 @@
 <?php
 include('include/api_database.php');
+include('include/api_bitfinex.php');
 include('include/config.php');
+
+$bitfinexAPI = new Bitfinex(BITFINEX_API_KEY, BITFINEX_API_SECRET);
+$bitfinexAPI->isMarginAvailable();
+
 
 
 $price_field = 'bitfinex_btc';
 
 $candleData = new Database($db);
+$candleData->get_options();
 $candleData->get_candles($price_field);
 
-$percentDiff = $candleData->get_percent_diff();
 
-$recordedATH = $candleData->get_recorded_ATH();
-$recordedATL = $candleData->get_recorded_ATL();
+$isGreen1 = $candleData->isGreen('1');
+$isGreen2 = $candleData->isGreen('2');
 
 
 $k21 = 2/(21+1);
 $k10 = 2/(10+1);
 
-$q = 'select time, bitfinex_btc from api_prices_30m order by count desc';
+$q = 'select time, bitfinex_btc from api_prices order by count desc';
 $res = $db->query($q);
 
 $array = array();
@@ -29,7 +34,7 @@ foreach($res as $row) {
 
 
 $ema10 = $ema21 = 0;
-for($count=1; $count<60; $count++) {
+for($count=1; $count<70; $count++) {
 
     //$array[$count]['time'] = date("Y-m-d H:i:s", strtotime('+2 hours', strtotime($array[$count]['time'])) );
     $bitfinex_btc = $array[$count]['bitfinex_btc'];
@@ -68,9 +73,7 @@ $bitfinexEMA = '<table class="table">
     <th>count</th>
     <th>day</th>
     <th>price</th>
-     
     <th>10 day ema</th>
-     
     <th>21 day ema</th>
 </tr>
 '.$emaTable.'
@@ -204,7 +207,7 @@ $bitfinex_currency_dropdown = '<select name="bitfinex_currency">
 
 
 $price_change = array();
-$queryP = $db->query('SELECT * FROM '.$context['pricesTable30m'].' order by count desc'); 
+$queryP = $db->query('SELECT * FROM '.$context['pricesTable2h'].' order by count desc'); 
 
 foreach($queryP as $priceRow) { 
     array_push($price_change, $priceRow);
@@ -218,7 +221,7 @@ foreach($price_change as $i => $p) {
     foreach($exchangeCurrency as $ec) {
         if($price_change[$i-1][$ec] != 0) { //previous price is recorded
            
-            $diff[$ec] =  ($p[$ec] - $price_change[$i-1][$ec])/$p[$ec]*100;
+            $diff[$ec] = ($p[$ec] - $price_change[$i-1][$ec])/$p[$ec]*100;
             $diff[$ec] = number_format($diff[$ec], 2);
             
             if($diff[$ec] > 0) { //positive change
@@ -243,6 +246,7 @@ foreach($price_change as $i => $p) {
 
 $bitfinexHistory = '<table class="table">
     <tr><td>time</td>
+    <td>candle #</td>
     <td>bitfinex_btc</td>
     <td>bitfinex_ltc</td>
     </tr>
@@ -278,7 +282,6 @@ $apiTradeData = '<table class="table">
 $queryB = $db->query('SELECT *, date_format(date, "%m/%d/%Y") as date FROM api_balance order by date desc');
 
 foreach($queryB as $b) {
-    //$balanceBTCE = number_format($b['balance_btce'], 2);
     $balanceBitfinex = number_format($b['balance_bitfinex'], 2);
     
     $combinedTotal = $b['balance_bitfinex'];

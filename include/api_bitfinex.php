@@ -6,6 +6,7 @@ class Bitfinex {
     private $base_url = 'https://api.bitfinex.com';
     private $debug = 0;
     private $bitfinexTrading = 1;
+    private $isMarginAvailable = 1;
     private $side;
 	
     public function __construct($api_key, $api_secret, $api_version = 'v1') {
@@ -13,19 +14,24 @@ class Bitfinex {
         $this->api_secret = $api_secret;
         $this->api_version = $api_version;
         $this->debug = $_GET['debug']; //debug mode
+        $this->isMarginAvailable = $this->isMarginAvailable();
     }
        
     public function new_order($data) { // to add new order
         $data['request']='/'.$this->api_version.'/order/new';
 
-        if($this->debug == 0) {
-            if($this->bitfinexTrading == 1)
-                return $this->process_request($data);
+        if($this->debug == 0) { //debug mode is off
+            if($this->bitfinexTrading == 1) { //trading is set to on
+                if($this->isMarginAvailable == 1) //if margin is available for trading
+                    return $this->process_request($data);
+                else 
+                    return 'No balance to trade';
+            }
             else 
-                return ' Bitfinex trading is OFF';
+                return 'Bitfinex trading is OFF';
         }
         else 
-            return ' No trade in debug mode';
+            return 'Debug mode is on';
     }
     
     public function margin_long_pos($symbol, $latestPrice, $posAmt) { // to add new order
@@ -84,8 +90,29 @@ class Bitfinex {
         return $this->process_request($data);
     }
 
+    //check if bitfinex trading is turned on in the db
     public function isBitfinexTrading($bitfinexTrading) {
         $this->bitfinexTrading = $bitfinexTrading;
+    }
+    
+    //check if there's margin available for trading
+    public function isMarginAvailable() {
+        $acctFunds = $this->get_balances(); 
+        $acctMargin = $this->margin_infos(); 
+
+        //funds in margin balance
+        $balanceBTC = $acctFunds[4]['amount'];
+        $balanceLTC = $acctFunds[5]['amount'];
+        $balanceUSD = $acctFunds[8]['amount'];
+
+        $marginUSD = $acctMargin[0]['margin_limits'][0]['tradable_balance'];
+        
+        if($marginUSD > $balanceUSD) {
+            return 1;
+        }
+        else {
+            return 0;
+        }
     }
  
     public function get_side() {
@@ -149,12 +176,6 @@ class Bitfinex {
             'X-BFX-PAYLOAD: ' . $payload,
             'X-BFX-SIGNATURE: ' . $signature
         );
-    }
-	 
-    public function claim_positions($data) // to claim positions in BTC/LTC
-    {
-            $data['request']='/'.$this->api_version.'/position/claim';   
-            return $this->process_request($data);
     }
     
 }

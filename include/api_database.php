@@ -7,6 +7,8 @@ class Database {
     private $candle_60;
     private $recorded_ATH;    
     private $recorded_ATL;
+    private $currency;
+    private $price_field;
     private $context = array(
         'tradeDataTable' => 'api_trade_data',
         'optionsTable' => 'api_options',
@@ -20,7 +22,7 @@ class Database {
         $this->db = $db; //database connection object
     }
     
-    public function get_options() { //get trading options from api_options
+    public function get_options($exchange = 'bitfinex') { //get trading options from api_options
         
         $queryO = 'SELECT * FROM '.$this->context['optionsTable'].' ORDER BY opt';
         $resultO = $this->db->query($queryO);
@@ -28,6 +30,9 @@ class Database {
         foreach($resultO as $opt) { 
             $bitfinexOption[$opt['opt']] = $opt['setting'];
         }
+        $this->currency = $bitfinexOption['bitfinex_currency'];
+        $this->price_field = $exchange.'_'.$this->currency;
+        
         return $bitfinexOption;
     }
     
@@ -35,8 +40,8 @@ class Database {
 
         $candle_1_to_24 = array(); //prices of candles 1 to 24 
         
-        //get prices for 60 candles (30 hours)
-        $queryT = 'SELECT * FROM '.$this->context['pricesTable30m'].' WHERE count <= 60 ORDER BY count desc';
+        //get prices for 70 candles (35 hours)
+        $queryT = 'SELECT * FROM '.$this->context['pricesTable2h'].' WHERE count <= 70 ORDER BY count desc';
         $resultT = $this->db->query($queryT);
 
         foreach($resultT as $row) { 
@@ -45,9 +50,6 @@ class Database {
             }
             else if($row['count'] == 24) {
                 $this->candle_24 = $row[$price_field]; //least recent candle
-            }
-            else if($row['count'] == 60) {
-                $this->candle_60 = $row[$price_field]; //least recent candle
             }
             
             //get the ATH and ATL for 24 candles
@@ -95,14 +97,14 @@ class Database {
         }
         
         $smaR = $emaR = 0;
-        for($count = 1; $count < 60; $count++) {//go through all candles
+        for($count = 1; $count < 70; $count++) {//go through all candles
             
             $bitfinex_btc = $array[$count]['bitfinex_btc'];
             
             if($count >= $R) { 
                 //get only last R prices from array
-                $last_10 = array_slice($arrayPrice, $count-$R, $R, true);
-                $smaR = array_sum ($last_10)/$R; //average of R prices = SMA
+                $lastR = array_slice($arrayPrice, $count-$R, $R, true);
+                $smaR = array_sum ($lastR)/$R; //average of R prices = SMA
 
                 if($emaR == 0) $emaR = $smaR; 
                 else $emaR = $k * ($bitfinex_btc - $emaR) + $emaR; //formula for EMA
@@ -115,6 +117,33 @@ class Database {
         }
         
         return $emaR;
+    }
+    
+    public function isGreen ($candleN) { //did the price increase from 1 candle ago
+        $price_field = $this->price_field;
+        
+        $queryT = 'SELECT * FROM '.$this->context['pricesTable30m'].' WHERE count = "'.$candleN.'" LIMIT 1';
+        $resultT = $this->db->query($queryT);
+
+        foreach($resultT as $p1) { $first = $p1[$price_field]; }
+        
+        $queryT = 'SELECT * FROM '.$this->context['pricesTable30m'].' WHERE count = "'.($candleN+1).'" LIMIT 1';
+        $resultT = $this->db->query($queryT);
+        
+        foreach($resultT as $p2) { $second = $p2[$price_field]; }
+        
+        $diff = $first - $second; 
+        
+        //echo ' '.$diff;
+        if($diff > 0) { //price rose
+            return 1;
+        }
+        else if ($diff < 0) { //price dropped
+            return 0;
+        }
+        else { //price stayed the same
+            return -1;
+        }
     }
     
     /*
@@ -149,7 +178,7 @@ class Database {
         'X-Mailer: PHP/' . phpversion();
 
         $emailTo = '17182136574@tmomail.net';
-        $mailSent = mail($emailTo, 'Trade', $sendEmailBody, $headers);
+        $mailSent = mail($emailTo, 'Bitfinex', $sendEmailBody, $headers);
 
         if($mailSent) {
             $subject = 'Text alert sent';

@@ -46,7 +46,7 @@ date_default_timezone_set ( 'America/New_York' );
 $time = date('h:i a', time());
 
 //shift all prices down 1 count
-$upd = 'UPDATE '.$context['pricesTable'].'
+$upd = 'UPDATE '.$context['pricesTable2h'].'
 JOIN (SELECT * FROM api_prices AS old) 
 AS old ON old.count = api_prices.count-1
 SET api_prices.btce_btc = old.btce_btc, api_prices.btce_ltc = old.btce_ltc, 
@@ -56,8 +56,8 @@ api_prices.time = old.time';
 $db->exec($upd);
 
 echo 'time: '.$time." \n";
-echo '[BTC-E] [BTC: '.$btcPrice.'] [LTC: '.$ltcPrice.']'."\n";
-echo '[Bitfinex] [BTC: '.$bitfinex_btc.'] [LTC: '.$bitfinex_ltc.']'."\n";
+echo 'BTC-E | BTC: '.$btcPrice.' | LTC: '.$ltcPrice.''."\n";
+echo 'Bitfinex | BTC: '.$bitfinex_btc.' | LTC: '.$bitfinex_ltc.''."\n";
 
 //if for some reason, the price is not recorded - ie. the website is down
 if($btcPrice == 0) { //if btc-e crashes, get price from bitfinex
@@ -72,7 +72,7 @@ if($bitfinex_btc == 0) { //if bitfinex crashes, get price from btc-e
 
 
 //input latest prices into count = 1
-$upd = "UPDATE ".$context['pricesTable']." SET time = now(), 
+$upd = "UPDATE ".$context['pricesTable2h']." SET time = '".date("Y-m-d H:i:s", time())."', 
     btce_btc = '$btcPrice', 
     btce_ltc = '$ltcPrice', 
     bitfinex_btc = '$bitfinex_btc',        
