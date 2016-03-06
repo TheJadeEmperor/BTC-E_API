@@ -63,12 +63,15 @@ function getPriceData($pair) {
 }
 
 $urlCexLTC = 'https://cex.io/api/ticker/LTC/USD';
-$urlCexBTC = 'https://cex.io/api/ticker/LTC/USD';
+$urlCexBTC = 'https://cex.io/api/ticker/BTC/USD';
 
  
-$json = retrieveJSON($urlCexBTC);
-echo $json['last'];
+$cexBTC = retrieveJSON($urlCexBTC);
+echo $cexBTC['last'].' ';
     
+$cexLTC = retrieveJSON($urlCexLTC);
+echo $cexLTC['last'];
+
 /*
 $candleData = new Database($db);
 $candleData->get_options();
