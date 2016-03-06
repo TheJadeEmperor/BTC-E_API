@@ -190,44 +190,11 @@
 
 <table>
     <tr valign="top">
-        <td width="">
+        <td>
     
             <form method="POST">
-                <!--
+           
             <div id="login-overlay" class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h4 class="modal-title" id="myModalLabel"><b>BTC-E Options</b></h4><br />
-
-
-                        <table class="table" border="0">
-                        <tr>
-                            <td>BTC-E Trading On/Off</td>
-                            <td>
-                                <?=$btc_e_trading_dropdown?>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>BTC-E Currency</td>
-                            <td>
-                                <?=$btc_e_currency_dropdown?>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>% of Balance to Trade</td>
-                            <td>
-                                <input type="text" name="btc_e_balance" value="<?=$btc_e_balance?>" /> (not used)
-                            </td>
-                        </tr>
-                        </table>
-              
-                        <input type="submit" class="btn btn-success btn-block" name="submit_options" value="Update" />
-                </div>
-            </div>
-        </div>
-                -->
-        
-        <div id="login-overlay" class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
                     <h4 class="modal-title" id="myModalLabel"><b>Bitfinex Options</b></h4><br />
@@ -245,7 +212,7 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td>Bitfinex Balance</td>
+                                <td>Bitfinex Balance %</td>
                                 <td>
                                     <input type="text" name="bitfinex_balance" size="2" value="<?=$bitfinex_balance?>" />
                                 </td>
@@ -283,13 +250,17 @@
             &nbsp;
             <input type="button" class="btn btn-warning apiBalance" value="apiBalance" />
             
-            <h3>apiTrade Debug Mode</h3>
+            &nbsp;
+            <a href="https://mail.google.com/mail/u/0/?shva=1#label/Cron+Jobs" target="_blank"><input type="button" class="btn btn-warning" value="GMail Cron Jobs" /></a>
+            
+            
+            <h4>apiTrade Debug Mode</h4>
             
             <a href="apiTradeBitfinex.php?debug=1" target="_blank"><input type="button" class="btn btn-warning" value="apiTradeBitfinex" /></a>  &nbsp;
             
-            <a href="apiTestBitfinex.php?debug=1" target="_blank"><input type="button" class="btn btn-warning" value="apiTestBitfinex" /></a> &nbsp;
+            <input type="button" class="btn btn-warning apiTradeData" value="apiTradeData" /> &nbsp;
             
-            <input type="button" class="btn btn-warning apiTradeData" value="apiTradeData" />
+            <a href="backtest.php" target="_blank"><input type="button" class="btn btn-warning" value="Backtest" /></a> &nbsp;
             
                 </div>
             </div>
@@ -336,13 +307,6 @@
             <table class="">
                 <tr valign="top">
                     <td>
-                        
-                        <a href="https://bitcoinwisdom.com/markets/btce/btcusd" target="_blank">/markets/btce/btcusd</a>
-                        <br /><br />
-                        
-                        <a href="https://bitcoinwisdom.com/markets/btce/ltcusd" target="_blank">/markets/btce/ltcusd</a>
-                        
-                        <br /><br />
                         
                         <a href="https://bitcoinwisdom.com/markets/bitfinex/btcusd" target="_blank">/markets/bitfinex/btcusd</a>
                          

@@ -3,26 +3,85 @@ include('include/api_database.php');
 include('include/api_bitfinex.php');
 include('include/config.php');
 
-$bitfinexAPI = new Bitfinex(BITFINEX_API_KEY, BITFINEX_API_SECRET);
-$bitfinexAPI->isMarginAvailable();
 
 
+function priceRow($pair) {
+    
+    global $allPrices;
+    
+    return '<td><a href="https://btc-e.com/exchange/'.$pair.'" target="_blank">'.$allPrices[$pair]['last'].'</a></td>
+        <td> '.$allPrices[$pair]['high'].' </td>
+        <td> '.$allPrices[$pair]['low'].'</td>';
+}
 
-$price_field = 'bitfinex_btc';
 
+function priceTable($allPrices) {
+    echo '<table border="1" class="table">
+            <tr>
+                <td>Pair</td>
+                <td>Last Price</td>
+                <td>24h High</td>
+                <td>24h Low</td>
+            </tr>
+            <tr>
+                <td>BTC/USD</td>
+                '.priceRow('btc_usd').'
+            </tr>
+            <tr>
+                <td>LTC/USD </td>
+                '.priceRow('ltc_usd').'
+            </tr>
+            <tr>
+                <td>LTC/BTC </td>
+                '.priceRow('ltc_btc').'            
+            </tr>
+            <tr>
+                <td>EUR/USD </td>
+                '.priceRow('eur_usd').'            
+            </tr>
+        </table>';
+}
+
+
+function retrieveJSON($url) {
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_URL, $url);
+    $result = curl_exec($ch);
+    curl_close($ch);
+
+    $json = json_decode($result, true);
+    return $json;
+}
+
+//get price for BTC-E currency pair
+function getPriceData($pair) {
+    global $public_api;
+    $json = retrieveJSON($public_api.'ticker/'.$pair);        
+    return $json[$pair];
+}
+
+$urlCexLTC = 'https://cex.io/api/ticker/LTC/USD';
+$urlCexBTC = 'https://cex.io/api/ticker/LTC/USD';
+
+ 
+$json = retrieveJSON($urlCexBTC);
+echo $json['last'];
+    
+/*
 $candleData = new Database($db);
 $candleData->get_options();
-$candleData->get_candles($price_field);
+$candleData->get_candles('bitfinex_btc');
+$diff = $candleData->get_percent();
+echo $diff;
+*/
 
+//get ema10 and ema21
+$k21 = 2/(21+1); //smoothing constant - 21 day
+$k10 = 2/(10+1); //smoothing constant - 10 day
 
-$isGreen1 = $candleData->isGreen('1');
-$isGreen2 = $candleData->isGreen('2');
-
-
-$k21 = 2/(21+1);
-$k10 = 2/(10+1);
-
-$q = 'select time, bitfinex_btc from api_prices order by count desc';
+$q = 'SELECT date_format(time, "%m/%d/%Y %h:%i %p") as time, bitfinex_btc from api_prices order by count desc';
 $res = $db->query($q);
 
 $array = array();
@@ -32,11 +91,9 @@ foreach($res as $row) {
     array_push($arrayPrice, $row['bitfinex_btc']);
 }
 
-
 $ema10 = $ema21 = 0;
-for($count=1; $count<70; $count++) {
+for($count = 1; $count < 70; $count++) {
 
-    //$array[$count]['time'] = date("Y-m-d H:i:s", strtotime('+2 hours', strtotime($array[$count]['time'])) );
     $bitfinex_btc = $array[$count]['bitfinex_btc'];
     if($count > 9) {
         $last_10 = array_slice($arrayPrice, $count-10, 10, true);
@@ -79,65 +136,6 @@ $bitfinexEMA = '<table class="table">
 '.$emaTable.'
 </table>';
 
-
-function priceRow($pair) {
-    
-    global $allPrices;
-    
-    return '<td> <a href="https://btc-e.com/exchange/'.$pair.'" target="_blank">'.$allPrices[$pair]['last'].'</a> </td>
-            <td> '.$allPrices[$pair]['buy'].' / '.$allPrices[$pair]['sell'].' </td>
-            <td> '.$allPrices[$pair]['high'].' / '.$allPrices[$pair]['low'].'</td>';
-}
-
-
-function priceTable($allPrices) {
-    echo '
-        <table border="1" class="table">
-            <tr>
-                <td>Pair</td>
-                <td>Last Price</td>
-                <td>Buy/Sell</td>
-                <td>High/Low</td>
-            </tr>
-            <tr>
-                <td>BTC/USD</td>
-                '.priceRow('btc_usd').'
-            </tr>
-            <tr>
-                <td> LTC/USD </td>
-                '.priceRow('ltc_usd').'
-            </tr>
-            <tr>
-                <td> LTC/BTC </td>
-                '.priceRow('ltc_btc').'            
-            </tr>
-            <tr>
-                <td> EUR/USD </td>
-                '.priceRow('eur_usd').'            
-            </tr>
-        </table>';
-}
-
-
-function retrieveJSON($url) {
-    $ch = curl_init();
-    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch, CURLOPT_URL, $url);
-    $result = curl_exec($ch);
-    curl_close($ch);
-
-    $json = json_decode($result, true);
-    return $json;
-}
-
-//get price for BTC-E currency pair
-function getPriceData($pair) {
-    global $public_api;
-    $json = retrieveJSON($public_api.'ticker/'.$pair);        
-    return $json[$pair];
-}
-
 global $public_api;
 $public_api = 'https://btc-e.com/api/3/';
 
@@ -155,20 +153,23 @@ if($_POST['submit_options']) {
     $bitfinex_trading = $_POST['bitfinex_trading'];
     $bitfinex_sl_range = $_POST['bitfinex_sl_range'];
     $bitfinex_pd_percent = $_POST['bitfinex_pd_percent'];
+    $bitfinex_pl_exit = $_POST['bitfinex_pl_exit'];
     
     //do multiple queries in one call
     $db->setAttribute(PDO::ATTR_EMULATE_PREPARES, 0);
     
-    $queryO = 'UPDATE '.$context['optionsTable'].' set
+    $queryO = 'UPDATE '.$context['optionsTable'].' SET
             setting = "'.$bitfinex_currency.'" WHERE opt = "bitfinex_currency";
-        UPDATE '.$context['optionsTable'].' set
+        UPDATE '.$context['optionsTable'].' SET
             setting = "'.$bitfinex_balance.'" WHERE opt = "bitfinex_balance";
-        UPDATE '.$context['optionsTable'].' set
+        UPDATE '.$context['optionsTable'].' SET
             setting = "'.$bitfinex_trading.'" WHERE opt = "bitfinex_trading";
-        UPDATE '.$context['optionsTable'].' set
+        UPDATE '.$context['optionsTable'].' SET
             setting = "'.$bitfinex_sl_range.'" WHERE opt = "bitfinex_sl_range";
-        UPDATE '.$context['optionsTable'].' set
+        UPDATE '.$context['optionsTable'].' SET
             setting = "'.$bitfinex_pd_percent.'" WHERE opt = "bitfinex_pd_percent";
+        UPDATE '.$context['optionsTable'].' SET
+            setting = "'.$bitfinex_pl_exit.'" WHERE opt = "bitfinex_pl_exit";
     ';
    
     try {
@@ -207,7 +208,7 @@ $bitfinex_currency_dropdown = '<select name="bitfinex_currency">
 
 
 $price_change = array();
-$queryP = $db->query('SELECT * FROM '.$context['pricesTable2h'].' order by count desc'); 
+$queryP = $db->query('SELECT *, date_format(time, "%m/%d/%Y %h:%i %p") as time FROM '.$context['pricesTable2h'].' order by count desc'); 
 
 foreach($queryP as $priceRow) { 
     array_push($price_change, $priceRow);
@@ -255,7 +256,7 @@ $bitfinexHistory = '<table class="table">
 
 
 //get data from api_trade_data 
-$queryTD = $db->query('SELECT *, date_format(last_updated, "%m/%d/%Y %h:%i %p") as last_updated FROM api_trade_data order by exchange'); 
+$queryTD = $db->query('SELECT *, date_format(last_updated, "%m/%d/%Y %h:%i %p") as updated_last FROM api_trade_data order by last_updated desc'); 
 
 foreach($queryTD as $td) { 
     $apiTradeData .= '<tr>
@@ -264,7 +265,7 @@ foreach($queryTD as $td) {
         <td>'.$td['last_action'].'</td>
         <td>'.$td['last_price'].'</td>
         <td>'.$td['trade_signal'].'</td>
-        <td>'.$td['last_updated'].'</td></tr>';
+        <td>'.$td['updated_last'].'</td></tr>';
 }
 
 $apiTradeData = '<table class="table">
@@ -281,24 +282,47 @@ $apiTradeData = '<table class="table">
 //get daily balance info
 $queryB = $db->query('SELECT *, date_format(date, "%m/%d/%Y") as date FROM api_balance order by date desc');
 
+$bCount = 1;
 foreach($queryB as $b) {
     $balanceBitfinex = number_format($b['balance_bitfinex'], 2);
     
-    $combinedTotal = $b['balance_bitfinex'];
-    $combinedTotal = number_format($combinedTotal, 2);
-    $apiBalance .= '<tr>
+    if($bCount < 30) {
+        $col1 .= '<tr>
         <td>'.$b['date'].'</td>
         <td>$'.$balanceBitfinex.'</td>
-        <td>$'.$combinedTotal.'</td>
         </tr>';
+    }
+    else {
+        $col2 .= '<tr>
+        <td>'.$b['date'].'</td>
+        <td>$'.$balanceBitfinex.'</td>
+        </tr>';
+
+    }
+    
+    $bCount++;
 }
 
-$apiBalance = '<table class="table">
-    <tr>
-        <td>Date</td>
-        <td>Bitfinex (USD)</td>
-        <td>Total</td>
-    </tr>'.$apiBalance.'</table>';
+$apiBalance = '<table>
+    <tr valign="top">
+        <td>
+            <table class="table">
+                <tr>
+                    <td>Date</td>
+                    <td>Bitfinex</td>
+                </tr>'.$col1.'
+            </table>
+        </td>
+        <td>
+            <table class="table">
+                <tr>
+                    <td>Date</td>
+                    <td>Bitfinex</td>
+                </tr>'.$col2.'
+            </table>
+        </td>
+    </tr>
+</table>';
 
 
 include('index.html');

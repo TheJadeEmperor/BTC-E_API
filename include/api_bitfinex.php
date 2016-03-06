@@ -107,7 +107,7 @@ class Bitfinex {
 
         $marginUSD = $acctMargin[0]['margin_limits'][0]['tradable_balance'];
         
-        if($marginUSD > $balanceUSD) {
+        if($marginUSD > 1.0) {
             return 1;
         }
         else {
