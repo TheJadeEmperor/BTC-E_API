@@ -62,23 +62,16 @@ function getPriceData($pair) {
     return $json[$pair];
 }
 
-$urlCexLTC = 'https://cex.io/api/ticker/LTC/USD';
-$urlCexBTC = 'https://cex.io/api/ticker/BTC/USD';
 
- 
-$cexBTC = retrieveJSON($urlCexBTC);
-echo $cexBTC['last'].' ';
-    
-$cexLTC = retrieveJSON($urlCexLTC);
-echo $cexLTC['last'];
-
-/*
 $candleData = new Database($db);
 $candleData->get_options();
 $candleData->get_candles('bitfinex_btc');
 $diff = $candleData->get_percent();
-echo $diff;
-*/
+
+$percentDiff_12 = $candleData->get_percent(); //trend of 12 candles (6 hours)
+$percentDiff_12 = number_format($percentDiff_12, 2);
+//echo $percentDiff_12;
+
 
 //get ema10 and ema21
 $k21 = 2/(21+1); //smoothing constant - 21 day
@@ -197,6 +190,7 @@ foreach($queryO as $opt) {
 $bitfinex_sl_range = $bitfinexOption['bitfinex_sl_range'];
 $bitfinex_balance = $bitfinexOption['bitfinex_balance'];
 $bitfinex_pd_percent = $bitfinexOption['bitfinex_pd_percent'];
+$bitfinex_pl_exit = $bitfinexOption['bitfinex_pl_exit'];
 
 
 $bitfinex_trading_dropdown = '<select name="bitfinex_trading">
@@ -211,7 +205,7 @@ $bitfinex_currency_dropdown = '<select name="bitfinex_currency">
 
 
 $price_change = array();
-$queryP = $db->query('SELECT *, date_format(time, "%m/%d/%Y %h:%i %p") as time FROM '.$context['pricesTable2h'].' order by count desc'); 
+$queryP = $db->query('SELECT *, date_format(time, "%m/%d/%Y %h:%i %p") as time FROM '.$context['pricesTable30m'].' order by count desc'); 
 
 foreach($queryP as $priceRow) { 
     array_push($price_change, $priceRow);
@@ -220,7 +214,7 @@ foreach($queryP as $priceRow) {
 $c = 70;
 foreach($price_change as $i => $p) {
     
-    $exchangeCurrency = array('btce_btc', 'btce_ltc', 'bitfinex_btc', 'bitfinex_ltc');
+    $exchangeCurrency = array('cex_btc', 'cex_ltc', 'bitfinex_btc', 'bitfinex_ltc');
             
     foreach($exchangeCurrency as $ec) {
         if($price_change[$i-1][$ec] != 0) { //previous price is recorded
@@ -244,6 +238,13 @@ foreach($price_change as $i => $p) {
         <td>'.number_format($p['bitfinex_ltc'], 4).' '.$diff['bitfinex_ltc'].'</td>
     </tr>';
     
+    $cexHistory .= '<tr>
+        <td>'.$p['time'].'</td>
+        <td>'.$c.'</td>
+        <td>'.number_format($p['cex_btc'], 4).' '.$diff['cex_btc'].'</td>
+        <td>'.number_format($p['cex_ltc'], 4).' '.$diff['cex_ltc'].'</td>
+    </tr>';
+    
     $c--;
 }
 
@@ -255,6 +256,15 @@ $bitfinexHistory = '<table class="table">
     <td>bitfinex_ltc</td>
     </tr>
 '.$bitfinexHistory.'</table>';
+
+
+$cexHistory = '<table class="table">
+    <tr><td>time</td>
+    <td>candle #</td>
+    <td>cex_btc</td>
+    <td>cex_ltc</td>
+    </tr>
+'.$cexHistory.'</table>';
 
 
 

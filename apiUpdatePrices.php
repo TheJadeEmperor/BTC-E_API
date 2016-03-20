@@ -1,6 +1,9 @@
 <?php
 include('include/config.php');
 
+date_default_timezone_set ( 'America/New_York' );
+$time = date('h:i a', time());
+
 function retrieveJSON($url) {
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
@@ -13,70 +16,63 @@ function retrieveJSON($url) {
     return $json;
 }
 
-//get last price for BTC-E currency pair
-function getLastPrice($pair) {
-    global $public_api;
-    $json = retrieveJSON($public_api.'ticker/'.$pair);        
-    return $json[$pair]['last'];
+function getBitfinexPrice($currency) {
+    $urlTickerPrice = 'https://api.bitfinex.com/v1/pubticker/'.$currency.'usd';
+    $urlJSON = file_get_contents($urlTickerPrice);
+    $currentPrice = json_decode($urlJSON);
+    return $currentPrice->last_price;
+} 
+
+function getCEXPrice($currency) {
+    $urlTickerPrice = 'https://cex.io/api/ticker/'.$currency.'/USD';  
+    $urlJSON = retrieveJSON($urlTickerPrice);
+    return $urlJSON['last'];
 }
 
-global $public_api;
-$public_api = 'https://btc-e.com/api/3/';
-
-//BTC-E prices
-$btcPrice = getLastPrice('btc_usd');
-$ltcPrice = getLastPrice('ltc_usd');
 
 //Bitfinex prices
-$urlBTC = 'https://api.bitfinex.com/v1/pubticker/btcusd';
-$urlLTC = 'https://api.bitfinex.com/v1/pubticker/ltcusd';
-    
-$urlBTC = file_get_contents($urlBTC);
-$urlLTC = file_get_contents($urlLTC);
+$bitfinexPriceBTC = getBitfinexPrice('btc');
+$bitfinexPriceLTC = getBitfinexPrice('ltc');
 
-$allPrices['bitfinex_btc'] = json_decode($urlBTC);
-$allPrices['bitfinex_ltc'] = json_decode($urlLTC);
+//CEX.IO prices
+$cexPriceBTC = getCEXPrice('BTC');
+$cexPriceLTC = getCEXPrice('LTC');
+//echo $cexPriceBTC.' '.$cexPriceLTC;
 
-//Bitfinex prices
-$bitfinex_btc = $allPrices['bitfinex_btc']->last_price;
-$bitfinex_ltc = $allPrices['bitfinex_ltc']->last_price;
-
-
-date_default_timezone_set ( 'America/New_York' );
-$time = date('h:i a', time());
+// exit; 
 
 //shift all prices down 1 count
-$upd = 'UPDATE '.$context['pricesTable2h'].'
-JOIN (SELECT * FROM api_prices AS old) 
-AS old ON old.count = api_prices.count-1
-SET api_prices.btce_btc = old.btce_btc, api_prices.btce_ltc = old.btce_ltc, 
-api_prices.bitfinex_btc = old.bitfinex_btc, api_prices.bitfinex_ltc = old.bitfinex_ltc, 
-api_prices.time = old.time';
+$upd = 'UPDATE '.$context['pricesTable2h'].' as new
+JOIN (SELECT * FROM '.$context['pricesTable2h'].' AS old) 
+AS old ON old.count = new.count-1
+SET new.btce_btc = old.btce_btc, new.btce_ltc = old.btce_ltc, 
+new.bitfinex_btc = old.bitfinex_btc, new.bitfinex_ltc = old.bitfinex_ltc, 
+new.cex_btc = old.cex_btc, new.cex_ltc = old.cex_ltc, 
+new.time = old.time';
 
 $db->exec($upd);
 
 echo 'time: '.$time." \n";
-echo 'BTC-E | BTC: '.$btcPrice.' | LTC: '.$ltcPrice.''."\n";
-echo 'Bitfinex | BTC: '.$bitfinex_btc.' | LTC: '.$bitfinex_ltc.''."\n";
+echo 'CEX.IO | BTC: '.$cexPriceBTC.' | LTC: '.$cexPriceLTC."\n";
+echo 'Bitfinex | BTC: '.$bitfinexPriceBTC.' | LTC: '.$bitfinexPriceLTC."\n";
 
 //if for some reason, the price is not recorded - ie. the website is down
-if($btcPrice == 0) { //if btc-e crashes, get price from bitfinex
-    $btcPrice = $bitfinex_btc;
-    $ltcPrice = $bitfinex_ltc;
+if($cexPriceBTC == 0) { //if cex.io crashes, get price from bitfinex
+    $cexPriceBTC = $bitfinexPriceBTC;
+    $cexPriceLTC = $bitfinexPriceBTC;
 }
 
-if($bitfinex_btc == 0) { //if bitfinex crashes, get price from btc-e
-    $bitfinex_btc = $btcPrice;
-    $bitfinex_ltc = $ltcPrice;
+if($bitfinexPriceBTC == 0) { //if bitfinex crashes, get price from cex.io
+    $bitfinexPriceBTC = $cexPriceBTC;
+    $bitfinexPriceBTC = $cexPriceLTC;
 }
-
 
 //input latest prices into count = 1
 $upd = "UPDATE ".$context['pricesTable2h']." SET time = '".date("Y-m-d H:i:s", time())."', 
-    btce_btc = '$btcPrice', 
-    btce_ltc = '$ltcPrice', 
-    bitfinex_btc = '$bitfinex_btc',        
-    bitfinex_ltc = '$bitfinex_ltc'
+    cex_btc = '$cexPriceBTC', 
+    cex_ltc = '$cexPriceLTC', 
+    bitfinex_btc = '$bitfinexPriceBTC',        
+    bitfinex_ltc = '$bitfinexPriceLTC'
     WHERE count = 1";
 
 $db->exec($upd);

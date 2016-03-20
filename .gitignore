@@ -1,5 +1,6 @@
 # Sensitive files
-/nbproject/private/
+/nbproject/
+/old/
 /include/config.php
 updates.rtf
 
@@ -217,6 +218,3 @@ pip-log.txt
 
 #Translations
 *.mo
-
-#Mr Developer
-.mr.developer.cfg

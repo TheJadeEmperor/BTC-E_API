@@ -5,7 +5,6 @@ class Database {
     private $candle_1;
     private $candle_12;
     private $candle_24;
-    //private $candle_60;
     private $recorded_ATH;    
     private $recorded_ATL;
     private $currency;
@@ -39,7 +38,7 @@ class Database {
     
     public function get_candles ($price_field) {
 
-        $candle_1_to_24 = array(); //prices of candles 1 to 24 
+        $candle_1_to_12 = array(); //prices of candles 1 to 24 
         
         //get prices for 70 candles (35 hours)
         $queryT = 'SELECT * FROM '.$this->context['pricesTable2h'].' WHERE count <= 70 ORDER BY count desc';
@@ -52,34 +51,21 @@ class Database {
             else if($row['count'] == 12) {
                 $this->candle_12 = $row[$price_field]; //least recent candle
             }
-            else if($row['count'] == 24) {
-                $this->candle_24 = $row[$price_field]; //least recent candle
-            }
-            
+          
             //get the ATH and ATL for 24 candles
-            if($row['count'] <= 24) {
-                array_push($candle_1_to_24, $row[$price_field]);
+            if($row['count'] <= 12) {
+                array_push($candle_1_to_12, $row[$price_field]);
             }
         }
 
-        $this->recorded_ATL = min($candle_1_to_24);
-        $this->recorded_ATH = max($candle_1_to_24);
+        $this->recorded_ATL = min($candle_1_to_12);
+        $this->recorded_ATH = max($candle_1_to_12);
         
         return $this->db->query($queryT);
     }
+ 
     
     public function get_percent_diff () {
-        
-        //price diff between 1st candle and last candle
-        $diff = $this->candle_1 - $this->candle_24;
-
-        //determine if trend is pump or dump
-        $percentDiff =  $diff/$this->candle_1 * 100;
-        
-        return $percentDiff;
-    }
-    
-    public function get_percent () {
         $candle_1 = $this->candle_1;
         $candle_12 = $this->candle_12;
         
@@ -136,6 +122,7 @@ class Database {
         return $emaR;
     }
     
+    
     public function isGreen ($candleN) { //did the price increase from 1 candle ago
         $price_field = $this->price_field;
         
@@ -182,11 +169,11 @@ class Database {
             last_action="'.$last_action_data['last_action'].'",
             last_price="'.$last_action_data['last_price'].'",            
             trade_signal="'.$last_action_data['trade_signal'].'",
-            last_updated="'.date('Y-m-d H:i:s', time()).'"
-            currency="'.$last_action_data['currency'].'", 
+            last_updated="'.date('Y-m-d H:i:s', time()).'",
+            currency="'.$last_action_data['currency'].'",
             exchange="bitfinex"';
-
-        $resultD = $this->db->query($queryD);
+    
+        $this->db->query($queryD);
     }
     
     public function sendMail($sendEmailBody) {

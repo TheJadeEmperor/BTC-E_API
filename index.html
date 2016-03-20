@@ -16,63 +16,13 @@
     }
 </style>
 <script>
-    function fillForm(id) {
-        //alert(id);
-        $.getJSON("<?=$read_call?>&id="+id+"", function( data ) {
-            
-            $.each( data, function( key, val ) {
-                if(data.hasOwnProperty(key))
-                    $('input[name='+key+']').val(val);
-
-                if(key == 'id') $('input[name=idButton]').val(val);
-
-                if(key == 'action') {
-                    $('select[name="action"]').find('option[value="'+val+'"]').attr("selected",true);
-                }
-                else if(key == 'pair') {
-                    $('select[name="pair"]').find('option[value="'+val+'"]').attr("selected",true);
-                }
-            });
-        });
-    }
-    
-    function deleteRow(id) {
-        if (confirm("Are you sure you want to delete record "+id+"?")) {
-            $.ajax({
-                type: "GET",
-                url: "<?=$delete_call?>&id="+id,
-                success: function() {
-                    alert('Deleted record '+id);
-                    location.reload();
-                }
-            })
-        }    
-    }
-    
-    function createRow() {
-        $.ajax({
-            type: "POST",
-            url: "<?=$create_call?>",
-            data: $('#updateForm').serialize(),
-            success: function(msg) {
-                alert('server msg: '+msg);
-                location.reload();
-            }
-        });
-    }
-    
-    function copyValue() {
-        var file = $("#file").val();
-        var subject = file.substring(5 ,file.length - 5);
-        $("#subject").val(subject);
-    }
- 
-    $(document).ready(function () {
+    $(document).ready(function () { //hide content for pop up windows
         $('#bitfinexEMA').hide();
         $('#bitfinexHistory').hide();
-        $('#btceHistory').hide();
+        $('#cexHistory').hide();
         $('#apiTradeData').hide();
         $('#apiBalance').hide();
+      
         
         $(".bitfinexHistory").click(function () {
             $("#bitfinexHistory").dialog({
@@ -96,8 +46,8 @@
         });
         
         
-        $(".btceHistory").click(function () {
-            $("#btceHistory").dialog({
+        $(".cexHistory").click(function () {
+            $("#cexHistory").dialog({
                 modal: true,
                 width: 880,
                 position: 'top',
@@ -116,7 +66,6 @@
                 }
             });
         });
-        
         
         
         $(".apiTradeData").click(function() {
@@ -214,19 +163,23 @@
                             <tr>
                                 <td>Bitfinex Balance %</td>
                                 <td>
-                                    <input type="text" name="bitfinex_balance" size="2" value="<?=$bitfinex_balance?>" />
+                                    <input type="text" name="bitfinex_balance" size="2" value="<?=$bitfinex_balance?>" />%
                                 </td>
                             </tr>
                             <tr>
                                 <td>Stop Loss Options</td>  
                             </tr>
                             <tr>
-                                <td>Stop Loss Range %</td>
-                                <td><input type="text" name="bitfinex_sl_range" size="2" value="<?=$bitfinex_sl_range?>" /></td>
+                                <td>Profit Exit</td>
+                                <td><input type="text" name="bitfinex_pl_exit" size="2" value="<?=$bitfinex_pl_exit?>" />$</td>
                             </tr>
-                            <tr>
+                        <!--    <tr>
+                                <td>Stop Loss Range %</td>
+                                <td><input type="text" name="bitfinex_sl_range" size="2" value="<?=$bitfinex_sl_range?>" />%</td>
+                            </tr>
+                            <tr>-->
                                 <td>Pump and Dump %</td>
-                                <td><input type="text" name="bitfinex_pd_percent" size="2" value="<?=$bitfinex_pd_percent?>" /></td>
+                                <td><input type="text" name="bitfinex_pd_percent" size="2" value="<?=$bitfinex_pd_percent?>" />%</td>
                             </tr>
                         </table>
                         <input type="submit" class="btn btn-success btn-block" name="submit_options" value="Update" />
@@ -246,13 +199,13 @@
             
             &nbsp;
             <input type="button" class="btn btn-warning bitfinexEMA" value="Bitfinex 2h EMA" />
+        
+            &nbsp;
+            <input type="button" class="btn btn-warning cexHistory" value="Cex 2h" />
+            
             
             &nbsp;
             <input type="button" class="btn btn-warning apiBalance" value="apiBalance" />
-            
-            &nbsp;
-            <a href="https://mail.google.com/mail/u/0/?shva=1#label/Cron+Jobs" target="_blank"><input type="button" class="btn btn-warning" value="GMail Cron Jobs" /></a>
-            
             
             <h4>apiTrade Debug Mode</h4>
             
@@ -261,6 +214,9 @@
             <input type="button" class="btn btn-warning apiTradeData" value="apiTradeData" /> &nbsp;
             
             <a href="backtest.php" target="_blank"><input type="button" class="btn btn-warning" value="Backtest" /></a> &nbsp;
+            
+            &nbsp;
+            <a href="https://mail.google.com/mail/u/0/?shva=1#label/Cron+Jobs" target="_blank"><input type="button" class="btn btn-warning" value="GMail Cron Jobs" /></a>
             
                 </div>
             </div>
@@ -300,14 +256,12 @@
             </pre>
             </div>
             
-            
             <div id="bitcoin_wisdom_links">
             <h3>Bitcoin Wisdom Links</h3>
             <pre class="xdebug-var-dump">
             <table class="">
                 <tr valign="top">
                     <td>
-                        
                         <a href="https://bitcoinwisdom.com/markets/bitfinex/btcusd" target="_blank">/markets/bitfinex/btcusd</a>
                          
                         <br /><br />
@@ -349,12 +303,12 @@
     </tr>
 </table>
 
-
 <p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p>
 
 <form id="priceTable" title="BTC-E Price Table">
     <?=priceTable($allPrices)?>
 </form>
+
 
 <form id="btceHistory" title="Price History">
     <?=$btceHistory?>
@@ -365,9 +319,11 @@
     <?=$bitfinexHistory?>
 </form>
 
+
 <form id="bitfinexEMA" title="Bitfinex EMA">
     <?=$bitfinexEMA?>
 </form>
+
 
 <form id="apiTradeData" title="apiTradeData">
     <?=$apiTradeData?>
@@ -376,4 +332,9 @@
 
 <form id="apiBalance" title="Daily Balances">
     <?=$apiBalance?>
+</form>
+
+
+<form id="cexHistory" title="Cex Price History">
+    <?=$cexHistory?>
 </form>
