@@ -177,13 +177,11 @@ class Database {
     }
     
     public function sendMail($sendEmailBody) {
-		global $emailTo;
-		global $textTo;
-		
         $headers = 'From: alerts@bestpayingsites.com' . "\r\n" .
         'Reply-To: alerts@bestpayingsites.com' . "\r\n" .
         'X-Mailer: PHP/' . phpversion();
 
+        $emailTo = '17182136574@tmomail.net';
         $mailSent = mail($emailTo, 'Bitfinex', $sendEmailBody, $headers);
 
         if($mailSent) {
@@ -192,11 +190,8 @@ class Database {
         else {
             $subject = 'Text alert NOT sent';
         }
-		
-		echo $emailTo.' '.$textTo;
 
-		
-        //$emailTo = 'louie.benjamin@gmail.com'; 
+        $emailTo = 'louie.benjamin@gmail.com'; 
         mail($emailTo, $subject, $sendEmailBody, $headers);
     }
 }
