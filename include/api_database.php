@@ -193,10 +193,7 @@ class Database {
             $subject = 'Text alert NOT sent';
         }
 		
-		echo $emailTo.' '.$textTo;
-
 		
-        //$emailTo = 'louie.benjamin@gmail.com'; 
         mail($emailTo, $subject, $sendEmailBody, $headers);
     }
 }
