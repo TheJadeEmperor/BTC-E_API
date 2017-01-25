@@ -15,326 +15,116 @@
         margin: 5px 20px;
     }
 </style>
-<script>
-    $(document).ready(function () { //hide content for pop up windows
-        $('#bitfinexEMA').hide();
-        $('#bitfinexHistory').hide();
-        $('#cexHistory').hide();
-        $('#apiTradeData').hide();
-        $('#apiBalance').hide();
-      
-        
-        $(".bitfinexHistory").click(function () {
-            $("#bitfinexHistory").dialog({
-                modal: true,
-                width: 880,
-                position: 'top',
-                show: {
-                    effect: "explode",
-                    duration: 500
-                },
-                hide: {
-                    effect: "explode",
-                    duration: 500
-                },
-                buttons: {
-                    Close: function() {
-                        $( this ).dialog( "close" );
-                    },                        
-                }
-            });
-        });
-        
-        
-        $(".cexHistory").click(function () {
-            $("#cexHistory").dialog({
-                modal: true,
-                width: 880,
-                position: 'top',
-                show: {
-                    effect: "explode",
-                    duration: 500
-                },
-                hide: {
-                    effect: "explode",
-                    duration: 500
-                },
-                buttons: {
-                    Close: function() {
-                        $( this ).dialog( "close" );
-                    },                        
-                }
-            });
-        });
-        
-        
-        $(".apiTradeData").click(function() {
-            $("#apiTradeData").dialog({
-                modal: true,
-                width: 800,
-                position: 'top',
-                show: {
-                    effect: "explode",
-                    duration: 500
-                },
-                hide: {
-                    effect: "explode",
-                    duration: 500
-                },
-                buttons: {
-                    Close: function() {
-                        $(this).dialog("close");
-                    }
-                }
-            })
-        })
-        
-        $(".apiBalance").click(function() {
-            $("#apiBalance").dialog({
-                modal: true,
-                width: 550,
-                position: 'top',
-                show: {
-                    effect: "explode",
-                    duration: 500
-                },
-                hide: {
-                    effect: "explode",
-                    duration: 500
-                },
-                buttons: {
-                    Close: function() {
-                        $(this).dialog("close");
-                    }
-                }
-            })
-        })
-        
-        $(".bitfinexEMA").click(function() {
-            $("#bitfinexEMA").dialog({
-                modal: true,
-                width: 750,
-                position: 'top',
-                show: {
-                    effect: "explode",
-                    duration: 500
-                },
-                hide: {
-                    effect: "explode",
-                    duration: 500
-                },
-                buttons: {
-                    Close: function() {
-                        $(this).dialog("close");
-                    }
-                }
-            })
-        })
-        
-    });
-    </script>
-</head>    
+</head>
 <body>
-<br />
 
-<table>
-    <tr valign="top">
-        <td>
-    
-            <form method="POST">
-           
-            <div id="login-overlay" class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title" id="myModalLabel"><b>Bitfinex Options</b></h4><br />
-                        <table class="table">
-                            <tr>
-                                <td>Bitfinex Trading</td>
-                                <td>
-                                    <?=$bitfinex_trading_dropdown?>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>Bitfinex Currency</td> 
-                                <td>
-                                    <?=$bitfinex_currency_dropdown?>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>Bitfinex Balance %</td>
-                                <td>
-                                    <input type="text" name="bitfinex_balance" size="2" value="<?=$bitfinex_balance?>" />%
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>Stop Loss Options</td>  
-                            </tr>
-                            <tr>
-                                <td>Profit Exit</td>
-                                <td><input type="text" name="bitfinex_pl_exit" size="2" value="<?=$bitfinex_pl_exit?>" />$</td>
-                            </tr>
-                        <!--    <tr>
-                                <td>Stop Loss Range %</td>
-                                <td><input type="text" name="bitfinex_sl_range" size="2" value="<?=$bitfinex_sl_range?>" />%</td>
-                            </tr>
-                            <tr>-->
-                                <td>Pump and Dump %</td>
-                                <td><input type="text" name="bitfinex_pd_percent" size="2" value="<?=$bitfinex_pd_percent?>" />%</td>
-                            </tr>
-                        </table>
-                        <input type="submit" class="btn btn-success btn-block" name="submit_options" value="Update" />
-                </div>
-            </div>
-        </div>
-        </form>
-    
-        <div id="login-overlay" class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title" id="myModalLabel"><b>View Prices History</b></h4><br />
-                    
-            <!--<input type="button" class="btn btn-info btceHistory" value="BTC-E 30m" />&nbsp;-->
- 
-            <input type="button" class="btn btn-warning bitfinexHistory" value="Bitfinex 2h" />
-            
-            &nbsp;
-            <input type="button" class="btn btn-warning bitfinexEMA" value="Bitfinex 2h EMA" />
-        
-            &nbsp;
-            <input type="button" class="btn btn-warning cexHistory" value="Cex 2h" />
-            
-            
-            &nbsp;
-            <input type="button" class="btn btn-warning apiBalance" value="apiBalance" />
-            
-            <h4>apiTrade Debug Mode</h4>
-            
-            <a href="apiTradeBitfinex.php?debug=1" target="_blank"><input type="button" class="btn btn-warning" value="apiTradeBitfinex" /></a>  &nbsp;
-            
-            <input type="button" class="btn btn-warning apiTradeData" value="apiTradeData" /> &nbsp;
-            
-            <a href="backtest.php" target="_blank"><input type="button" class="btn btn-warning" value="Backtest" /></a> &nbsp;
-            
-            &nbsp;
-            <a href="https://mail.google.com/mail/u/0/?shva=1#label/Cron+Jobs" target="_blank"><input type="button" class="btn btn-warning" value="GMail Cron Jobs" /></a>
-            
-                </div>
-            </div>
-        </div>
-    
-        </td>
-        <td width="30px"></td>
-        <td>
-      
-            <div id="bitfinex_links">
-            <h3>Bitfinex Links</h3>
+		<div id="links_to_charts">
+            <h3>Links to Charts</h3>
             <pre class="xdebug-var-dump">
             <table>
                 <tr valign="top">
                     <td>
-                        
-                        <a href="https://www.bitfinex.com/trading/index/btcusd" target="_blank">Margin BTC</a>
+		                
+                        <a href="http://coinmarketcap.com/currencies/views/all/" target="_blank">Coin Market cap</a>
                         <br /><br />
                         
-                        <a href="https://www.bitfinex.com/history/orders" target="_blank">Order History</a>
+                        <a href="http://bitcoinwisdom.com/markets/bitfinex/btcusd" target="_blank">Bitcoin Wisdom</a>
                         <br /><br />
                         
-                        <a href="https://www.bitfinex.com/account/api" target="_blank">API Keys</a>
+                        <a href="https://www.tradingview.com/chart/BTCUSD/" target="_blank">TradingView</a>
                     </td>
                     <td width="18px"></td>
-                    <td>
-                        <a href="https://www.bitfinex.com/account/deposit" target="_blank">Deposit Coins</a>
-                        <br /><br />
-                        
-                        <a href="https://www.bitfinex.com/account/withdraw" target="_blank">Withdraw Coins</a>
-                        <br /><br />
-                        
-                        <a href="https://www.bitfinex.com/managewallets" target="_blank">Manage Wallets</a>
-                    </td>
+                    
                 </tr>
                 </table>
             </pre>
             </div>
             
-            <div id="bitcoin_wisdom_links">
-            <h3>Bitcoin Wisdom Links</h3>
+            <div id="coinbase_links">
+            <h3>Coinbase Links</h3>
             <pre class="xdebug-var-dump">
             <table class="">
                 <tr valign="top">
                     <td>
-                        <a href="https://bitcoinwisdom.com/markets/bitfinex/btcusd" target="_blank">/markets/bitfinex/btcusd</a>
+                        <a href="https://www.coinbase.com/trade" target="_blank">Buy/Sell Screen</a>
                          
                         <br /><br />
                         
-                        <a href="https://bitcoinwisdom.com/markets/bitfinex/ltcusd" target="_blank">/markets/bitfinex/ltcusd</a>
+                        <a href="https://www.coinbase.com/accounts" target="_blank">Coinbase Funds</a>
                     </td>
                 </tr>
             </table>
             </pre>
                   
-            <div id="btc_e_links">
-            <h3>BTC-E Links</h3>
+            <div id="poloniex_links">
+            <h3>Poloniex Links</h3>
             <pre class="xdebug-var-dump">
             <table>
                 <tr valign="top">
                     <td>
-                        <a href="https://btc-e.com/" target="_blank">Main Site</a>
+                        <a href="https://poloniex.com/balances" target="_blank">Polo Funds</a>
+						
                         <br /><br />
-                        <a href="https://btc-e.com/profile#orders_history" target="_blank">Orders History</a>
+						
+                        <a href="https://poloniex.com/login" target="_blank">Polo Login</a>
+						
                         <br /><br />
-                        <a href="https://btc-e.com/profile#trade_history" target="_blank">Trade history</a> 
-                        <br /><br />                        
+                                        
                     </td>
-                    <td>
-                        <a href="https://btc-e.com/profile#funds" target="_blank">Account Funds</a> 
-                        <br /><br />
-                        <a href="https://btc-e.com/profile#funds/deposit_coin/1" target="_blank">Deposit Coins</a>
-                        <br /><br />
-                        <a href="https://btc-e.com/profile#funds/withdraw_coin/1" target="_blank">Withdraw Coins</a>
-                        <br /><br />
-                    </td>
+                   
                 </tr>
             </table>
             </pre>
             </div>
-            
-            
-        </td>
-    </tr>
-</table>
 
-<p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p>
-
-<form id="priceTable" title="BTC-E Price Table">
-    <?=priceTable($allPrices)?>
-</form>
+</body>
 
 
-<form id="btceHistory" title="Price History">
-    <?=$btceHistory?>
-</form>
 
+<form id="conditionTable" title="Poloniex Trade">
+    
+	<table>
+	<tr>
+		<th>Currency</th>
+		<th>Condition</th>
+		<th>Price</th>
+		<th>Action</th>
+		<th>Exchange</th>
+	</tr>
+	<tr>
+		<td>
+			<select name="currency">
+				<option>BTC/USDT</option>
+				<option>ETH/USDT</option>
+				<option>ETH/BTC</option>
+			</select>
+			
+			 
+		</td>
+		<td>
+			<select name="condition">
+				<option><=</option>
+				<option>>=</option>
+			</select>
+		</td>
+		<td>
+			<input type="text" name="price" />
+		</td>
+		<td>
+			<select name="action">
+				<option>Buy</option>
+				<option>Sell</option>
+				<option>Stop Loss</option>
+			</select>
+		</td>
+		<td>
+			<select name="exchange">
+				<option>Poloniex</option>
+			</select>
+		</td>
+	 
 
-<form id="bitfinexHistory" title="Price History">
-    <?=$bitfinexHistory?>
-</form>
-
-
-<form id="bitfinexEMA" title="Bitfinex EMA">
-    <?=$bitfinexEMA?>
-</form>
-
-
-<form id="apiTradeData" title="apiTradeData">
-    <?=$apiTradeData?>
-</form>
-
-
-<form id="apiBalance" title="Daily Balances">
-    <?=$apiBalance?>
-</form>
-
-
-<form id="cexHistory" title="Cex Price History">
-    <?=$cexHistory?>
+	</tr>
+	</table>
+	
 </form>

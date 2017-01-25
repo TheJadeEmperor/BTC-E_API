@@ -1,6 +1,5 @@
 <?php
 
-
 include('include/api_database.php');
 include('include/api_poloniex.php');
 include('include/config.php');
@@ -41,7 +40,7 @@ $USDT_ETH = $polo->get_ticker('USDT_ETH');
 
 
 <?
-exit;
+//exit;
 
-include('index1.html');
+include('index.html');
 ?>
