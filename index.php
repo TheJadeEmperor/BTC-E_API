@@ -4,6 +4,11 @@ include('include/api_database.php');
 include('include/api_poloniex.php');
 include('include/config.php');
 
+$create_call = 'include/ajax.php?action=create';
+$read_call = 'include/ajax.php?action=read';
+$update_call = 'include/ajax.php?action=update';
+$delete_call = 'include/ajax.php?action=delete';
+
 
 error_reporting(E_ALL & ~E_NOTICE & ~E_WARNING);
 
@@ -20,12 +25,7 @@ $USDT_ETH = $polo->get_ticker('USDT_ETH');
 //$candleData = new Database($db);
 //$candleData->sendMail();
 
-?>
 
-
-
-
-<?
 //exit;
 
 include('index.html');

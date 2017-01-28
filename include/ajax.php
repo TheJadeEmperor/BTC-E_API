@@ -1,11 +1,10 @@
 <?php
-include($dir.'functions.php');
 include($dir.'config.php');
 include($dir.'ez_sql_core.php');
 include($dir.'ez_sql_mysql.php');
 
 ///////////////////////////
-$tableName = 'credentials';
+$tableName = 'api_alerts';
 ///////////////////////////
 
 $id = $_REQUEST['id'];
@@ -55,8 +54,8 @@ switch($_GET['action']) {
         
     case 'create':
 	
-        $insert = "INSERT INTO $tableName (name, acct, priority, campaign, username, email, password, url, referralURL, extra) values (
-            '".$_REQUEST['name']."', '".$_REQUEST['acct']."', '".$_REQUEST['priority']."', '".$_REQUEST['campaign']."', '".$_REQUEST['username']."', '".$_REQUEST['email']."', '".$_REQUEST['password']."', '".$_REQUEST['url']."', '".$_REQUEST['referralURL']."', '".$_REQUEST['extra']."'
+        $insert = "INSERT INTO $tableName (currency, on_condition, price, action, exchange) values (
+            '".$_REQUEST['currency']."', '".$_REQUEST['on_condition']."', '".$_REQUEST['price']."', '".$_REQUEST['action']."', '".$_REQUEST['exchange']."' 
         )";
         
         $success = $db->query($insert);
