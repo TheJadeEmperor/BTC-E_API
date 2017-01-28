@@ -62,6 +62,8 @@
 			}
 		}
 		
+		
+		//requires the extension php_openssl to work
 		protected function retrieveJSON($URL) {
 			$opts = array('http' =>
 				array(
@@ -162,13 +164,16 @@
 		public function get_ticker($pair = "ALL") {
 			$pair = strtoupper($pair);
 			$prices = $this->retrieveJSON($this->public_url.'?command=returnTicker');
+			
 			if($pair == "ALL"){
 				return $prices;
-			}else{
+			}
+			else {
 				$pair = strtoupper($pair);
 				if(isset($prices[$pair])){
 					return $prices[$pair];
-				}else{
+				}
+				else {
 					return array();
 				}
 			}

@@ -4,10 +4,10 @@ include('include/api_database.php');
 include('include/api_poloniex.php');
 include('include/config.php');
 
-//$candleData = new Database($db);
-//$candleData->sendMail();
 
+error_reporting(E_ALL & ~E_NOTICE & ~E_WARNING);
 
+//requires the extension php_openssl to work
 $polo = new poloniex();
 
 
@@ -17,26 +17,12 @@ $USDT_BTC = $polo->get_ticker('USDT_BTC');
 
 $USDT_ETH = $polo->get_ticker('USDT_ETH');
 
-
+//$candleData = new Database($db);
+//$candleData->sendMail();
 
 ?>
 
-<pre class="xdebug-var-dump">
-<table>
-<tr>
-	<td>ETH/BTC </td>
-	<td><?=$BTC_ETH['last']; ?>
-</td>
-</tr>
-	<td>BTC/USDT </td>
-	<td> <?=$USDT_BTC['last'] ?> </td>
-</tr>
-</tr>
-	<td>ETH/USDT </td>
-	<td> <?=$USDT_ETH['last']?> </td>
-</tr>
-</table>
-</pre>
+
 
 
 <?

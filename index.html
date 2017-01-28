@@ -1,6 +1,6 @@
 <head>
 <!-- Latest compiled and minified CSS -->
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
 
 <!-- Optional theme -->
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
@@ -18,6 +18,31 @@
 </head>
 <body>
 
+<table>
+<tr valign="top">
+	<td>
+	
+		<!--<pre class="xdebug-var-dump1">-->
+			<table class="table">
+			<tr>
+				<td>ETH/BTC </td>
+				<td> <?=$BTC_ETH['last']; ?>
+			</td>
+			</tr>
+				<td>BTC/USDT </td>
+				<td> $<?=$USDT_BTC['last'] ?> </td>
+			</tr>
+			</tr>
+				<td>ETH/USDT </td>
+				<td> $<?=$USDT_ETH['last']?> </td>
+			</tr>
+			</table>
+		</pre>
+
+	</td>
+	<td width="100px"></td>
+	<td>
+	
 		<div id="links_to_charts">
             <h3>Links to Charts</h3>
             <pre class="xdebug-var-dump">
@@ -40,7 +65,7 @@
             </pre>
             </div>
             
-            <div id="coinbase_links">
+		<div id="coinbase_links">
             <h3>Coinbase Links</h3>
             <pre class="xdebug-var-dump">
             <table class="">
@@ -55,8 +80,9 @@
                 </tr>
             </table>
             </pre>
+		</div>
                   
-            <div id="poloniex_links">
+		<div id="poloniex_links">
             <h3>Poloniex Links</h3>
             <pre class="xdebug-var-dump">
             <table>
@@ -75,15 +101,24 @@
                 </tr>
             </table>
             </pre>
-            </div>
-
-</body>
+		</div>
 
 
 
-<form id="conditionTable" title="Poloniex Trade">
+</td>
+</tr>
+</table>
+
+<form id="tradeTable" title="Poloniex Trades">
+
+</form>
+
+
+
+<form id="conditionTable" title="Price Alerts">
     
-	<table>
+	<table class="table">
+	<thead class="thead-default">
 	<tr>
 		<th>Currency</th>
 		<th>Condition</th>
@@ -91,6 +126,7 @@
 		<th>Action</th>
 		<th>Exchange</th>
 	</tr>
+	</thead>
 	<tr>
 		<td>
 			<select name="currency">
@@ -128,3 +164,4 @@
 	</table>
 	
 </form>
+</body>
