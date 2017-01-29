@@ -159,14 +159,12 @@
 </script>
 </head>
 <body>
-
-
-<input type="button" class="createButton" value = "Add"/>
-
-<br />
- 
- 
 <div class="container">
+
+	<input type="button" class="createButton" value = "Add Alert"/>
+
+	<br /><br />
+	
 	<div class="row justify-content-md-center">
 		<div class="col">
 			<table class="table">
@@ -189,15 +187,35 @@
 			</tr>
 			</table>
 			
+			
 			<table class="table">
 				<thead class="thead-default">
-				<th>Currency</th>
-				<th>Condition</th>
-				<th>Price</th>
-				<th>Action</th>
+				<tr>
+					<th colspan="5">api_alerts Table <a href="cronSendAlerts.php"><input type="button"></a>
+					</th>
+				</tr>
+				<tr>
+					<th>Currency</th>
+					<th>Condition</th>
+					<th>Price</th>
+					<th>Exchange</th>
+				</tr>
 				</thead>
 				<tbody>
+				<?php
 				
+				foreach($condTable as $cond) {
+					
+					echo '<tr>
+					<td>'.$cond->currency.'</td>
+					<td>'.$cond->on_condition.'</td>
+					<td>'.$cond->price.'</td>
+					<td>'.$cond->exchange.'</td>
+				';
+				}
+
+
+				?>
 				</tbody>
 			</table>
 		</div>
