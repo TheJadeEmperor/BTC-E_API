@@ -72,13 +72,18 @@ foreach($condTable as $cond) {
 		}
 		else {
 			$extra = ' | will send ';
-			$tableData->sendMail($sendEmailBody);
+			$success = $tableData->sendMail($sendEmailBody);
 		}
 		
 		$queryA = 'UPDATE '.$tableName.' SET sent = "Yes" WHERE id='.$id;
-		$resultA = $db->query($queryA); 
-			//$db->debug();
+		$resultA = $db->query($queryA); //$db->debug();
 		
+		echo $success;
+		
+		$error = error_get_last();
+		echo $error["message"];
+		
+		$tableData->showMail();
 	}
 	
 	

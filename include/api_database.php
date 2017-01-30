@@ -67,6 +67,12 @@ class Database {
 		
         mail($emailTo, $subject, $sendEmailBody, $headers);
     }
+	
+	public function showMail() {
+		global $emailTo;
+		global $textTo;
+		echo $emailTo;
+	}
 }
 
 ?>
