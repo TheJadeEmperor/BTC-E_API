@@ -2,24 +2,18 @@
 class Database {
     
     private $db;
-    private $candle_1;
-    private $candle_12;
-    private $candle_24;
-    private $recorded_ATH;    
-    private $recorded_ATL;
-    private $currency;
-    private $price_field;
-    private $context = array(
+    
+	private $context = array(
 		'alertsTable' => 'api_alerts',
 		'tradesTable' => 'btc_trades',
-        'optionsTable' => 'api_options',
+        'optionsTable' => 'btc_options',
     );
     
 
     public function __construct($db) {
         $this->db = $db; //database connection object
     }
-    
+    /*
     public function get_options($exchange = 'bitfinex') { //get trading options from api_options
         
         $queryO = 'SELECT * FROM '.$this->context['optionsTable'].' ORDER BY opt';
@@ -27,13 +21,13 @@ class Database {
 
         foreach($resultO as $opt) { 
             $bitfinexOption[$opt['opt']] = $opt['setting'];
-        }
+        }0
         $this->currency = $bitfinexOption['bitfinex_currency'];
         $this->price_field = $exchange.'_'.$this->currency;
         
         return $bitfinexOption;
     }
-     
+     */
     
 	
     public function tradesTable() {
@@ -61,7 +55,7 @@ class Database {
         'Reply-To: alerts@bestpayingsites.com' . "\r\n" .
         'X-Mailer: PHP/' . phpversion();
 
-        $mailSent = mail($textTo, 'Bitfinex', $sendEmailBody, $headers);
+        $mailSent = mail($textTo, 'Alert', $sendEmailBody, $headers);
 
         if($mailSent) {
             $subject = 'Text alert sent';

@@ -23,11 +23,13 @@ $condTable = $tableData->alertsTable();
 
 foreach($condTable as $cond) {
 	
-	//format the currency for polo
+	$id = $cond->id;
 	$currencyDB = $cond->currency;
 	$onCondition = $cond->on_condition;
 	$onPrice = floatval($cond->price);
+	$sent = $cond->sent;
 	
+	//format the currency for polo
 	$pieces =  explode('/', $currencyDB);
 	
 	$currencyPolo = $pieces[1].'_'.$pieces[0];
@@ -41,35 +43,53 @@ foreach($condTable as $cond) {
 	//if conditions are right, send email and text
 	if($onCondition == '>=') {
 		if($currentPrice >= $onPrice) {
-			echo 'true';
+			$result = 'true';
 		}
 		else {
-			echo 'false';
+			$result = 'false';
 		}
 	}
 	else if ($onCondition == '<=') {
 		if($currentPrice <= $onPrice) {
-			echo 'true';
+			$result =  'true';
 		}
 		else {
-			echo 'false';
+			$result = 'false';
 		}
 	}
 	else {
-		echo 'error';
+		$result =  'error';
+	}
+	 
+	
+	$sendEmailBody = $currencyDB.' is '.$onCondition.' '.number_format($onPrice, 2).' | Live price: '.number_format($currentPrice, 2);
+	
+	if($result == 'true') {
+		
+		//check if email is already sent (don't spam the same email over and over)
+		if($sent == 'Yes') {
+			$extra = ' | already sent';
+		}
+		else {
+			$extra = ' | will send ';
+			$tableData->sendMail($sendEmailBody);
+		}
+		
+		$queryA = 'UPDATE '.$tableName.' SET sent = "Yes" WHERE id='.$id;
+		$resultA = $db->query($queryA); 
+			//$db->debug();
+		
 	}
 	
-	echo '<br />'.$currencyDB.' ('.$currencyPolo.') '.$onCondition.' '.$onPrice.' | 
-	'.$cond->exchange.' | Live price: '.$currentPrice.' | '.$result.'<br />';
+	
+	$output = '<br />'.$currencyDB.' ('.$currencyPolo.') '.$onCondition.' '.number_format($onPrice, 2).' | 
+	'.$cond->exchange.' | Live price: '.number_format($currentPrice, 2).' | '.$result.' '.$extra .'<br />';
+	
+	echo $output;
+	
 }
 
 
 
-
-//$tableData->sendMail();
-
-
-//new field to db: sent 
-//update to Y if sent 
 
 ?>
