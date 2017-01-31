@@ -10,6 +10,8 @@ global $db, $currencyDB, $currencyPolo;
 
 $db = new ezSQL_mysql($dbUser, $dbPW, $dbName, $dbHost);
 
+$debug = $_GET['debug'];
+
 
 //connect to the BTC Database
 $tableData = new Database($db);
@@ -73,22 +75,26 @@ foreach($condTable as $cond) {
 		else {
 			$extra = ' | will send ';
 			$success = $tableData->sendMail($sendEmailBody);
+			
 		}
 		
 		$queryA = 'UPDATE '.$tableName.' SET sent = "Yes" WHERE id='.$id;
 		$resultA = $db->query($queryA); //$db->debug();
-		
-		echo $success;
-		
-		$error = error_get_last();
-		echo $error["message"];
-		
-		$tableData->showMail();
+		 
 	}
 	
 	
-	$output = '<br />'.$currencyDB.' ('.$currencyPolo.') '.$onCondition.' '.number_format($onPrice, 2).' | 
-	'.$cond->exchange.' | Live price: '.number_format($currentPrice, 2).' | '.$result.' '.$extra .'<br />';
+	if($debug == 1) {
+		
+		$output = ''.$currencyDB.' ('.$currencyPolo.') '.$onCondition.' '.number_format($onPrice, 2).' | '.$cond->exchange.' | Live price: '.number_format($currentPrice, 2).' | '.$result.' '.$extra .'<br /><br />';
+		
+		
+	}
+	else {
+		$output = ''.$currencyDB.' ('.$currencyPolo.') '.$onCondition.' '.number_format($onPrice, 2).' | '.$cond->exchange.' | Live price: '.number_format($currentPrice, 2).' | '.$result.' '.$extra .'\n\n';
+		
+		
+	}
 	
 	echo $output;
 	

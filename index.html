@@ -170,28 +170,31 @@
 			<table class="table">
 			<thead class="thead-default">
 				<th>Currency Pair</th>
-				<th>Price - Poloniex</th>
-			 
-				</thead>
+				<th>Poloniex Price</th>
+				<th>BTCe Price</th>
+			</thead>
 			<tr>
 				<td>ETH/BTC </td>
-				<td> <?=$BTC_ETH['last']; ?>
-			</td>
+				<td> <?=$BTC_ETH['last']; ?></td>
+				<td> <?=$btce_btc_eth?> </td>
 			</tr>
 				<td>BTC/USDT </td>
 				<td> $<?=$USDT_BTC['last'] ?> </td>
+				<td> <?=$btce_btc_usd?> </td>
 			</tr>
 			</tr>
 				<td>ETH/USDT </td>
 				<td> $<?=$USDT_ETH['last']?> </td>
+				<td> <?=$btce_eth_usd?> </td>
 			</tr>
+			
 			</table>
 			
 			
 			<table class="table">
 				<thead class="thead-default">
 				<tr>
-					<th colspan="5">api_alerts Table <a href="cronSendAlerts.php?debug=true"><input type="button" value="cronSendAlerts"></a>
+					<th colspan="5">api_alerts Table <a href="cronSendAlerts.php?debug=1"><input type="button" value="cronSendAlerts"></a>
 					</th>
 				</tr>
 				<tr>

@@ -57,6 +57,9 @@ class Database {
 
         $mailSent = mail($textTo, 'Alert', $sendEmailBody, $headers);
 
+		$error = error_get_last();
+		echo $error["message"];
+		
         if($mailSent) {
             $subject = 'Text alert sent';
         }
@@ -66,12 +69,15 @@ class Database {
 		
 		
         mail($emailTo, $subject, $sendEmailBody, $headers);
+		
+		$error = error_get_last();
+		echo $error["message"];
     }
 	
 	public function showMail() {
 		global $emailTo;
 		global $textTo;
-		echo $emailTo;
+		echo $emailTo.' '.$textTo;
 	}
 }
 
