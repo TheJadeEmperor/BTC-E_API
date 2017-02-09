@@ -39,13 +39,25 @@ $USDT_BTC = $polo->get_ticker('USDT_BTC');
 
 $USDT_ETH = $polo->get_ticker('USDT_ETH');
 
-$btce_btc_usd = $btce->getLastPrice('btc_usd');
 
 $btce_btc_eth = $btce->getLastPrice('eth_btc');
+
+$btce_btc_usd = $btce->getLastPrice('btc_usd');
 
 $btce_eth_usd = $btce->getLastPrice('eth_usd');
 
 
+//format currencies
+
+$btce_btc_eth = number_format($btce_btc_eth, 4);
+
+$btce_btc_usd = number_format($btce_btc_usd, 4);
+
+$btce_eth_usd = number_format($btce_eth_usd, 4);
+
+
+//echo $polo->get_ticker_url();
+echo $polo->get_last_price('BTC_ETH');
 
 
 include('index.html');

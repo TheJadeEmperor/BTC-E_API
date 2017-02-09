@@ -3,9 +3,6 @@ include($dir.'config.php');
 include($dir.'ez_sql_core.php');
 include($dir.'ez_sql_mysql.php');
 
-///////////////////////////
-$tableName = 'api_alerts';
-///////////////////////////
 
 $id = $_REQUEST['id'];
 
@@ -22,15 +19,11 @@ foreach($_REQUEST as $request => $value) {
 switch($_GET['action']) {
     case 'update':
        
-	   $update = "UPDATE $tableName SET name='".$_REQUEST['name']."',
-            acct='".$_REQUEST['acct']."',
-			priority='".$_REQUEST['priority']."',
-            campaign='".$_REQUEST['campaign']."',
-			username='".$_REQUEST['username']."',
-			email='".$_REQUEST['email']."',
-			password='".$_REQUEST['password']."',
-			url='".$_REQUEST['url']."',
-			referralURL='".$_REQUEST['referralURL']."',
+	   $update = "UPDATE $tableName SET currency='".$_REQUEST['currency']."',
+            on_condition='".$_REQUEST['on_condition']."',
+			price='".$_REQUEST['price']."',
+            unit='".$_REQUEST['unit']."',
+			exchange='".$_REQUEST['exchange']."'
 			extra='".$_REQUEST['extra']."'
             WHERE id='".$id."'";
 			
@@ -54,8 +47,8 @@ switch($_GET['action']) {
         
     case 'create':
 	
-        $insert = "INSERT INTO $tableName (currency, on_condition, price, action, exchange) values (
-            '".$_REQUEST['currency']."', '".$_REQUEST['on_condition']."', '".$_REQUEST['price']."', '".$_REQUEST['action']."', '".$_REQUEST['exchange']."' 
+        $insert = "INSERT INTO $tableName (currency, on_condition, price, unit, exchange) values (
+            '".$_REQUEST['currency']."', '".$_REQUEST['on_condition']."', '".$_REQUEST['price']."', '".$_REQUEST['unit']."', '".$_REQUEST['exchange']."' 
         )";
         
         $success = $db->query($insert);

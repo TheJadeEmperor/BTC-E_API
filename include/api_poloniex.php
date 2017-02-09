@@ -161,6 +161,11 @@
 			return $volume;
 		}
 	
+	
+		/*************************************************************************
+		*	get details from a currency pair - returns an array 
+		*	last, lowestAsk, highestBid, percentChange, baseVolume, quoteVolume
+		*/
 		public function get_ticker($pair = "ALL") {
 			$pair = strtoupper($pair);
 			$prices = $this->retrieveJSON($this->public_url.'?command=returnTicker');
@@ -179,6 +184,13 @@
 			}
 		}
 		
+		
+		public function get_last_price($pair = "ALL") {
+			$priceArray = $this->get_ticker($pair);
+			
+			return $priceArray['last'];
+		}
+	
 		public function get_trading_pairs() {
 			$tickers = $this->retrieveJSON($this->public_url.'?command=returnTicker');
 			return array_keys($tickers);
@@ -217,5 +229,16 @@
 
 			return $tot_btc;
 		}
+		
+		
+		/**************************
+		*	Debugging functions 
+		*/
+		
+		public function get_ticker_url () {
+			$url = ($this->public_url.'?command=returnTicker');
+			return $url;
+		}
+		
 	}
 ?>

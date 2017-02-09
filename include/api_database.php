@@ -4,7 +4,7 @@ class Database {
     private $db;
     
 	private $context = array(
-		'alertsTable' => 'api_alerts',
+		'alertsTable' => 'btc_alerts',
 		'tradesTable' => 'btc_trades',
         'optionsTable' => 'btc_options',
     );
@@ -74,6 +74,9 @@ class Database {
 		echo $error["message"];
     }
 	
+	/*
+	Show emails for testing purposes
+	*/
 	public function showMail() {
 		global $emailTo;
 		global $textTo;

@@ -37,17 +37,20 @@
 		$.getJSON("<?=$read_call?>&id="+id+"", function( data ) {
 		
 		$.each( data, function( key, val ) {
-               if(data.hasOwnProperty(key))
-                    $('input[name='+key+']').val(val);
+			if(data.hasOwnProperty(key))
+				$('input[name='+key+']').val(val);
 
-               if(key == 'currency') {					
-                    $('select[name="currency"]').find('option:contains("'+val+'")').attr("selected",true);	
+			if(key == 'currency') {					
+				$('select[name="currency"]').find('option:contains("'+val+'")').attr("selected",true);	
 			}
 			
 			if(key == 'on_condition') {					
-                    $('select[name="on_condition"]').find('option:contains("'+val+'")').attr("selected",true);	
+				$('select[name="on_condition"]').find('option:contains("'+val+'")').attr("selected",true);	
 			}
-				 
+		
+			if(key == 'unit') {
+				$('select[name="unit"]').find('option:contains("'+val+'")').attr("selected",true);	
+			}
 		
             });
         });
@@ -113,6 +116,7 @@
 
     $(document).ready(function () {
         
+		
 		$(".updateForm").click(function() {
 			
 			//Remove the select element and reconstruct it - to prevent from selecting the wrong option
@@ -126,6 +130,7 @@
 			$("#priorityRow").html('<?=$priDropDownMenu?>');	//re-construct the priority menu
 			
 		});
+		
 		
         $(".createButton").click(function() {
 			
@@ -145,13 +150,14 @@
 					Save: function() {
 						createRow();
 						$(this).dialog("close");
+						location.reload();
 					},
 					Cancel: function() {
 						$(this).dialog("close");
 					}
 				}
 			})
-			});
+		});
 		
     });
 	
@@ -180,12 +186,12 @@
 			</tr>
 				<td>BTC/USDT </td>
 				<td> $<?=$USDT_BTC['last'] ?> </td>
-				<td> <?=$btce_btc_usd?> </td>
+				<td> $<?=$btce_btc_usd?> </td>
 			</tr>
 			</tr>
 				<td>ETH/USDT </td>
 				<td> $<?=$USDT_ETH['last']?> </td>
-				<td> <?=$btce_eth_usd?> </td>
+				<td> $<?=$btce_eth_usd?> </td>
 			</tr>
 			
 			</table>
@@ -212,7 +218,7 @@
 					echo '<tr>
 					<td>'.$cond->currency.'</td>
 					<td>'.$cond->on_condition.'</td>
-					<td>'.$cond->price.'</td>
+					<td>'.$cond->price.' '.$cond->unit.'</td>
 					<td>'.$cond->exchange.'</td>
 				';
 				}
@@ -285,14 +291,10 @@
 					   
 					</tr>
 				</table>
-            </pre>
-		</div>
-	
-                  
-            
+				</pre>
+			</div>
 		</div>
 	</div>
-
 </div>
  
 
@@ -306,7 +308,7 @@
 		<th>Currency</th>
 		<th>Condition</th>
 		<th>Price</th>
-		<th>Action</th>
+		<th>Unit</th>
 		<th>Exchange</th>
 		<th>Delete</th>
 	</tr>
@@ -314,6 +316,7 @@
 	<tr>
 		<td>
 			<select name="currency">
+				<option>Any</option>
 				<option>BTC/USDT</option>
 				<option>ETH/USDT</option>
 				<option>ETH/BTC</option>
@@ -331,9 +334,9 @@
 			<input type="text" name="price" size="15" />
 		</td>
 		<td>
-			<select name="action">
-				<option>Alert</option>
-
+			<select name="unit">
+				<option>$</option>
+				<option>%</option>
 			</select>
 		</td>
 		<td>
