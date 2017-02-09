@@ -2,6 +2,7 @@
 $dir = 'include/';
 include($dir.'api_database.php');
 include($dir.'api_poloniex.php');
+include($dir.'api_btce.php');
 include($dir.'config.php');
 include($dir.'ez_sql_core.php');
 include($dir.'ez_sql_mysql.php');
@@ -18,6 +19,8 @@ $tableData = new Database($db);
 
 //requires the extension php_openssl to work
 $polo = new poloniex();
+
+$btce = new BTCeAPI();
 
 //get all records from the alerts table
 $condTable = $tableData->alertsTable();
@@ -40,6 +43,22 @@ foreach($condTable as $cond) {
 	$currentPrice = $polo->get_ticker($currencyPolo);
 	$currentPrice = floatval($currentPrice['last']);
 	
+	
+	//format the currency for BTCE
+	if($pieces[1] == 'USDT') 
+		$pieces[1] = 'USD';
+		
+	$currencyBTCE = $pieces[0].'_'.$pieces[1];
+	$currencyBTCE = strtolower($currencyBTCE);
+	
+	///get the live price from BTCE
+	$currentPriceBTCE = $btce->getLastPrice($currencyBTCE);
+	
+	
+	//if poloniex crashes, or some error occurs
+	if($currentPrice == '0.00') {
+		$currentPrice = $currentPriceBTCE;
+	}
 	
 	
 	//if conditions are right, send email and text
@@ -80,19 +99,18 @@ foreach($condTable as $cond) {
 		
 		$queryA = 'UPDATE '.$tableName.' SET sent = "Yes" WHERE id='.$id;
 		$resultA = $db->query($queryA); //$db->debug();
-		 
+		
 	}
 	
 	
 	if($debug == 1) {
 		
-		$output = ''.$currencyDB.' ('.$currencyPolo.') '.$onCondition.' '.number_format($onPrice, 2).' | '.$cond->exchange.' | Live price: '.number_format($currentPrice, 2).' | '.$result.' '.$extra .'<br /><br />';
+		$output = ''.$currencyDB.' '.$onCondition.' '.number_format($onPrice, 2).' | '.$cond->exchange.' ('.$currencyPolo.') | Live price: '.number_format($currentPrice, 2).' | '.$result.' '.$extra .'<br /><br />';
 		
 		
 	}
 	else {
-		$output = ''.$currencyDB.' ('.$currencyPolo.') '.$onCondition.' '.number_format($onPrice, 2).' | '.$cond->exchange.' | Live price: '.number_format($currentPrice, 2).' | '.$result.' '.$extra .'\n\n';
-		
+		$output = ''.$currencyDB.' '.$onCondition.' '.number_format($onPrice, 2).' | '.$cond->exchange.' ('.$currencyPolo.') | Live price: '.number_format($currentPrice, 2).' | '.$result.' '.$extra .'\n\n';
 		
 	}
 	

@@ -32,13 +32,16 @@ $tableData = new Database($db);
 $condTable = $tableData->alertsTable();
 
 
-//get currency prices
+//get prices from poloniex
 $BTC_ETH = $polo->get_ticker('BTC_ETH');
 
 $USDT_BTC = $polo->get_ticker('USDT_BTC');
 
 $USDT_ETH = $polo->get_ticker('USDT_ETH');
 
+
+//get prices from btc-e
+$btce_btc_usd = $btce->getLastPrice('btc_usd');
 
 $btce_btc_eth = $btce->getLastPrice('eth_btc');
 
