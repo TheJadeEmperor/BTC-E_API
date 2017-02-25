@@ -110,15 +110,13 @@ foreach($condTable as $cond) {
 		
 	}
 	else {
-		$output = ''.$currencyDB.' '.$onCondition.' '.number_format($onPrice, 2).' | '.$cond->exchange.' ('.$currencyPolo.') | Live price: '.number_format($currentPrice, 2).' | '.$result.' '.$extra .'\n\n';
+		$output = ''.$currencyDB.' '.$onCondition.' '.number_format($onPrice, 2).' | '.$cond->exchange.' ('.$currencyPolo.') | Live price: '.number_format($currentPrice, 2).' | '.$result.' '.$extra ."\n\n";
 		
 	}
 	
 	echo $output;
 	
 }
-
-
 
 
 ?>

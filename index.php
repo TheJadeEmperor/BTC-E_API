@@ -16,7 +16,6 @@ $read_call = 'include/ajax.php?action=read';
 $update_call = 'include/ajax.php?action=update';
 $delete_call = 'include/ajax.php?action=delete';
 
-
 global $db;
 
 $db = new ezSQL_mysql($dbUser, $dbPW, $dbName, $dbHost);
@@ -60,7 +59,7 @@ $btce_eth_usd = number_format($btce_eth_usd, 4);
 
 
 //echo $polo->get_ticker_url();
-echo $polo->get_last_price('BTC_ETH');
+//echo $polo->get_last_price('BTC_ETH');
 
 
 include('index.html');
