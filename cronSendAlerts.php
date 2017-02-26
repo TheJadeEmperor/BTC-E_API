@@ -81,7 +81,7 @@ foreach($condTable as $cond) {
 	else {
 		$result =  'error';
 	}
-	 
+	
 	
 	$sendEmailBody = $currencyDB.' is '.$onCondition.' '.number_format($onPrice, 2).' | Live price: '.number_format($currentPrice, 2);
 	

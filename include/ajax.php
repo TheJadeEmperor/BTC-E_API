@@ -19,18 +19,18 @@ foreach($_REQUEST as $request => $value) {
 switch($_GET['action']) {
     case 'update':
        
-	   $update = "UPDATE $tableName SET currency='".$_REQUEST['currency']."',
-            on_condition='".$_REQUEST['on_condition']."',
-			price='".$_REQUEST['price']."',
-            unit='".$_REQUEST['unit']."',
-			exchange='".$_REQUEST['exchange']."'
-			extra='".$_REQUEST['extra']."'
-            WHERE id='".$id."'";
+	   $update = "UPDATE $tableName SET currency = '".$_REQUEST['currency']."',
+            on_condition = '".$_REQUEST['on_condition']."',
+			price = '".$_REQUEST['price']."',
+            unit = '".$_REQUEST['unit']."',
+			exchange = '".$_REQUEST['exchange']."',
+			sent = '".$_REQUEST['sent']."'
+            WHERE id = '".$id."'";
 			
         $success = $db->query($update); 
         
         if($success == 1)
-            echo 'Updated record '.$id;
+            echo 'Updated record '.$id.' '.$update;
         else 
             echo 'Failed to update record '.$update;
         break;

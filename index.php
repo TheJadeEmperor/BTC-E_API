@@ -50,16 +50,75 @@ $btce_eth_usd = $btce->getLastPrice('eth_usd');
 
 
 //format currencies
-
 $btce_btc_eth = number_format($btce_btc_eth, 4);
 
-$btce_btc_usd = number_format($btce_btc_usd, 4);
+$btce_btc_usd = number_format($btce_btc_usd, 2);
 
-$btce_eth_usd = number_format($btce_eth_usd, 4);
+$btce_eth_usd = number_format($btce_eth_usd, 2);
 
 
-//echo $polo->get_ticker_url();
-//echo $polo->get_last_price('BTC_ETH');
+
+$currTypes = array(
+	'Any',
+	'BTC/USDT',
+	'ETH/USDT',
+	'ETH/BTC'
+);
+
+foreach($currTypes as $cType) {
+	$currencyDropDown .= '<option value="'.$cType.'">'.$cType.'</option>';
+}
+$currencyDropDown = '<select name="currency">'.$currencyDropDown.'</option>';
+
+
+
+$conditionTypes = array(
+	'<=',
+	'>=',
+);
+
+foreach($conditionTypes as $condType) {
+	$conditionDropDown .= '<option value="'.$condType.'">'.$condType.'</option>';
+}
+$conditionDropDown = '<select name="on_condition">'.$conditionDropDown.'</option>';
+
+
+
+$unitTypes = array(
+	'$',
+	'%',
+);
+
+foreach($unitTypes as $uType) {
+	$unitDropDown .= '<option value="'.$uType.'">'.$uType.'</option>';
+}
+$unitDropDown = '<select name="unit">'.$unitDropDown.'</option>';
+
+
+
+
+$exchangeTypes = array(
+	'Poloniex'
+);
+
+foreach($exchangeTypes as $eType) {
+	$exchangeDropDown .= '<option value="'.$eType.'">'.$eType.'</option>';
+}
+$exchangeDropDown = '<select name="exchange">'.$exchangeDropDown.'</option>';
+
+
+
+
+$sentTypes = array(
+	'No',
+	'Yes',
+);
+
+foreach($sentTypes as $sType) {
+	$sentDropDown .= '<option value="'.$sType.'">'.$sType.'</option>';
+}
+$sentDropDown = '<select name="sent">'.$sentDropDown.'</option>';
+ 
 
 
 include('index.html');
