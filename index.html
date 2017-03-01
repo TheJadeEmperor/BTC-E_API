@@ -328,30 +328,21 @@
 	</thead>
 	<tr>
 		<td>
-			<div id="currencyDiv">
-			<?=$currencyDropDown?>
-			</div>
-			 
+			<div id="currencyDiv"><?=$currencyDropDown?></div>	 
 		</td>
 		<td>
 			<div id="conditionDiv">
 			<?=$conditionDropDown?>
 			</div>
-			
 		</td>
 		<td>
 			<input type="text" name="price" size="15" />
 		</td>
 		<td>
-			<div id="unitDiv">
-			<?=$unitDropDown?>
-			</div>
-			 
+			<div id="unitDiv"><?=$unitDropDown?></div>
 		</td>
 		<td>
-			<div id="exchangeDiv">
-			<?=$exchangeDropDown?>
-			</div>
+			<div id="exchangeDiv"><?=$exchangeDropDown?></div>
 		</td>
 		<td>
 			<input type="button" value = "X">
@@ -363,7 +354,42 @@
 		
 		</td>
 	</tr>
+	</table>	
+</form>
+
+
+<form id="tradeTable" title="Active Trades">
+	<table class="table">
+	<thead class="thead-default">
+	<tr>
+		<th>Currency</th>
+		<th>Condition</th>
+		<th>Price</th>
+		<th>Amount</th>
+		<th>Exchange</th>
+		<th>Delete</th>
+	</tr>
+	</thead>
+	<tr>
+		<td>
+			<div id="tradeCurrencyDiv"><?=$tradeCurrencyDropDown?></div>	 
+		</td>
+		<td>
+			<div id="tradeConditionDiv"><?=$tradeConditionDropDown?></div>
+		</td>
+		<td>
+			<input type="text" name="price" size="15" />
+		</td>
+		<td>
+			<input type="text" name="amount" size="15" />
+		</td>
+		<td>
+			<div id="tradeExchangeDiv"><?=$tradeExchangeDropDown?></div>
+		</td>
+		<td>
+			<input type="button" value = "X">
+		</td>
+	</tr>
 	</table>
-	
 </form>
 </body>

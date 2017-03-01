@@ -16,8 +16,60 @@ foreach($_REQUEST as $request => $value) {
     $_REQUEST[$request] = mysql_real_escape_string($value);
 }
 
-switch($_GET['action']) {
-    case 'update':
+
+switch($_GET['action']) { 
+ 
+	case 'createTrade':
+		$insert = "INSERT INTO $tradeTable (currency, on_condition, price, amount, exchange) values (
+            '".$_REQUEST['currency']."', '".$_REQUEST['on_condition']."', '".$_REQUEST['price']."', '".$_REQUEST['amount']."', '".$_REQUEST['exchange']."' 
+        )";
+        
+        $success = $db->query($insert);
+        if($success == 1) 
+            echo 'Added record '.$insert;
+        else 
+            echo 'Failed to add record '.$insert;
+
+		break;
+	
+	case 'readTrade':
+
+        $news = $db->get_row("SELECT * FROM $tradeTable WHERE id='".$id."'");
+
+        echo json_encode($news);
+
+		break;
+		
+	case 'updateTrade':
+
+	   $update = "UPDATE $tradeTable SET currency = '".$_REQUEST['currency']."',
+            on_condition = '".$_REQUEST['on_condition']."',
+			price = '".$_REQUEST['price']."',
+            unit = '".$_REQUEST['unit']."',
+			exchange = '".$_REQUEST['exchange']."',
+			sent = '".$_REQUEST['sent']."'
+            WHERE id = '".$id."'";
+			
+        $success = $db->query($update); 
+        
+        if($success == 1)
+            echo 'Updated record '.$id.' '.$update;
+        else 
+            echo 'Failed to update record '.$update;
+        break;
+		
+	case 'deleteTrade':
+
+        $success = $db->query("DELETE from $tradeTable WHERE id='".$id."'");
+        
+        if($success == 1) 
+            echo 'Successfully deleted record '.$id;
+        else
+            echo 'Failed to delete record '.$id;
+        break;
+		
+	
+	case 'update':
        
 	   $update = "UPDATE $tableName SET currency = '".$_REQUEST['currency']."',
             on_condition = '".$_REQUEST['on_condition']."',
