@@ -11,163 +11,31 @@
 <script src="http://code.jquery.com/jquery-latest.min.js" type='text/javascript' /></script>
 
 <script src="include/jquery-ui/ui/jquery-ui.js"></script>
+
+
+
+
 <style>
     body {
         margin: 5px 20px;
     }
+	
+	.clickable, .btn {
+		cursor: pointer;
+	}
 </style>
 
-<script>
-		
-	function updateRow(id) {
-		$.ajax({ //Process the form using $.ajax()
-			type        : 'POST', //Method type
-			url         : '<?=$update_call?>', //Your form processing file url
-			data        : $('#conditionTable').serialize(), 
-			success     : function(msg) {
-				console.log(msg);
-				location.reload();
-			}
-		});
-		event.preventDefault(); //Prevent the default submit      
-	}
-    
-	function fillForm(id) {
-		
-		$.getJSON("<?=$read_call?>&id="+id+"", function( data ) {
-		
-		$.each( data, function( key, val ) {
-			if(data.hasOwnProperty(key))
-				$('input[name='+key+']').val(val);
+<?
+include('scripts.html');
+?>
 
-			if(key == 'currency') {						
-				$('select[name="currency"]').find('option:contains("'+val+'")').attr("selected",true);	
-			}
-			
-			if(key == 'on_condition') {					
-				$('select[name="on_condition"]').find('option:contains("'+val+'")').attr("selected",true);	
-			}
-		
-			if(key == 'unit') {
-				$('select[name="unit"]').find('option:contains("'+val+'")').attr("selected",true);	
-			}
-			
-			if(key == 'exchange' || key == 'sent') {
-				$('select[name="'+key+'"]').find('option:contains("'+val+'")').attr("selected",true);	
-			}
-			 
-            });
-        });
-    }
-    
-    function deleteRow(id) {
-        if (confirm("Are you sure you want to delete record "+id+"?")) {
-            $.ajax({
-                type: "GET",
-                url: "<?=$delete_call?>&id="+id,
-                success: function() {
-                    alert('Deleted record '+id);
-                    location.reload();
-                }
-            })
-        }    
-    }
-    
-    function createRow() {
-		$.ajax({
-			type: "POST",
-			url: "<?=$create_call?>",
-			data: $('#conditionTable').serialize(),
-			success: function(msg) {
-				console.log(msg);
-				//location.reload();
-			}
-		});
-    }
-    
-	
-	function updateDialog(id) {
-	
-		$("select[name=currency]").remove(); //remove  acct select menu
-		$("#currencyDiv").html('<?=$currencyDropDown?>');	//re-construct the acct menu
-			
-		$("select[name=on_condition]").remove();	//remove on_condition select menu
-		$("#conditionDiv").html('<?=$conditionDropDown?>');	//re-construct the on_condition men
-		
-		$("select[name=unit]").remove();	//remove unit select menu
-		$("#unitDiv").html('<?=$unitDropDown?>');	//re-construct the unit men
-		
-		$("select[name=exchange]").remove();	//remove exchange menu
-		$("#exchangeDiv").html('<?=$exchangeDropDown?>');	//re-construct the exchange men
-
-		$('select[name=sent]').remove();
-		$('#sentDiv').html('<?=$sentDropDown?>');
-			
-		fillForm(id);
-	 
-		$("#conditionTable").dialog({
-			modal: true,
-			width: 790,
-			position: 'top',
-			show: {
-				effect: "explode",
-				duration: 500
-			},
-			hide: {
-				effect: "explode",
-				duration: 500
-			},
-			buttons: {
-				Save: function () {
-					updateRow(id);
-					$( this ).dialog( "close" );
-				},
-				Cancel: function() {
-					$( this ).dialog( "close" );				
-				},                        
-			}
-		});
-	}
-
-    $(document).ready(function () {
-        
-		
-        $(".createButton").click(function() {
-			
-			$("#conditionTable").dialog({
-				modal: true,
-				width: 790,
-				position: 'top',
-				show: {
-					effect: "explode",
-					duration: 500
-				},
-				hide: {
-					effect: "explode",
-					duration: 500
-				},
-				buttons: {
-					Save: function() {
-						createRow();
-						$(this).dialog("close");
-						location.reload();
-					},
-					Cancel: function() {
-						$(this).dialog("close");
-					}
-				}
-			})
-		});
-		
-    });
-	
-	
-</script>
 </head>
 <body>
 <div class="container">
 
-	<input type="button" class="createButton" value = "Add Alert"/>
+	<button class = "createButton btn btn-primary">Add Alert</button>
+	
+	<button class = "tradeButton btn btn-success">Add Trade</button>
 
 	<br /><br />
 	
@@ -199,7 +67,7 @@
 			<table class="table">
 				<thead class="thead-default">
 				<tr>
-					<th colspan="5">api_alerts Table <a href="cronSendAlerts.php?debug=1"><input type="button" value="cronSendAlerts"></a>
+					<th colspan="5">btc_alerts Table <a href="cronSendAlerts.php?debug=1"><input type="button" value="cronSendAlerts"></a>
 					</th>
 				</tr>
 				<tr>
@@ -215,7 +83,7 @@
 				
 				foreach($condTable as $cond) {
 					
-					echo '<tr onclick="javascript:updateDialog(\''.$cond->id.'\')">
+					echo '<tr class="clickable" onclick="javascript:updateDialog(\''.$cond->id.'\')">
 					<td>'.$cond->currency.'</td>
 					<td>'.$cond->on_condition.'</td>
 					<td>'.$cond->price.' '.$cond->unit.'</td>
@@ -232,7 +100,34 @@
 			<table class="table">
 				<thead class="thead-default">
 				<tr>
+					<th colspan="6">btc_trades Table <a href="cronSendAlerts.php?debug=1"><input type="button" value="cronSendAlerts"></a>
+					</th>
+				</tr>
+				<tr>
+					<th>Currency</th>
+					<th>Condition</th>
+					<th>Price</th>
+					<th>Amount</th>
+					<th>Exchange</th>
+		
+				</tr>
+				</thead>
+				<tbody>
+				<?php
 				
+				foreach($tradesTable as $trade) {
+					
+					echo '<tr class="clickable" onclick="javascript:updateTrade(\''.$trade->id.'\')">
+					<td>'.$trade->trade_currency.'</td>
+					<td>'.$trade->trade_condition.'</td>
+					<td>'.$trade->trade_price.'</td>
+					<td>'.$trade->trade_amount.'</td>
+					<td>'.$trade->trade_exchange.'</td>
+				';
+				}
+
+				?>
+				</tbody>
 				</tr>
 			</table>
 			
@@ -311,6 +206,8 @@
 </div>
  
 
+
+
 <form id="conditionTable" title="Price Alerts">
     
 	<input type="hidden" id="id" name="id" />
@@ -323,7 +220,6 @@
 		<th>Price</th>
 		<th>Unit</th>
 		<th>Exchange</th>
-		<th>Delete</th>
 	</tr>
 	</thead>
 	<tr>
@@ -344,14 +240,17 @@
 		<td>
 			<div id="exchangeDiv"><?=$exchangeDropDown?></div>
 		</td>
-		<td>
-			<input type="button" value = "X">
-		</td>
-	</tr>
-	<tr>
-		<td colspan="5">
-			Already Sent? <span id="sentDiv"><?=$sentDropDown?></span> 
 		
+	</tr>
+	</table>
+	<table>
+	<tr>
+		<td width="200px">
+			Already Sent? <span id="sentDiv"><?=$sentDropDown?></span> 
+		</td>
+		<td>
+			<button id="deleteAlert" class="btn btn-danger">Delete</button>
+
 		</td>
 	</tr>
 	</table>	
@@ -367,7 +266,7 @@
 		<th>Price</th>
 		<th>Amount</th>
 		<th>Exchange</th>
-		<th>Delete</th>
+
 	</tr>
 	</thead>
 	<tr>
@@ -378,16 +277,23 @@
 			<div id="tradeConditionDiv"><?=$tradeConditionDropDown?></div>
 		</td>
 		<td>
-			<input type="text" name="price" size="15" />
+			<input type="text" name="trade_price" size="15" />
 		</td>
 		<td>
-			<input type="text" name="amount" size="15" />
+			<input type="text" name="trade_amount" size="15" />
 		</td>
 		<td>
 			<div id="tradeExchangeDiv"><?=$tradeExchangeDropDown?></div>
 		</td>
+	</tr>
+	</table>
+	<table>
+	<tr>
 		<td>
-			<input type="button" value = "X">
+			<input type="text" name="until" id="until" />
+		</td>	
+		<td>
+			<button id="deleteTrade" class="btn btn-danger">Delete</button>
 		</td>
 	</tr>
 	</table>

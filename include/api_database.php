@@ -13,22 +13,8 @@ class Database {
     public function __construct($db) {
         $this->db = $db; //database connection object
     }
-    /*
-    public function get_options($exchange = 'bitfinex') { //get trading options from api_options
-        
-        $queryO = 'SELECT * FROM '.$this->context['optionsTable'].' ORDER BY opt';
-        $resultO = $this->db->query($queryO);
-
-        foreach($resultO as $opt) { 
-            $bitfinexOption[$opt['opt']] = $opt['setting'];
-        }0
-        $this->currency = $bitfinexOption['bitfinex_currency'];
-        $this->price_field = $exchange.'_'.$this->currency;
-        
-        return $bitfinexOption;
-    }
-     */
     
+	
 	
     public function tradesTable() {
 		$queryT = 'SELECT * FROM '.$this->context['tradesTable'].' ORDER BY id';

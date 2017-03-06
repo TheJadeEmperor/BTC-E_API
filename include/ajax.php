@@ -20,8 +20,7 @@ foreach($_REQUEST as $request => $value) {
 switch($_GET['action']) { 
  
 	case 'createTrade':
-		$insert = "INSERT INTO $tradeTable (currency, on_condition, price, amount, exchange) values (
-            '".$_REQUEST['currency']."', '".$_REQUEST['on_condition']."', '".$_REQUEST['price']."', '".$_REQUEST['amount']."', '".$_REQUEST['exchange']."' 
+		$insert = "INSERT INTO $tradeTable (trade_currency, trade_condition, trade_price, trade_amount, trade_exchange, until) values ('".$_REQUEST['trade_currency']."', '".$_REQUEST['trade_condition']."', '".$_REQUEST['trade_price']."', '".$_REQUEST['trade_exchange']."', '".$_REQUEST['trade_exchange']."', '".$_REQUEST['until']."'  
         )";
         
         $success = $db->query($insert);

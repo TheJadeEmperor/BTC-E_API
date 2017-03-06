@@ -10,11 +10,17 @@ include($dir.'ez_sql_mysql.php');
 
 error_reporting(E_ALL & ~E_NOTICE & ~E_WARNING);
 
-
-$create_call = 'include/ajax.php?action=create';
+//alert ajax calls
+$createAlert = 'include/ajax.php?action=create';
 $read_call = 'include/ajax.php?action=read';
 $update_call = 'include/ajax.php?action=update';
 $delete_call = 'include/ajax.php?action=delete';
+
+//trade Ajax calls
+$createTrade = 'include/ajax.php?action=createTrade';
+$readTrade = 'include/ajax.php?action=readTrade';
+$updateTrade = 'include/ajax.php?action=updateTrade';
+$deleteTrade = 'include/ajax.php?action=deleteTrade';
 
 global $db;
 
@@ -29,6 +35,9 @@ $btce = new BTCeAPI();
 $tableData = new Database($db);
 
 $condTable = $tableData->alertsTable();
+
+$tradesTable = $tableData->tradesTable();
+
 
 
 //get prices from poloniex
@@ -66,7 +75,6 @@ $btce_btc_eth =  number_format($btce_btc_eth, 4);
 
 
 $currTypes = array(
-	'Any',
 	'BTC/USDT',
 	'ETH/USDT',
 	'ETH/BTC'
@@ -86,8 +94,10 @@ $conditionTypes = array(
 
 foreach($conditionTypes as $condType) {
 	$conditionDropDown .= '<option value="'.$condType.'">'.$condType.'</option>';
+	$tradeConditionDropDown .= '<option value="'.$condType.'">'.$condType.'</option>';
 }
 $conditionDropDown = '<select name="on_condition">'.$conditionDropDown.'</option>';
+$tradeConditionDropDown = '<select name="trade_condition">'.$tradeConditionDropDown.'</select>';
 
 
 
@@ -110,9 +120,11 @@ $exchangeTypes = array(
 
 foreach($exchangeTypes as $eType) {
 	$exchangeDropDown .= '<option value="'.$eType.'">'.$eType.'</option>';
+	$tradeExchangeDropDown .= '<option value="'.$eType.'">'.$eType.'</option>';
 }
 $exchangeDropDown = '<select name="exchange">'.$exchangeDropDown.'</option>';
-
+$tradeExchangeDropDown = '<select name="tradeExchange">'.$tradeExchangeDropDown.'</option>';
+ 
 
 
 
@@ -126,6 +138,20 @@ foreach($sentTypes as $sType) {
 }
 $sentDropDown = '<select name="sent">'.$sentDropDown.'</option>';
  
+ 
+
+ 
+$currencyTypes = array(
+	'BTC/USDT',
+	'ETH/USDT',
+	'ETH/BTC'
+);
+
+foreach($currencyTypes as $cType) {
+	$tradeCurrencyDropDown .= '<option value="'.$cType.'">'.$cType.'</option>';
+}
+$tradeCurrencyDropDown = '<select name="trade_currency">'.$tradeCurrencyDropDown.'</option>';
+
 
 
 include('index.html');
