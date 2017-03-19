@@ -73,20 +73,26 @@ $btce_eth_usd = number_format($btce_eth_usd, 2);
 $btce_btc_eth =  number_format($btce_btc_eth, 4);
 
 
-
+//currency options
 $currTypes = array(
 	'BTC/USDT',
 	'ETH/USDT',
-	'ETH/BTC'
+	'ETH/BTC',
+	'DASH/USDT',
+
 );
 
 foreach($currTypes as $cType) {
-	$currencyDropDown .= '<option value="'.$cType.'">'.$cType.'</option>';
+	$alertCurrencyDropDown .= '<option value="'.$cType.'">'.$cType.'</option>';
+	$tradeCurrencyDropDown .= '<option value="'.$cType.'">'.$cType.'</option>';
 }
-$currencyDropDown = '<select name="currency">'.$currencyDropDown.'</option>';
+$currencyDropDown = '<select name="currency">'.$alertCurrencyDropDown.'</option>';
+$tradeCurrencyDropDown = '<select name="trade_currency">'.$tradeCurrencyDropDown.'</option>';
 
 
 
+
+//condition types
 $conditionTypes = array(
 	'<=',
 	'>=',
@@ -97,6 +103,7 @@ foreach($conditionTypes as $condType) {
 	$tradeConditionDropDown .= '<option value="'.$condType.'">'.$condType.'</option>';
 }
 $conditionDropDown = '<select name="on_condition">'.$conditionDropDown.'</option>';
+
 $tradeConditionDropDown = '<select name="trade_condition">'.$tradeConditionDropDown.'</select>';
 
 
@@ -123,7 +130,7 @@ foreach($exchangeTypes as $eType) {
 	$tradeExchangeDropDown .= '<option value="'.$eType.'">'.$eType.'</option>';
 }
 $exchangeDropDown = '<select name="exchange">'.$exchangeDropDown.'</option>';
-$tradeExchangeDropDown = '<select name="tradeExchange">'.$tradeExchangeDropDown.'</option>';
+$tradeExchangeDropDown = '<select name="trade_exchange">'.$tradeExchangeDropDown.'</option>';
  
 
 
@@ -140,17 +147,6 @@ $sentDropDown = '<select name="sent">'.$sentDropDown.'</option>';
  
  
 
- 
-$currencyTypes = array(
-	'BTC/USDT',
-	'ETH/USDT',
-	'ETH/BTC'
-);
-
-foreach($currencyTypes as $cType) {
-	$tradeCurrencyDropDown .= '<option value="'.$cType.'">'.$cType.'</option>';
-}
-$tradeCurrencyDropDown = '<select name="trade_currency">'.$tradeCurrencyDropDown.'</option>';
 
 
 

@@ -83,7 +83,7 @@ include('scripts.html');
 				
 				foreach($condTable as $cond) {
 					
-					echo '<tr class="clickable" onclick="javascript:updateDialog(\''.$cond->id.'\')">
+					echo '<tr class="clickable" onclick="javascript:updateAlertDialog(\''.$cond->id.'\')">
 					<td>'.$cond->currency.'</td>
 					<td>'.$cond->on_condition.'</td>
 					<td>'.$cond->price.' '.$cond->unit.'</td>
@@ -117,7 +117,7 @@ include('scripts.html');
 				
 				foreach($tradesTable as $trade) {
 					
-					echo '<tr class="clickable" onclick="javascript:updateTrade(\''.$trade->id.'\')">
+					echo '<tr class="clickable" onclick="javascript:updateTradeDialog(\''.$trade->id.'\')">
 					<td>'.$trade->trade_currency.'</td>
 					<td>'.$trade->trade_condition.'</td>
 					<td>'.$trade->trade_price.'</td>
@@ -258,6 +258,9 @@ include('scripts.html');
 
 
 <form id="tradeTable" title="Active Trades">
+
+	<input type="hidden" id="trade_id" name="trade_id" />
+
 	<table class="table">
 	<thead class="thead-default">
 	<tr>

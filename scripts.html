@@ -11,9 +11,24 @@
 		});
 		event.preventDefault(); //Prevent the default submit      
 	}
+	
+	function updateTrade(id) {
+	console.log($('#tradeTable').serialize() );
+		$.ajax({ //Process the form using $.ajax()
+			type        : 'POST', //Method type
+			url         : '<?=$updateTrade?>', //Your form processing file url
+			data        : $('#tradeTable').serialize(), 
+			success     : function(msg) {
+				console.log(msg);
+				refresh();						
+			}
+		});
+		event.preventDefault(); //Prevent the default submit      
+	}
+	
+	
     
-	function fillForm(id) {
-		
+	function fillFormAlert(id) {
 		$.getJSON("<?=$read_call?>&id="+id+"", function( data ) {
 		
 		$.each( data, function( key, val ) {
@@ -39,12 +54,34 @@
             });
         });
     }
+	
+	function fillFormTrade(id) {
+
+//	alert(id);
+	$.getJSON("<?=$readTrade?>&trade_id="+id+"", function( data ) {
+		console.log('fillFormTrade: '+data);
+		$.each( data, function( key, val ) {
+			if(data.hasOwnProperty(key))
+				$('input[name='+key+']').val(val);
+
+			if(key == 'id') {
+				$('input[name=trade_id]').val(val);
+			}
+				
+			if(key == 'trade_currency' || key == 'trade_condition' || key == 'trade_exchange') {						
+				$('select[name="'+key+'"]').find('option:contains("'+val+'")').attr("selected",true);	
+				console.log(key + ' ' + val);
+			}
+			 
+            });
+        });
+	}
     
     function deleteAlert(id) {
         if (confirm("Are you sure you want to delete record "+id+"?")) {
             $.ajax({
                 type: "GET",
-                url: "<?=$delete_call?>&id="+id,
+                url: "<?=$deleteTrade?>&id="+id,
                 success: function() {
                     alert('Deleted record '+id);
                     location.reload();
@@ -53,7 +90,20 @@
         }    
     }
     
-    function createRow() {
+	 function deleteTrade(id) {
+        if (confirm("Are you sure you want to delete record "+id+"?")) {
+            $.ajax({
+                type: "GET",
+                url: "<?=$deleteTrade?>&trade_id="+id,
+                success: function() {
+                    alert('Deleted record '+id);
+                    location.reload();
+                }
+            })
+        }    
+    }
+	
+    function createAlert() {
 		$.ajax({
 			type: "POST",
 			url: "<?=$createAlert?>",
@@ -82,7 +132,7 @@
 		location.reload();
 	}
 	
-	function updateDialog(id) {
+	function updateAlertDialog(id) {
 	
 		$("select[name=currency]").remove(); //remove  acct select menu
 		$("#currencyDiv").html('<?=$currencyDropDown?>');	//re-construct the acct menu
@@ -91,7 +141,7 @@
 		$("#conditionDiv").html('<?=$conditionDropDown?>');	//re-construct the on_condition men
 		
 		$("select[name=unit]").remove();	//remove unit select menu
-		$("#unitDiv").html('<?=$unitDropDown?>');	//re-construct the unit men
+		$("#unitDiv").html('<?=$unitDropDown?>');	//re-construct the unit menu
 		
 		$("select[name=exchange]").remove();	//remove exchange menu
 		$("#exchangeDiv").html('<?=$exchangeDropDown?>');	//re-construct the exchange men
@@ -99,7 +149,7 @@
 		$('select[name=sent]').remove();
 		$('#sentDiv').html('<?=$sentDropDown?>');
 			
-		fillForm(id);
+		fillFormAlert(id);
  
 				
 		$( "#deleteAlert" ).click(function() {
@@ -132,23 +182,23 @@
 	
 	}
 	
-	function updateTrade(id) {
+	function updateTradeDialog(id) {
 
 		$("select[name=trade_currency]").remove(); //remove  acct select menu
-		$("#tradeCurrencyDiv").html('<?=$currencyDropDown?>');	//re-construct the acct menu
+		$("#tradeCurrencyDiv").html('<?=$tradeCurrencyDropDown?>');	//re-construct the acct menu
 			
 		$("select[name=trade_condition]").remove();	//remove on_condition select menu
-		$("#tradeConditionDiv").html('<?=$conditionDropDown?>');	//re-construct the on_condition men
+		$("#tradeConditionDiv").html('<?=$tradeConditionDropDown?>');	//re-construct the on_condition men
 		
 		$("select[name=trade_exchange]").remove();	//remove exchange menu
-		$("#tradeExchangeDiv").html('<?=$exchangeDropDown?>');	//re-construct the exchange men
+		$("#tradeExchangeDiv").html('<?=$tradeExchangeDropDown?>');	//re-construct the exchange men
 
+		fillFormTrade(id);
 	
 		$( "#deleteTrade" ).click(function() {
 			deleteTrade(id);
 		});
 		
-				
 		$("#tradeTable").dialog({
 			modal: true,
 			width: 790,
@@ -163,7 +213,7 @@
 			},
 			buttons: {
 				Save: function () {
-					updateRow(id);
+					updateTrade(id);
 					$( this ).dialog( "close" );
 				},
 				Cancel: function() {
@@ -176,14 +226,10 @@
 	}
 
     $(document).ready(function () {
-        	
 		
-			
 		//hide pop up forms			
 		$("#conditionTable").hide();
 		$("#tradeTable").hide();		
-			
-			
 							
         $(".createButton").click(function() {
 
@@ -201,7 +247,7 @@
 				},
 				buttons: {
 					Save: function() {
-						createRow();
+						createAlert();
 						$(this).dialog("close");
 					},
 					Cancel: function() {
