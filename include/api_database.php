@@ -9,29 +9,27 @@ class Database {
         'optionsTable' => 'btc_options',
     );
     
-
     public function __construct($db) {
         $this->db = $db; //database connection object
     }
     
-	
-	
     public function tradesTable() {
-		$queryT = 'SELECT * FROM '.$this->context['tradesTable'].' ORDER BY id';
+		$queryT = "SELECT *, date_format(until, '%m/%d/%Y') as until_date,
+		date_format(until, '%H:%i:%s') as until_time  FROM ".$this->context['tradesTable']." ORDER BY id";
+		
         $resultT = $this->db->get_results($queryT);
 		
 		return $resultT;
 	}
 	
-	
 	public function alertsTable() {
 		
 		$queryA = 'SELECT * FROM '.$this->context['alertsTable'].' ORDER BY currency, on_condition';
-        $resultA = $this->db->get_results($queryA);
+        
+		$resultA = $this->db->get_results($queryA);
 		
 		return $resultA;
 	}
-	
 	
     public function sendMail($sendEmailBody) {
 		global $emailTo;

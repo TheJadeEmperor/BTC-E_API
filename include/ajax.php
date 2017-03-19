@@ -12,16 +12,20 @@ global $db;
 $db = new ezSQL_mysql($dbUser, $dbPW, $dbName, $dbHost);
 
 
-
 foreach($_REQUEST as $request => $value) {
     $_REQUEST[$request] = mysql_real_escape_string($value);
 }
 
 
+//handle date and time field
+$until_date = date('Y-m-d', strtotime($_REQUEST['until_date']));
+$until = $until_date.' '.$_REQUEST['until_time'];
+
+
 switch($_GET['action']) { 
  
 	case 'createTrade':
-		$insert = "INSERT INTO $tradeTable (trade_currency, trade_condition, trade_price, trade_amount, trade_exchange, until) values ('".$_REQUEST['trade_currency']."', '".$_REQUEST['trade_condition']."', '".$_REQUEST['trade_price']."', '".$_REQUEST['trade_exchange']."', '".$_REQUEST['trade_exchange']."', '".$_REQUEST['until']."'  
+		$insert = "INSERT INTO $tradeTable (trade_currency, trade_condition, trade_price, trade_amount, trade_exchange, until) values ('".$_REQUEST['trade_currency']."', '".$_REQUEST['trade_condition']."', '".$_REQUEST['trade_price']."', '".$_REQUEST['trade_exchange']."', '".$_REQUEST['trade_exchange']."', '".$until."'  
         )";
         
         $success = $db->query($insert);
@@ -33,8 +37,11 @@ switch($_GET['action']) {
 		break;
 	
 	case 'readTrade':
-
-		$readQuery = "SELECT * FROM $tradeTable WHERE id='".$trade_id."'";
+		//format 2 fields for date time - until_date - until_time
+		$readQuery = "SELECT *, date_format(until, '%m/%d/%Y') as until_date,
+		date_format(until, '%H:%i:%s') as until_time
+		FROM $tradeTable WHERE id='".$trade_id."'";
+		
         $result = $db->get_row($readQuery);
 
         echo json_encode($result);
@@ -48,7 +55,7 @@ switch($_GET['action']) {
 			trade_price = '".$_REQUEST['trade_price']."',
             trade_amount = '".$_REQUEST['trade_amount']."',
 			trade_exchange = '".$_REQUEST['trade_exchange']."',
-			until = '".$_REQUEST['until']."'
+			until = '".$until."'
             WHERE id = '".$trade_id."'";
 			
         $success = $db->query($update); 
