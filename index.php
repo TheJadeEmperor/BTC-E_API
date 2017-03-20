@@ -15,8 +15,8 @@ date_default_timezone_set('America/New_York');
 
 //alert ajax calls
 $createAlert = 'include/ajax.php?action=create';
-$read_call = 'include/ajax.php?action=read';
-$update_call = 'include/ajax.php?action=update';
+$readAlert = 'include/ajax.php?action=read';
+$updateAlert = 'include/ajax.php?action=update';
 $deleteAlert = 'include/ajax.php?action=delete';
 
 //trade Ajax calls

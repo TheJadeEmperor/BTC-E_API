@@ -106,12 +106,12 @@ foreach($tradesTable as $trade) {
 		
 		if($debug == 1) {
 			
-			$output .= $trade_exchange.' | '.$trade_currency.' | if '.$pair.' | is '.$trade_condition.' '.$trade_price.' then '.$trade_action.' '.$trade_amount.' units | valid until '.$trade_until.'
+			$output .= $trade_exchange.' | '.$trade_currency.' | if '.$pair.' | is '.$trade_condition.' '.$trade_price.' then '.$trade_action.' '.$trade_amount.' units | valid until '.$trade_until.' | 
 			'.$valid.' | '.$result.'
 			<br />'.$trade_until.' ('.$dbTimestamp.')<br />';
 		}
 		else {
-			$output .= $trade_exchange.' | '.$trade_currency.' | if '.$pair.' | is '.$trade_condition.' '.$trade_price.' then '.$trade_action.' '.$trade_amount.' units | valid until '.$trade_until.'
+			$output .= $trade_exchange.' | '.$trade_currency.' | if '.$pair.' | is '.$trade_condition.' '.$trade_price.' then '.$trade_action.' '.$trade_amount.' units | valid until '.$trade_until.' |
 			'.$valid.' | '.$result."\n".$trade_until.' ('.$dbTimestamp.')'."\n";
 		}	 
 }

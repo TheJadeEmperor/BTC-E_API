@@ -51,7 +51,7 @@ foreach($condTable as $cond) {
 	$currencyBTCE = $pieces[0].'_'.$pieces[1];
 	$currencyBTCE = strtolower($currencyBTCE);
 	
-	///get the live price from BTCE
+	//get the live price from BTCE
 	$currentPriceBTCE = $btce->getLastPrice($currencyBTCE);
 	
 	

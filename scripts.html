@@ -2,7 +2,7 @@
 	function updateAlert(id) {
 		$.ajax({ //Process the form using $.ajax()
 			type        : 'POST', //Method type
-			url         : '<?=$update_call?>', //Your form processing file url
+			url         : '<?=$updateAlert?>', //Your form processing file url
 			data        : $('#conditionTable').serialize(), 
 			success     : function(msg) {
 				console.log(msg);
@@ -27,7 +27,7 @@
 	}
 	
 	function fillFormAlert(id) {
-		$.getJSON("<?=$read_call?>&id="+id+"", function( data ) {
+		$.getJSON("<?=$readAlert?>&id="+id+"", function( data ) {
 		
 		$.each( data, function( key, val ) {
 			if(data.hasOwnProperty(key))
@@ -145,8 +145,7 @@
 		$('#sentDiv').html('<?=$sentDropDown?>');
 			
 		fillFormAlert(id);
- 
-				
+	
 		$( "#deleteAlert" ).click(function() {
 			deleteAlert(id);
 		});
@@ -218,8 +217,7 @@
 					$( this ).dialog( "close" );				
 				},                        
 			}
-		});
-	
+		});	
 	}
 
     $(document).ready(function () {
@@ -279,8 +277,7 @@
 					}
 				}
 			})
-		});
-		
+		});	
     });
 
 	
