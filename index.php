@@ -7,14 +7,17 @@ include($dir.'config.php');
 include($dir.'ez_sql_core.php');
 include($dir.'ez_sql_mysql.php');
 
-
 error_reporting(E_ALL & ~E_NOTICE & ~E_WARNING);
+
+//set timezone
+date_default_timezone_set('America/New_York');
+
 
 //alert ajax calls
 $createAlert = 'include/ajax.php?action=create';
 $read_call = 'include/ajax.php?action=read';
 $update_call = 'include/ajax.php?action=update';
-$delete_call = 'include/ajax.php?action=delete';
+$deleteAlert = 'include/ajax.php?action=delete';
 
 //trade Ajax calls
 $createTrade = 'include/ajax.php?action=createTrade';
@@ -79,7 +82,6 @@ $currTypes = array(
 	'ETH/USDT',
 	'ETH/BTC',
 	'DASH/USDT',
-
 );
 
 foreach($currTypes as $cType) {
@@ -88,7 +90,6 @@ foreach($currTypes as $cType) {
 }
 $currencyDropDown = '<select name="currency">'.$alertCurrencyDropDown.'</option>';
 $tradeCurrencyDropDown = '<select name="trade_currency">'.$tradeCurrencyDropDown.'</option>';
-
 
 
 
@@ -120,7 +121,6 @@ $unitDropDown = '<select name="unit">'.$unitDropDown.'</option>';
 
 
 
-
 $exchangeTypes = array(
 	'Poloniex'
 );
@@ -136,8 +136,7 @@ $tradeExchangeDropDown = '<select name="trade_exchange">'.$tradeExchangeDropDown
 
 
 $sentTypes = array(
-	'No',
-	'Yes',
+	'No', 'Yes',
 );
 
 foreach($sentTypes as $sType) {
@@ -145,9 +144,15 @@ foreach($sentTypes as $sType) {
 }
 $sentDropDown = '<select name="sent">'.$sentDropDown.'</option>';
  
- 
 
+$actionTypes = array(
+	'Buy', 'Sell'
+); 
 
+foreach($actionTypes as $aType) {
+	$actionDropDown .= '<option value="'.$aType.'">'.$aType.'</option>'; 
+}
+$tradeActionDropDown = '<select name="trade_action">'.$actionDropDown.'</option>';
 
 
 include('index.html');

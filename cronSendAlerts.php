@@ -94,7 +94,6 @@ foreach($condTable as $cond) {
 		else {
 			$extra = ' | will send ';
 			$success = $tableData->sendMail($sendEmailBody);
-			
 		}
 		
 		$queryA = 'UPDATE '.$tableName.' SET sent = "Yes" WHERE id='.$id;
@@ -107,16 +106,12 @@ foreach($condTable as $cond) {
 		
 		$output = ''.$currencyDB.' '.$onCondition.' '.number_format($onPrice, 2).' | '.$cond->exchange.' ('.$currencyPolo.') | Live price: '.number_format($currentPrice, 2).' | '.$result.' '.$extra .'<br /><br />';
 		
-		
 	}
 	else {
 		$output = ''.$currencyDB.' '.$onCondition.' '.number_format($onPrice, 2).' | '.$cond->exchange.' ('.$currencyPolo.') | Live price: '.number_format($currentPrice, 2).' | '.$result.' '.$extra ."\n\n";
-		
 	}
 	
-	echo $output;
-	
+	echo $output;	
 }
-
 
 ?>

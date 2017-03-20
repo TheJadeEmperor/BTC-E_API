@@ -64,7 +64,7 @@ include('scripts.html');
 			<table class="table">
 				<thead class="thead-default">
 				<tr>
-					<th colspan="5">btc_alerts Table <a href="cronSendAlerts.php?debug=1"><input type="button" value="cronSendAlerts"></a>
+					<th colspan="5">btc_alerts Table <a href="cronSendAlerts.php?debug=1" target="_BLANK"><input type="button" value="cronSendAlerts"></a>
 					</th>
 				</tr>
 				<tr>
@@ -79,8 +79,7 @@ include('scripts.html');
 				<?php
 				
 				foreach($condTable as $cond) {
-					
-					echo '<tr class="clickable" onclick="javascript:updateAlertDialog(\''.$cond->id.'\')">
+					echo '<tr class="clickable" onclick="javascript:updateAlertDialog(\''.$cond->id.'\')" title="'.$cond->id.'">
 					<td>'.$cond->currency.'</td>
 					<td>'.$cond->on_condition.'</td>
 					<td>'.$cond->price.' '.$cond->unit.'</td>
@@ -93,11 +92,10 @@ include('scripts.html');
 				</tbody>
 			</table>
 			
-			
 			<table class="table">
 				<thead class="thead-default">
 				<tr>
-					<th colspan="6">btc_trades Table <a href="cronSendAlerts.php?debug=1"><input type="button" value="cronSendAlerts"></a>
+					<th colspan="6">btc_trades Table <a href="cronSendTrades.php?debug=1" target="_BLANK"><input type="button" value="cronSendTrades"></a>
 					</th>
 				</tr>
 				<tr>
@@ -106,15 +104,12 @@ include('scripts.html');
 					<th>Price</th>
 					<th>Amount</th>
 					<th>Exchange</th>
-		
 				</tr>
 				</thead>
 				<tbody>
 				<?php
-				
 				foreach($tradesTable as $trade) {
-					
-					echo '<tr class="clickable" onclick="javascript:updateTradeDialog(\''.$trade->id.'\')">
+					echo '<tr class="clickable" onclick="javascript:updateTradeDialog(\''.$trade->id.'\')" title="'.$trade->id.'">
 					<td>'.$trade->trade_currency.'</td>
 					<td>'.$trade->trade_condition.'</td>
 					<td>'.$trade->trade_price.'</td>
@@ -127,11 +122,9 @@ include('scripts.html');
 				</tbody>
 				</tr>
 			</table>
-			
 		</div>
     
 		<div class="col">
-		 
 			<div id="links_to_charts">
 				<h3>Links to Charts</h3>
 				<pre class="xdebug-var-dump">
@@ -198,9 +191,8 @@ include('scripts.html');
 		</div>
 	</div>
 </div>
- 
 
-
+<p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p>
 
 <form id="conditionTable" title="Price Alerts">
     
@@ -258,15 +250,17 @@ include('scripts.html');
 	<table class="table">
 	<thead class="thead-default">
 	<tr>
+		<th>Exchange</th>
 		<th>Currency</th>
 		<th>Condition</th>
 		<th>Price</th>
-		<th>Amount</th>
-		<th>Exchange</th>
-
+		
 	</tr>
 	</thead>
 	<tr>
+		<td>
+			<div id="tradeExchangeDiv"><?=$tradeExchangeDropDown?></div>
+		</td>
 		<td>
 			<div id="tradeCurrencyDiv"><?=$tradeCurrencyDropDown?></div>	 
 		</td>
@@ -274,21 +268,34 @@ include('scripts.html');
 			<div id="tradeConditionDiv"><?=$tradeConditionDropDown?></div>
 		</td>
 		<td>
-			<input type="text" name="trade_price" size="15" />
+			<input type="text" name="trade_price" size="10" />
 		</td>
-		<td>
-			<input type="text" name="trade_amount" size="15" />
-		</td>
-		<td>
-			<div id="tradeExchangeDiv"><?=$tradeExchangeDropDown?></div>
-		</td>
+		
 	</tr>
 	</table>
-	<table>
+	
+	<table class="table">
+	<thead class="thead-default">
+	<tr>
+		<th>Action</th>
+		<th>Amount</th>
+		<th>Date Time</th>
+		<th>Delete</th>
+	</tr>
+	</thead>
 	<tr>
 		<td>
-			<input type="text" name="until_date" id="until_date" />
-			<input type="text" name="until_time" id="until_time" />
+			<div id="tradeActionDiv">
+				<?=$tradeActionDropDown?>
+			</div>
+		</td>
+		<td>
+			<input type="text" name="trade_amount" size="7" />
+		</td>
+		
+		<td>
+			<input type="text" name="until_date" id="until_date" size="10" />
+			<input type="text" name="until_time" id="until_time" size="10" />
 		</td>	
 		<td>
 			<button id="deleteTrade" class="btn btn-danger">Delete</button>
