@@ -30,12 +30,15 @@ $polo = new poloniex($polo_api_key, $polo_api_secret);
 //get all records from the alerts table
 $tradesTable = $tableData->tradesTable();
 
-if($debug == 1){
-	$output = 'Current Time: '.$currentTime.' ('.time().') <br /><br />';	
+if($debug == 1) {
+	$newline = '<br />';
 }
 else {
-	$output = 'Current Time: '.$currentTime.' <br /><br />';
+	$newline = "\n";
+	//$output = 'Current Time: '.$currentTime."\n\n";
 }
+
+$output = 'Current Time: '.$currentTime.' ('.time().')'.$newline.$newline;	
 
 
 foreach($tradesTable as $trade) {
@@ -47,7 +50,7 @@ foreach($tradesTable as $trade) {
 		$trade_price = $trade->trade_price;
 		$trade_action = $trade->trade_action;
 		$trade_amount = $trade->trade_amount;
-		$trade_until = $trade->until;
+		$trade_until = $trade->until_date.' '.$trade->until_time;
 		
 		if($trade_exchange == 'Poloniex'){
 			
@@ -100,20 +103,12 @@ foreach($tradesTable as $trade) {
 			}
 		}
 		else { //trade expired 
-			$valid = ' expired';
+			$valid = $result = ' expired';
 		}
 		
+		$output .= $trade_exchange.' | '.$trade_currency.' | if '.$pair.' | is '.$trade_condition.' '.$trade_price.' then '.$trade_action.' '.$trade_amount.' units | valid until '.$trade_until.' | 
+		'.$valid.' | '.$result.$newline.$newline;
 		
-		if($debug == 1) {
-			
-			$output .= $trade_exchange.' | '.$trade_currency.' | if '.$pair.' | is '.$trade_condition.' '.$trade_price.' then '.$trade_action.' '.$trade_amount.' units | valid until '.$trade_until.' | 
-			'.$valid.' | '.$result.'
-			<br />'.$trade_until.' ('.$dbTimestamp.')<br />';
-		}
-		else {
-			$output .= $trade_exchange.' | '.$trade_currency.' | if '.$pair.' | is '.$trade_condition.' '.$trade_price.' then '.$trade_action.' '.$trade_amount.' units | valid until '.$trade_until.' |
-			'.$valid.' | '.$result."\n".$trade_until.' ('.$dbTimestamp.')'."\n";
-		}	 
 }
 
 
