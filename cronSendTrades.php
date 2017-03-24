@@ -68,7 +68,7 @@ foreach($tradesTable as $trade) {
 		
 		
 		if($dbTimestamp >= time()) { //trade valid
-			$valid = ' valid';
+			$valid = ' active';
 			
 			$priceArray = $polo->get_ticker($pair);
 
@@ -106,7 +106,7 @@ foreach($tradesTable as $trade) {
 			$valid = $result = ' expired';
 		}
 		
-		$output .= $trade_exchange.' | '.$trade_currency.' | if '.$pair.' | is '.$trade_condition.' '.$trade_price.' then '.$trade_action.' '.$trade_amount.' units | valid until '.$trade_until.' | 
+		$output .= $trade_exchange.' | '.$trade_currency.' | if '.$pair.' is '.$trade_condition.' '.$trade_price.' then '.$trade_action.' '.$trade_amount.' units | valid until '.$trade_until.' | 
 		'.$valid.' | '.$result.$newline.$newline;
 		
 }
