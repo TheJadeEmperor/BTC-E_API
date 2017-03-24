@@ -106,7 +106,10 @@ foreach($tradesTable as $trade) {
 			$valid = $result = ' expired';
 		}
 		
-		$output .= $trade_exchange.' | '.$trade_currency.' | if '.$pair.' is '.$trade_condition.' '.$trade_price.' then '.$trade_action.' '.$trade_amount.' units | valid until '.$trade_until.' | 
+		$lastPrice = number_format($lastPrice, 4);
+		
+		$output .= $trade_exchange.' | '.$trade_currency.' | if '.$pair.' is '.$trade_condition.' '.$trade_price.' then '.$trade_action.' '.$trade_amount.' units | last price: '.$lastPrice.' '.$newline.'
+		valid until '.$trade_until.' | 
 		'.$valid.' | '.$result.$newline.$newline;
 		
 }
