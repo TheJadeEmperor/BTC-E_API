@@ -9,22 +9,19 @@ include($dir.'ez_sql_mysql.php');
 //set timezone
 date_default_timezone_set('America/New_York');
 
-
 //get timestamp
 $currentTime = date('Y-m-d H:i:s', time());
 
-
-
-global $db;
-
+//database connection
 $db = new ezSQL_mysql($dbUser, $dbPW, $dbName, $dbHost);
+
 
 $debug = $_GET['debug'];
 
 //connect to the BTC Database
 $tableData = new Database($db);
 
-//
+//connect to Poloniex
 $polo = new poloniex($polo_api_key, $polo_api_secret);
 
 //get all records from the alerts table
@@ -42,23 +39,20 @@ $output = 'Current Time: '.$currentTime.' ('.time().')'.$newline.$newline;
 
 foreach($tradesTable as $trade) {
 		
-		$id = $trade->id;
+		$trade_id = $trade->id;
 		$trade_exchange = $trade->trade_exchange;
 		$trade_currency = $trade->trade_currency;
 		$trade_condition = $trade->trade_condition;
 		$trade_price = $trade->trade_price;
 		$trade_action = $trade->trade_action;
 		$trade_amount = $trade->trade_amount;
+		$trade_result = $trade->result;
 		$trade_until = $trade->until_date.' '.$trade->until_time;
 		
-		if($trade_exchange == 'Poloniex'){
+		if($trade_exchange == 'Poloniex') { //set the currency in poloniex
 			
-			if($trade_currency == 'ETH/BTC') {
-				$pair = 'BTC_ETH';
-			}
-			else if($trade_currency == 'ETH/USDT') {
-				$pair = 'USDT_ETH';
-			}
+			list($first, $second) = explode('/', $trade_currency);
+			$pair = $second.'_'.$first;
 			
 		}
 		
@@ -66,8 +60,8 @@ foreach($tradesTable as $trade) {
 		$dbTimestamp = strtotime($trade_until);
 		
 		
-		if($dbTimestamp >= time()) { //trade valid
-			$valid = ' active';
+		if($dbTimestamp >= time()) { //is trade valid
+			$isValid = ' active';
 			
 			$priceArray = $polo->get_ticker($pair);
 
@@ -76,39 +70,55 @@ foreach($tradesTable as $trade) {
 			//check if price meets conditions
 			if($trade_condition == '>=') {
 				if($lastPrice >= $trade_price) {
-					$result = 'true'; 
+					$isTradeable = 'true'; 
 				}
 				else {
-					$result = 'false';
+					$isTradeable = 'false';
 				}
 			}
 			else if ($trade_condition == '<=') {
 				if($lastPrice <= $trade_price) {
-					$result =  'true';
+					$isTradeable =  'true';
 				}
 				else {
-					$result = 'false';
+					$isTradeable = 'false';
 				}
 			}
 			else {
-				$result =  'error';
+				$isTradeable =  'error';
 			}
 
-			if($result == 'true') {
-				if($trade_action == 'Buy')
-					$tradeResult = $polo->buy($pair, $trade_price, $trade_amount); 
-				else 
-					$tradeResult = $polo->sell($pair, $trade_price, $trade_amount); 
+			$queryT = "SELECT result from $tradeTable WHERE id='".$trade_id."'";
+			$resultT = $db->get_results($queryT);
+		
+			$dbResult = $resultT[0]->result;
+			
+			if($isTradeable == 'true') {
+				
+				if($dbResult == 0) { //only trade once 
+					if($trade_action == 'Buy')
+						$tradeResult = $polo->buy($pair, $trade_price, $trade_amount); 
+					else 
+						$tradeResult = $polo->sell($pair, $trade_price, $trade_amount); 
+					
+					//update trades table with result
+					$update = "UPDATE $tradeTable SET
+					result = '1' WHERE id = '".$trade_id."'";
+					
+					$success = $db->query($update); 
+					
+					$isValidOnce = ' | true';
+				}
+				else { //trade already processed
+					$isValidOnce = ' | false';
+				}
 			}
 		}
 		else { //trade expired 
-			$valid = $result = ' expired';
-		}
+			$isValid = $isTradeable = ' expired';
+		} 
 		
-		$lastPrice = number_format($lastPrice, 4);
-		
-		$output .= $trade_exchange.' | '.$trade_currency.' | if '.$pair.' is '.$trade_condition.' '.$trade_price.' then '.$trade_action.' '.$trade_amount.' units | last price: '.$lastPrice.' '.$newline.' valid until '.$trade_until.' | '.$valid.' | '.$result.$newline.$newline;
-		
+		$output .= $trade_exchange.' | '.$trade_currency.' | if '.$pair.' is '.$trade_condition.' '.$trade_price.' then '.$trade_action.' '.$trade_amount.' units | last price: '.$lastPrice.' '.$newline.' valid until '.$trade_until.' | '.$isValid.' | '.$isTradeable.' '.$isValidOnce.'  '.$newline.$newline; 		
 }
 
 

@@ -100,7 +100,7 @@ include('scripts.html');
 				</tr>
 				<tr>
 					<th>Currency</th>
-					<th>Condition</th>
+					<th>Cond</th>
 					<th>Price</th>
 					<th>Amount</th>
 					<th>Exchange</th>
@@ -109,7 +109,7 @@ include('scripts.html');
 				<tbody>
 				<?php
 				foreach($tradesTable as $trade) {
-					echo '<tr class="clickable" onclick="javascript:updateTradeDialog(\''.$trade->id.'\')" title="'.$trade->id.'">
+					echo '<tr class="clickable" onclick="javascript:updateTradeDialog(\''.$trade->id.'\')" title="id: '.$trade->id.' | trade_until: '.$trade->until_date.' '.$trade->until_time.'">
 					<td>'.$trade->trade_currency.'</td>
 					<td>'.$trade->trade_condition.'</td>
 					<td>'.$trade->trade_price.'</td>
@@ -158,6 +158,11 @@ include('scripts.html');
 							<br /><br />
 							
 							<a href="https://www.coinbase.com/accounts" target="_blank">Coinbase Funds</a>
+							
+							<br /><br />
+							
+							<a href="https://www.gdax.com/" target="_blank">GDAX</a>
+							
 						</td>
 					</tr>
 				</table>
@@ -181,6 +186,8 @@ include('scripts.html');
 							<a href="https://poloniex.com/exchange" target="_blank">Polo Exchange</a>
 							
 							<br /><br />
+							
+							<a href="https://bittrex.com/account/login" target="_blank">Bittrex Exchange</a>
 											
 						</td>
 					   
@@ -188,6 +195,8 @@ include('scripts.html');
 				</table>
 				</pre>
 			</div>
+			
+			
 		</div>
 	</div>
 </div>
@@ -262,7 +271,8 @@ include('scripts.html');
 			<div id="tradeExchangeDiv"><?=$tradeExchangeDropDown?></div>
 		</td>
 		<td>
-			<div id="tradeCurrencyDiv"><?=$tradeCurrencyDropDown?></div>	 
+		<input type="text" name="trade_currency" size="10" />
+<!--			<div id="tradeCurrencyDiv"><?=$tradeCurrencyDropDown?></div>-->	 
 		</td>
 		<td>
 			<div id="tradeConditionDiv"><?=$tradeConditionDropDown?></div>
@@ -292,7 +302,6 @@ include('scripts.html');
 		<td>
 			<input type="text" name="trade_amount" size="7" />
 		</td>
-		
 		<td>
 			<input type="text" name="until_date" id="until_date" size="10" />
 			<input type="text" name="until_time" id="until_time" size="10" />

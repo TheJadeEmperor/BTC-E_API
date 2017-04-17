@@ -134,7 +134,6 @@ $tradeExchangeDropDown = '<select name="trade_exchange">'.$tradeExchangeDropDown
  
 
 
-
 $sentTypes = array(
 	'No', 'Yes',
 );
