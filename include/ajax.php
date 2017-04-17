@@ -27,7 +27,7 @@ $until = $until_date.' '.$_REQUEST['until_time'];
 switch($_GET['action']) { 
  
 	case 'createTrade':
-		$insert = "INSERT INTO $tradeTable (trade_exchange, trade_currency, trade_condition, trade_price, trade_action, trade_amount, until) values (''".$_REQUEST['trade_exchange']."', ".$_REQUEST['trade_currency']."', '".$_REQUEST['trade_condition']."', '".$_REQUEST['trade_price']."', '".$_REQUEST['trade_action']."', '".$_REQUEST['trade_amount']."', '".$until."' )";
+		$insert = "INSERT INTO $tradeTable (trade_exchange, trade_currency, trade_condition, trade_price, trade_action, trade_amount, until) values ('".$_REQUEST['trade_exchange']."', '".$_REQUEST['trade_currency']."', '".$_REQUEST['trade_condition']."', '".$_REQUEST['trade_price']."', '".$_REQUEST['trade_action']."', '".$_REQUEST['trade_amount']."', '".$until."' )";
         
         $success = $db->query($insert);
         if($success == 1) 
@@ -80,7 +80,7 @@ switch($_GET['action']) {
         break;
 		
 	
-	case 'update':
+	case 'update': //updateAlert
        
 	   $update = "UPDATE $tableName SET currency = '".$_REQUEST['currency']."',
             on_condition = '".$_REQUEST['on_condition']."',
@@ -98,7 +98,7 @@ switch($_GET['action']) {
             echo 'Failed to update record '.$update;
         break;
         
-    case 'delete':
+    case 'delete':	//deleteAlert
 	
         $success = $db->query("DELETE from $tableName WHERE id='".$id."'");
         
@@ -108,11 +108,10 @@ switch($_GET['action']) {
             echo 'Failed to delete record '.$id;
         break;
         
-    case 'create':
+    case 'create':	//createAlert
 	
         $insert = "INSERT INTO $tableName (currency, on_condition, price, unit, exchange) values (
-            '".$_REQUEST['currency']."', '".$_REQUEST['on_condition']."', '".$_REQUEST['price']."', '".$_REQUEST['unit']."', '".$_REQUEST['exchange']."' 
-        )";
+            '".$_REQUEST['currency']."', '".$_REQUEST['on_condition']."', '".$_REQUEST['price']."', '".$_REQUEST['unit']."', '".$_REQUEST['exchange']."' )";
         
         $success = $db->query($insert);
         
@@ -123,7 +122,7 @@ switch($_GET['action']) {
         
         break;
 		
-    case 'read':
+    case 'read':	//readAlert
     default:
         $result = $db->get_row("SELECT * FROM $tableName WHERE id='".$id."'");
 
