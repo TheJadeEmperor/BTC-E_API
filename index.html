@@ -1,4 +1,5 @@
 <head>
+	<title>BTC API Dashboard</title>
 <!-- Latest compiled and minified CSS -->
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
 
@@ -103,7 +104,7 @@ include('scripts.html');
 					<th>Cond</th>
 					<th>Price</th>
 					<th>Amount</th>
-					<th>Exchange</th>
+					<th>Action</th>
 				</tr>
 				</thead>
 				<tbody>
@@ -114,7 +115,7 @@ include('scripts.html');
 					<td>'.$trade->trade_condition.'</td>
 					<td>'.$trade->trade_price.'</td>
 					<td>'.$trade->trade_amount.'</td>
-					<td>'.$trade->trade_exchange.'</td>
+					<td>'.$trade->trade_action.'</td>
 				';
 				}
 

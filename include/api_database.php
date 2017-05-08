@@ -15,7 +15,7 @@ class Database {
     
     public function tradesTable() {
 		$queryT = "SELECT *, date_format(until, '%m/%d/%Y') as until_date,
-		date_format(until, '%H:%i:%s') as until_time  FROM ".$this->context['tradesTable']." ORDER BY id";
+		date_format(until, '%H:%i:%s') as until_time  FROM ".$this->context['tradesTable']." ORDER BY trade_currency, trade_condition";
 		
         $resultT = $this->db->get_results($queryT);
 		
