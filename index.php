@@ -81,7 +81,7 @@ $currTypes = array(
 	'BTC/USDT',
 	'ETH/USDT',
 	'ETH/BTC',
-	'XRP/BTC',
+	'XRP/BTC'
 );
 
 foreach($currTypes as $cType) {
