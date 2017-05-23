@@ -278,7 +278,30 @@
 				}
 			})
 		});	
+		
+		$(".balanceButton").click(function() {
+			$("#accountBalance").dialog({
+				modal: true,
+				width: 790,
+				position: 'top',
+				show: {
+					effect: "explode",
+					duration: 500
+				},
+				hide: {
+					effect: "explode",
+					duration: 500
+				},
+				buttons: {
+					Save: function() {
+						createTrade();
+						$(this).dialog("close");
+					},
+					Cancel: function() {
+						$(this).dialog("close");
+					}
+				}
+			})
+		});	
     });
-
-	
 </script>

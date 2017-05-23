@@ -31,7 +31,7 @@ $db = new ezSQL_mysql($dbUser, $dbPW, $dbName, $dbHost);
 
 
 //requires the extension php_openssl to work
-$polo = new poloniex();
+$polo = new poloniex($polo_api_key, $polo_api_secret);
 
 $btce = new BTCeAPI();
 
@@ -40,7 +40,6 @@ $tableData = new Database($db);
 $condTable = $tableData->alertsTable();
 
 $tradesTable = $tableData->tradesTable();
-
 
 
 //get prices from poloniex
@@ -52,7 +51,6 @@ $USDT_ETH = $polo->get_ticker('USDT_ETH');
 
 
 //get prices from btc-e
-
 $btce_btc_eth = $btce->getLastPrice('eth_btc');
 
 $btce_btc_usd = $btce->getLastPrice('btc_usd');
@@ -75,7 +73,7 @@ $btce_eth_usd = number_format($btce_eth_usd, 2);
 
 $btce_btc_eth =  number_format($btce_btc_eth, 4);
 
-
+/*
 //currency options
 $currTypes = array(
 	'BTC/USDT',
@@ -90,7 +88,7 @@ foreach($currTypes as $cType) {
 }
 $currencyDropDown = '<select name="currency">'.$alertCurrencyDropDown.'</option>';
 $tradeCurrencyDropDown = '<select name="trade_currency">'.$tradeCurrencyDropDown.'</option>';
-
+*/
 
 
 //condition types
@@ -111,7 +109,7 @@ $tradeConditionDropDown = '<select name="trade_condition">'.$tradeConditionDropD
 
 $unitTypes = array(
 	'$',
-	'%',
+	'BTC',
 );
 
 foreach($unitTypes as $uType) {
