@@ -2,11 +2,11 @@
 function transfer($r1_btc){
 	
 $fee = 0.0025; //0.25% fee
-$polo_btc = 1369;
-$polo_dash = 78;
+$polo_btc = 2055;
+$polo_ltc = 23.99;
 
-$cryp_btc = 1356;
-$cryp_dash = 84;
+$cb_btc = 2236;
+$cb_ltc = 24.82;
 	
 	echo 'Polo BTC: '.$r1_btc.'<br />';
 	
@@ -15,34 +15,34 @@ $cryp_dash = 84;
 	
 	echo 'Polo USDT: '.$r1_usdt.'<br />';
 	
-	$r1_dash = $r1_usdt / $polo_dash;
+	$r1_dash = $r1_usdt / $polo_ltc;
 	$r1_dash = $r1_dash - ($r1_dash * $fee);
 	
 	echo 'Polo DASH: '.$r1_dash.'<br />';
 
-	echo '<br />Transfer to Cryptopia...<br />';
+	echo '<br />Transfer to Coinbase...<br />';
 
-	echo 'Cryp DASH: '.$r1_dash.'<br />';
+	echo 'CB LTC: '.$r1_dash.'<br />';
 	
-	$r2_usdt = $r1_dash * $cryp_dash;
+	$r2_usdt = $r1_dash * $cb_ltc;
 	$r2_usdt = $r2_usdt - ($r2_usdt * $fee);
 	
-	echo 'Cryp USDT: '.$r2_usdt.'<br />';
+	echo 'CB USDT: '.$r2_usdt.'<br />';
 	
-	$r2_btc = $r2_usdt / $cryp_btc;
+	$r2_btc = $r2_usdt / $cb_btc;
 	$r2_btc = $r2_btc - ($r2_btc * $fee);
 	
 	
-	echo 'Cryp BTC: '.$r2_btc.'<br />'; 
+	echo 'CB BTC: '.$r2_btc.'<br />'; 
 	
 	return $r2_btc;
 }
 
-$polo_btc = 1369;
-$polo_dash = 78;
+$polo_btc = 2055;
+$polo_ltc = 23.99;
 
-$cryp_btc = 1356;
-$cryp_dash = 84;
+$cb_btc = 2236;
+$cb_ltc = 24.82;
 
 if($_POST['balance']) {
 	

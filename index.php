@@ -14,7 +14,7 @@ date_default_timezone_set('America/New_York');
 
 
 //alert ajax calls
-$createAlert = 'include/ajax.php?action=create';
+$createAlert = 'include/ajax.php?action=create4';
 $readAlert = 'include/ajax.php?action=read';
 $updateAlert = 'include/ajax.php?action=update';
 $deleteAlert = 'include/ajax.php?action=delete';
@@ -43,11 +43,23 @@ $tradesTable = $tableData->tradesTable();
 
 
 //get prices from poloniex
-$BTC_ETH = $polo->get_ticker('BTC_ETH');
+$POLO_BTC_ETH = $polo->get_ticker('BTC_ETH');
 
-$USDT_BTC = $polo->get_ticker('USDT_BTC');
+$POLO_USDT_BTC = $polo->get_ticker('USDT_BTC');
 
-$USDT_ETH = $polo->get_ticker('USDT_ETH');
+$POLO_USDT_ETH = $polo->get_ticker('USDT_ETH');
+
+$POLO_USDT_LTC = $polo->get_ticker('USDT_LTC');
+
+
+//format polo currencies
+$polo_btc_eth = number_format($POLO_BTC_ETH['last'], 4);
+
+$polo_btc_usd = number_format($POLO_USDT_BTC['last'], 0);
+
+$polo_eth_usd = number_format($POLO_USDT_ETH['last'], 2);
+
+$polo_ltc_usd = number_format($POLO_USDT_LTC['last'], 2);
 
 
 //get prices from btc-e
@@ -57,14 +69,7 @@ $btce_btc_usd = $btce->getLastPrice('btc_usd');
 
 $btce_eth_usd = $btce->getLastPrice('eth_usd');
 
-
-//format polo currencies
-$polo_btc_usd = number_format($USDT_BTC['last'], 0);
-
-$polo_eth_usd= number_format($USDT_ETH['last'], 2);
-
-$polo_btc_eth = number_format($BTC_ETH['last'], 4);
-
+$btce_ltc_usd = $btce->getLastPrice('ltc_usd');
 
 //format btc-e currencies
 $btce_btc_usd = number_format($btce_btc_usd, 0);
@@ -73,22 +78,8 @@ $btce_eth_usd = number_format($btce_eth_usd, 2);
 
 $btce_btc_eth =  number_format($btce_btc_eth, 4);
 
-/*
-//currency options
-$currTypes = array(
-	'BTC/USDT',
-	'ETH/USDT',
-	'ETH/BTC',
-	'XRP/BTC'
-);
+$btce_ltc_usd =  number_format($btce_ltc_usd, 2);
 
-foreach($currTypes as $cType) {
-	$alertCurrencyDropDown .= '<option value="'.$cType.'">'.$cType.'</option>';
-	$tradeCurrencyDropDown .= '<option value="'.$cType.'">'.$cType.'</option>';
-}
-$currencyDropDown = '<select name="currency">'.$alertCurrencyDropDown.'</option>';
-$tradeCurrencyDropDown = '<select name="trade_currency">'.$tradeCurrencyDropDown.'</option>';
-*/
 
 
 //condition types

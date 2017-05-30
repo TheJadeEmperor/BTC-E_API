@@ -60,6 +60,11 @@ include('scripts.html');
 					<td>ETH/USDT </td>
 					<td> $<?=$polo_eth_usd ?> </td>
 					<td> $<?=$btce_eth_usd ?> </td>
+				</tr>
+				</tr>
+					<td>LTC/USDT </td>
+					<td> $<?=$polo_ltc_usd ?> </td>
+					<td> $<?=$btce_ltc_usd ?> </td>
 				</tr>				
 			</table>
 			
@@ -325,18 +330,47 @@ include('scripts.html');
 <h2>Poloniex</h2>
 <table>
 <tr>
-	<th>Currency</th><th>Balance</th><th>Chart</th>
+	<th>Currency</th><th>Balance</th><th>Price</th><th>Change</th><th>Chart</th>
 </tr>
 	<?php
 
 	$balanceArray = $polo->get_balances();
 
-	foreach($balanceArray as $currencyPair => $currencyBalance) {
-		if($currencyBalance > 0.001)
-			$balanceTable .= '<tr><td>'.$currencyPair.'</td>
+	$tickerArray = $polo->get_ticker();
+			
+//	print_r($tickerArray);
+	
+	
+
+	foreach($balanceArray as $currency => $currencyBalance) {
+		if($currencyBalance > 0.001) {
+			if($currency == 'BTC') $chartLink = 'BTCUSD';
+			else $chartLink = $currency.'BTC';
+			
+			foreach($tickerArray as $currencyPair => $tickerData) {
+				list($crap, $curr) = explode('_',  $currencyPair);
+			
+				if($currency == $curr && $crap == 'BTC') {
+					$percentChange = $tickerData['percentChange'];
+					$lastFormat = $tickerData['last'];
+					
+					$percentChangeFormat = $percentChange * 100;
+					$percentChangeFormat = number_format($percentChangeFormat, 2);
+					
+					$lastFormat = number_format($lastFormat, 8);
+				}	
+			}
+			
+			if($percentChangeFormat > 0) $color = 'green';
+			else $color = 'red';
+			
+			$balanceTable .= '<tr><td>'.$currency.'</td>
 			<td>'.$currencyBalance.'</td>
-			<td><a href="https://www.tradingview.com/chart/'.$currencyPair.'BTC" target="_BLANK">View</a></td>
+			<td>'.$lastFormat.'</td>
+			<td style="color: '.$color.'">'.$percentChangeFormat.'%</td>
+			<td><a href="https://www.tradingview.com/chart/'.$chartLink.'" target="_BLANK">View</a></td>
 			</tr>';
+		}
 	}
 	echo $balanceTable;
 	?>
