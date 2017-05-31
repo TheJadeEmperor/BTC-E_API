@@ -214,6 +214,31 @@ include('scripts.html');
 
 <p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p>
 
+
+
+<div class="col">
+<table class="table">
+<?php
+$tickerArray = $polo->get_ticker();
+foreach($tickerArray as $currencyPair => $tickerData) {
+	$percentChange = $tickerData['percentChange'];
+	
+	
+	$percentChangeFormat = $percentChange * 100;
+	
+	$percentChangeFormat = number_format($percentChangeFormat, 2);
+	
+	if($percentChangeFormat > 10) {
+		echo '<tr>
+		<td>'.$currencyPair.'</td>
+		<td>'.$percentChangeFormat.'</td></tr>';
+	}
+}
+?>
+</table>
+</div>
+
+
 <form id="conditionTable" title="Price Alerts">
     
 	<input type="hidden" id="id" name="id" />
@@ -376,5 +401,6 @@ include('scripts.html');
 	?>
 <table>
 </form>
+
 
 </body>
