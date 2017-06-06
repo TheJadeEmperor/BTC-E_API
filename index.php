@@ -82,31 +82,21 @@ $btce_ltc_usd =  number_format($btce_ltc_usd, 2);
 
 
 
-//condition types
-$conditionTypes = array(
-	'<=',
-	'>=',
-);
+$conditionDropDown = '<select name="on_condition"><option value=">="> > </option><option value="<="> < </option></select>';
 
-foreach($conditionTypes as $condType) {
-	$conditionDropDown .= '<option value="'.$condType.'">'.$condType.'</option>';
-	$tradeConditionDropDown .= '<option value="'.$condType.'">'.$condType.'</option>';
-}
-$conditionDropDown = '<select name="on_condition">'.$conditionDropDown.'</option>';
-
-$tradeConditionDropDown = '<select name="trade_condition">'.$tradeConditionDropDown.'</select>';
+$tradeConditionDropDown = '<select name="trade_condition"><option value=">="> > </option><option value="<="> < </option></select>';
 
 
 
 $unitTypes = array(
-	'$',
 	'BTC',
+	'%',
 );
 
 foreach($unitTypes as $uType) {
 	$unitDropDown .= '<option value="'.$uType.'">'.$uType.'</option>';
 }
-$unitDropDown = '<select name="unit">'.$unitDropDown.'</option>';
+$tradeUnitDropDown = '<select name="unit">'.$unitDropDown.'</option>';
 
 
 

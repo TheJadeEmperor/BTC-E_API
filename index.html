@@ -21,6 +21,10 @@
 	.clickable, .btn {
 		cursor: pointer;
 	}
+	
+	.green {
+		color: green;
+	}
 </style>
 
 <?
@@ -85,7 +89,6 @@ include('scripts.html');
 				</thead>
 				<tbody>
 				<?php
-				
 				foreach($condTable as $cond) {
 					echo '<tr class="clickable" onclick="javascript:updateAlertDialog(\''.$cond->id.'\')" title="'.$cond->id.'">
 					<td>'.$cond->currency.'</td>
@@ -172,7 +175,7 @@ include('scripts.html');
 							
 							<br /><br />
 							
-							<a href="https://www.gdax.com/" target="_blank">GDAX</a>
+							<a href="https://www.gdax.com/" target="_blank">GDAX Exchange</a>
 							
 						</td>
 					</tr>
@@ -210,34 +213,46 @@ include('scripts.html');
 			
 		</div>
 	</div>
-</div>
-
-<p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p>
 
 
-
+<div class="row justify-content-md-center">
 <div class="col">
 <table class="table">
+	<thead class="thead-default">
+		<tr>
+			<th colspan="2">Today's Winners</th>
+		</tr>
+		<tr>
+			<th>Currency</th>
+			<th>Percent Change</th>
+		</tr>
+	</thead>
 <?php
 $tickerArray = $polo->get_ticker();
 foreach($tickerArray as $currencyPair => $tickerData) {
 	$percentChange = $tickerData['percentChange'];
 	
+	list($crap, $curr) = explode('_',  $currencyPair);
 	
 	$percentChangeFormat = $percentChange * 100;
 	
 	$percentChangeFormat = number_format($percentChangeFormat, 2);
 	
+	if($crap == 'BTC') //only show BTC markets
 	if($percentChangeFormat > 10) {
 		echo '<tr>
 		<td>'.$currencyPair.'</td>
-		<td>'.$percentChangeFormat.'</td></tr>';
+		<td class="green">+'.$percentChangeFormat.'%</td></tr>';
 	}
 }
 ?>
 </table>
 </div>
+</div>
 
+</div>
+
+<p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p>
 
 <form id="conditionTable" title="Price Alerts">
     
@@ -300,7 +315,8 @@ foreach($tickerArray as $currencyPair => $tickerData) {
 		<th>Exchange</th>
 		<th>Currency</th>
 		<th>Condition</th>
-		<th>Price</th>		
+		<th>Price </th>		
+		<th>Unit</th>
 	</tr>
 	</thead>
 	<tr>
@@ -314,9 +330,11 @@ foreach($tickerArray as $currencyPair => $tickerData) {
 			<div id="tradeConditionDiv"><?=$tradeConditionDropDown?></div>
 		</td>
 		<td>
-			<input type="text" name="trade_price" size="10" />
+			<input type="text" name="trade_price" size="10" />	
 		</td>
-		
+		<td>
+			<div id="tradeUnitDiv"><?=$tradeUnitDropDown?></div>
+		</td>
 	</tr>
 	</table>
 	
@@ -336,7 +354,7 @@ foreach($tickerArray as $currencyPair => $tickerData) {
 			</div>
 		</td>
 		<td>
-			<input type="text" name="trade_amount" size="7" />
+			<input type="text" name="trade_amount" size="12" />
 		</td>
 		<td>
 			<input type="text" name="until_date" id="until_date" size="10" />
@@ -363,15 +381,10 @@ foreach($tickerArray as $currencyPair => $tickerData) {
 
 	$tickerArray = $polo->get_ticker();
 			
-//	print_r($tickerArray);
-	
-	
-
 	foreach($balanceArray as $currency => $currencyBalance) {
 		if($currencyBalance > 0.001) {
-			if($currency == 'BTC') $chartLink = 'BTCUSD';
-			else $chartLink = $currency.'BTC';
-			
+		
+		 
 			foreach($tickerArray as $currencyPair => $tickerData) {
 				list($crap, $curr) = explode('_',  $currencyPair);
 			
@@ -385,6 +398,13 @@ foreach($tickerArray as $currencyPair => $tickerData) {
 					$lastFormat = number_format($lastFormat, 8);
 				}	
 			}
+			
+			if($currency == 'BTC') {
+				$chartLink = 'BTCUSD';
+				$percentChangeFormat = $lastFormat = 0;
+			}
+			else 
+				$chartLink = $currency.'BTC';
 			
 			if($percentChangeFormat > 0) $color = 'green';
 			else $color = 'red';

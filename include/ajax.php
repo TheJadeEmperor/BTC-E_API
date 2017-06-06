@@ -27,7 +27,7 @@ $until = $until_date.' '.$_REQUEST['until_time'];
 switch($_GET['action']) { 
  
 	case 'createTrade':
-		$insert = "INSERT INTO $tradeTable (trade_exchange, trade_currency, trade_condition, trade_price, trade_action, trade_amount, until) values ('".$_REQUEST['trade_exchange']."', '".$_REQUEST['trade_currency']."', '".$_REQUEST['trade_condition']."', '".$_REQUEST['trade_price']."', '".$_REQUEST['trade_action']."', '".$_REQUEST['trade_amount']."', '".$until."' )";
+		$insert = "INSERT INTO $tradeTable (trade_exchange, trade_currency, trade_condition, trade_price, trade_action, trade_amount, trade_unit, until) values ('".$_REQUEST['trade_exchange']."', '".$_REQUEST['trade_currency']."', '".$_REQUEST['trade_condition']."', '".$_REQUEST['trade_price']."', '".$_REQUEST['trade_action']."', '".$_REQUEST['trade_amount']."', '".$_REQUEST['trade_unit']."', '".$until."' )";
         
         $success = $db->query($insert);
         if($success == 1) 
@@ -58,6 +58,7 @@ switch($_GET['action']) {
 			trade_price = '".$_REQUEST['trade_price']."',
 			trade_action = '".$_REQUEST['trade_action']."',
             trade_amount = '".$_REQUEST['trade_amount']."',
+			trade_unit = '".$_REQUEST['trade_unit']."',
 			until = '".$until."'
             WHERE id = '".$trade_id."'";
 			
