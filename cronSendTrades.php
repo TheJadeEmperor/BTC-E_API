@@ -59,7 +59,6 @@ foreach($tradesTable as $trade) {
 	//check timestamp
 	$dbTimestamp = strtotime($trade_until);
 	
-	echo $trade_unit;
 	if($dbTimestamp >= time()) { //has trade expired yet
 		$isValid = ' active';
 			
