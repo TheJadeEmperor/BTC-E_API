@@ -122,7 +122,7 @@ include('scripts.html');
 					echo '<tr class="clickable" onclick="javascript:updateTradeDialog(\''.$trade->id.'\')" title="id: '.$trade->id.' | trade_until: '.$trade->until_date.' '.$trade->until_time.'">
 					<td>'.$trade->trade_currency.'</td>
 					<td>'.$trade->trade_condition.' 
-					'.$trade->trade_price.'</td>
+					'.$trade->trade_price.' '.$trade->trade_unit.'</td>
 					<td>'.$trade->trade_action.' '.$trade->trade_amount.'</td>
 					<td>'.$trade->until.'</td>
 				';
@@ -376,7 +376,6 @@ foreach($tickerArray as $currencyPair => $tickerData) {
 	<th>Currency</th><th>Balance</th><th>Price</th><th>Change</th><th>Chart</th>
 </tr>
 	<?php
-
 	$balanceArray = $polo->get_balances();
 
 	$tickerArray = $polo->get_ticker();
