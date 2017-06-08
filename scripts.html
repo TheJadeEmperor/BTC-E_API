@@ -66,7 +66,7 @@
 			}
 			
 			//select the values for drop down menus
-			if(key == 'trade_currency' || key == 'trade_condition' || key == 'trade_exchange' || key == 'trade_action') {
+			if(key == 'trade_currency' || key == 'trade_condition' || key == 'trade_exchange' || key == 'trade_action' || key == 'trade_unit') {
 				$('select[name="'+key+'"]').find('option:contains("'+val+'")').attr("selected",true);		
 			}
             });
@@ -188,7 +188,11 @@
 
 		$("select[name=trade_action]").remove();	//remove action menu
 		$("#tradeActionDiv").html('<?=$tradeActionDropDown?>');	//re-construct the action menu
-	
+
+		$("select[name=trade_unit]").remove();	//remove action menu
+		$("#tradeUnitDiv").html('<?=$tradeUnitDropDown?>');	//re-construct the unit menu
+
+		
 		fillFormTrade(id);
 	
 		$( "#deleteTrade" ).click(function() {

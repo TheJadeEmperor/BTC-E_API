@@ -23,7 +23,11 @@ $debug = $_GET['debug'];
 $polo = new poloniex($polo_api_key, $polo_api_secret);
 
 
-$tickerArray = $polo->get_ticker();
+$tickerArray = $polo->get_ticker(); //ticker prices
+$balanceArray = $polo->get_balances(); //account balances
+
+//print_r($balanceArray);
+
 foreach($tickerArray as $currencyPair => $tickerData) {
 	$percentChange = $tickerData['percentChange'];
 	
@@ -34,20 +38,26 @@ foreach($tickerArray as $currencyPair => $tickerData) {
 	$percentChangeFormat = number_format($percentChangeFormat, 2);
 	
 	if($crap == 'BTC') //only show BTC markets
-	if($percentChangeFormat > 10) {
-		echo '<tr>
-		<td>'.$currencyPair.'</td>
-		<td class="green">+'.$percentChangeFormat.'%</td></tr>';
+	if($percentChangeFormat > 15 && $percentChangeFormat < 20) { //check if price > 15% && price < 20%
+		
+		echo '<br />'.$currencyPair.' <br />'.$percentChangeFormat.'% <br />';
+		
+		//check if there's a balance for the currencyPair
+		echo $balanceArray[$curr];
+		if($balanceArray[$curr] == 0) {
+			echo 'empty';
+		}
 	}
+	
+	
 }
 
 
 //check all polo prices
 
 /*
-check if percentChange > 15% && percentChange < 20%
 
-check if there's a balance for the currencyPair
+
 if there is no balance, buy 0.1 BTC
 
 create new record in trade table for currencyPair

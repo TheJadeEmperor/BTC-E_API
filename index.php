@@ -82,9 +82,9 @@ $btce_ltc_usd =  number_format($btce_ltc_usd, 2);
 
 
 
-$conditionDropDown = '<select name="on_condition"><option value=">="> > </option><option value="<="> < </option></select>';
+$conditionDropDown = '<select name="on_condition"><option value=">"> > </option><option value="<"> < </option></select>';
 
-$tradeConditionDropDown = '<select name="trade_condition"><option value=">="> > </option><option value="<="> < </option></select>';
+$tradeConditionDropDown = '<select name="trade_condition"><option value=">"> > </option><option value="<"> < </option></select>';
 
 
 
@@ -96,7 +96,7 @@ $unitTypes = array(
 foreach($unitTypes as $uType) {
 	$unitDropDown .= '<option value="'.$uType.'">'.$uType.'</option>';
 }
-$tradeUnitDropDown = '<select name="unit">'.$unitDropDown.'</option>';
+$tradeUnitDropDown = '<select name="trade_unit">'.$unitDropDown.'</option>';
 
 
 

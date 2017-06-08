@@ -47,28 +47,38 @@ foreach($tradesTable as $trade) {
 		$trade_action = $trade->trade_action;
 		$trade_amount = $trade->trade_amount;
 		$trade_result = $trade->result;
+		$trade_unit = $trade->trade_unit;
 		$trade_until = $trade->until_date.' '.$trade->until_time;
 		
 		if($trade_exchange == 'Poloniex') { //set the currency in poloniex
 			
 			list($first, $second) = explode('/', $trade_currency);
-			$pair = $second.'_'.$first;
-			
+			$pair = $second.'_'.$first; //currency format is xxx_yyy
 		}
 		
 		//check timestamp
 		$dbTimestamp = strtotime($trade_until);
 		
 		
-		if($dbTimestamp >= time()) { //is trade valid
+		if($dbTimestamp >= time()) { //has trade expired yet
 			$isValid = ' active';
 			
 			$priceArray = $polo->get_ticker($pair);
 
 			$lastPrice = $priceArray['last'];
+			$priceArray['percentChange'].' ';
+			
+			echo $percentChange = $priceArray['percentChange'] * 100;
+			
+			if($trade_unit == 'BTC') {
+				
+			}
+			else { //%
+				
+			}
 			
 			//check if price meets conditions
-			if($trade_condition == '>=') {
+			if($trade_condition == '>') {
 				if($lastPrice >= $trade_price) {
 					$isTradeable = 'true'; 
 				}
@@ -76,7 +86,7 @@ foreach($tradesTable as $trade) {
 					$isTradeable = 'false';
 				}
 			}
-			else if ($trade_condition == '<=') {
+			else if ($trade_condition == '<') {
 				if($lastPrice <= $trade_price) {
 					$isTradeable =  'true';
 				}
@@ -118,7 +128,7 @@ foreach($tradesTable as $trade) {
 			$isValid = $isTradeable = ' expired';
 		} 
 		
-		$output .= $trade_exchange.' | '.$trade_currency.' | if '.$pair.' is '.$trade_condition.' '.$trade_price.' then '.$trade_action.' '.$trade_amount.' units | last price: '.$lastPrice.' '.$newline.' valid until '.$trade_until.' | '.$isValid.' | '.$isTradeable.' '.$isValidOnce.'  '.$newline.$newline; 		
+		$output .= $trade_exchange.' | '.$trade_currency.' | if '.$pair.' is '.$trade_condition.' '.$trade_price.' '.$trade_unit.' then '.$trade_action.' '.$trade_amount.' | last price: '.$lastPrice.' '.$newline.' valid until '.$trade_until.' | isValid: '.$isValid.' | isTradeable: '.$isTradeable.' '.$isValidOnce.'  '.$newline.$newline; 		
 }
 
 
