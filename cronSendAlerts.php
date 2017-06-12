@@ -62,7 +62,7 @@ foreach($condTable as $cond) {
 	
 	
 	//if conditions are right, send email and text
-	if($onCondition == '>=') {
+	if($onCondition == '>') {
 		if($currentPrice >= $onPrice) {
 			$result = 'true';
 		}
@@ -70,7 +70,7 @@ foreach($condTable as $cond) {
 			$result = 'false';
 		}
 	}
-	else if ($onCondition == '<=') {
+	else if ($onCondition == '<') {
 		if($currentPrice <= $onPrice) {
 			$result =  'true';
 		}

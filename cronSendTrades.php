@@ -62,9 +62,9 @@ foreach($tradesTable as $trade) {
 	if($dbTimestamp >= time()) { //has trade expired yet
 		$isValid = ' active';
 			
-		$priceArray = $polo->get_ticker($pair);
+		$priceArray = $polo->get_ticker($pair); 
 
-		$lastPrice = $priceArray['last'];
+		$lastPrice = $priceArray['last']; //most recent price for this coin
 		//$priceArray['percentChange'].' ';
 		
 
@@ -96,9 +96,11 @@ foreach($tradesTable as $trade) {
 				$isTradeable = 'false';
 			}
 			
-			echo $percentChange;
+			//echo $percentChange;
 			
-			echo ' '.$trade_price;
+			//echo ' '.$trade_price;
+			
+			$lastPrice = $percentChange.'%';
 			//echo $trade_unit;
 		}
 			

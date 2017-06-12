@@ -1,0 +1,8 @@
+.half{
+	width:20%;
+}
+
+
+.cancelBox, .otherBox{
+	display:none;
+}
