@@ -7,6 +7,9 @@
 			$_SESSION['key'] 	= $_POST['apikey'];
 			$_SESSION['secret'] = $_POST['secret'];
 			
+			echo $_SESSION['key'] = '6ebadd9db0504586bf7f26a5adae9ccf';
+			$_SESSION['secret'] = 'f04b39348a884448837641d0c2504588';
+			
 			$_SESSION['bittrex'] = new Client ($_SESSION['key'], $_SESSION['secret']);
 			try{
 				$balance = $_SESSION['bittrex']->getBalances();

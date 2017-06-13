@@ -43,8 +43,9 @@ class Client
 		$answer = json_decode($result);
 
 		if ($answer->success == false) {
-			throw new \Exception ($answer->message);
 		}
+			echo ($answer->message);
+			print_r($answer);
 
 		return $answer->result;
 	}

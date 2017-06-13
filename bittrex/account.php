@@ -1,15 +1,21 @@
 <?php
 	session_start();
 	require __DIR__.'/library/bittrex/Client.php';
+	
+		$_SESSION['key'] = '6ebadd9db0504586bf7f26a5adae9ccf';
+			$_SESSION['secret'] = 'f04b39348a884448837641d0c2504588';
 
 	if(!empty($_SESSION['key']) && !empty($_SESSION['secret'])){  
 		try{
 			$_SESSION['bittrex'] = new Client ($_SESSION['key'], $_SESSION['secret']);
+		echo ',,,';	
 		}catch(Exception $e){
-			header('Location:index.php');
+			echo 'bad';
+			//header('Location:index.php');
 		}
 	}else{
-		header('Location:index.php');
+		
+		//header('Location:index.php');
 	}
 
 
@@ -59,6 +65,8 @@
   <h3>Account Information</h3>
   <p>
 			      <?php 
+				 echo $_SESSION['bittrex']->getBalance('btc');
+				  
 			      	$balance = $_SESSION['bittrex']->getBalances();
 			      	if(!empty($balance)){ ?>
 			      		<table>
