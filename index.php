@@ -43,7 +43,7 @@ $tradesTable = $tableData->tradesTable();
 
 
 //get prices from poloniex
-$POLO_BTC_ETH = $polo->get_ticker('BTC_ETH');
+$POLO_USDT_DASH = $polo->get_ticker('USDT_DASH');
 
 $POLO_USDT_BTC = $polo->get_ticker('USDT_BTC');
 
@@ -53,7 +53,7 @@ $POLO_USDT_LTC = $polo->get_ticker('USDT_LTC');
 
 
 //format polo currencies
-$polo_btc_eth = number_format($POLO_BTC_ETH['last'], 4);
+$polo_dash_usd = number_format($POLO_USDT_DASH['last'], 2);
 
 $polo_btc_usd = number_format($POLO_USDT_BTC['last'], 0);
 
@@ -63,7 +63,7 @@ $polo_ltc_usd = number_format($POLO_USDT_LTC['last'], 2);
 
 
 //get prices from btc-e
-$btce_btc_eth = $btce->getLastPrice('eth_btc');
+$btce_dash_usd = $btce->getLastPrice('dsh_usd');
 
 $btce_btc_usd = $btce->getLastPrice('btc_usd');
 
@@ -72,11 +72,11 @@ $btce_eth_usd = $btce->getLastPrice('eth_usd');
 $btce_ltc_usd = $btce->getLastPrice('ltc_usd');
 
 //format btc-e currencies
+$btce_dash_usd =  number_format($btce_dash_usd, 2);
+
 $btce_btc_usd = number_format($btce_btc_usd, 0);
 
 $btce_eth_usd = number_format($btce_eth_usd, 2);
-
-$btce_btc_eth =  number_format($btce_btc_eth, 4);
 
 $btce_ltc_usd =  number_format($btce_ltc_usd, 2);
 
