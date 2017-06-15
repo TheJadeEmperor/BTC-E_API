@@ -36,6 +36,7 @@ foreach($tickerArray as $currencyPair => $tickerData) {
 	$lastPrice = $tickerData['last']; //most recent price for this coin
 	
 	list($market, $curr) = explode('_',  $currencyPair);
+	$dbCurrencyPair = $curr.'/'.$market;
 	
 	$percentChangeFormat = $percentChange * 100;
 	
@@ -44,8 +45,8 @@ foreach($tickerArray as $currencyPair => $tickerData) {
 	if($market == 'BTC') //only show BTC markets
 	if($percentChangeFormat > 15 && $percentChangeFormat < 20) { //check if price > 15% && price < 20%
 
-		//check if there's a balance for the currencyPair
 		
+		//check if there's a balance for the currencyPair
 		if($balanceArray[$curr] == 0) { //if no balance, then buy
 			$balanceDisplay = ' No balance ';
 			
@@ -55,13 +56,14 @@ foreach($tickerArray as $currencyPair => $tickerData) {
 			$dateInTwoWeeks = strtotime('+2 weeks');		
 			$until = date('Y-m-d h:i:m', $dateInTwoWeeks);
 			
+			
 			//buy order
 			if($debug != 1) {
 				$tradeResult = $polo->buy($currencyPair, $lastPrice, $tradeAmount); 
 			}
 			
 			//set stop loss through btc_trades table - sell if < 12%
-			$insert = "INSERT INTO $tradeTable (trade_exchange, trade_currency, trade_condition, trade_price, trade_action, trade_amount, trade_unit, until) values ('Poloniex', '".$currencyPair."', '<', '12', 'Sell', '".$tradeAmount."', '%', '".$until."' )";
+			$insert = "INSERT INTO $tradeTable (trade_exchange, trade_currency, trade_condition, trade_price, trade_action, trade_amount, trade_unit, until) values ('Poloniex', '".$dbCurrencyPair."', '<', '12', 'Sell', '".$tradeAmount."', '%', '".$until."' )";
 			
 			//create new record in trade table for currencyPair
 			if($debug != 1) {

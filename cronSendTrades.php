@@ -101,7 +101,6 @@ foreach($tradesTable as $trade) {
 			//echo ' '.$trade_price;
 			
 			$lastPrice = $percentChange.'%';
-			//echo $trade_unit;
 		}
 			
 
@@ -112,7 +111,7 @@ foreach($tradesTable as $trade) {
 		
 		if($isTradeable == 'true') {
 			
-			if($dbResult == 0) { //only trade once 
+			if($dbResult != 1) { //only trade once 
 				if($trade_action == 'Buy')
 					$tradeResult = $polo->buy($pair, $trade_price, $trade_amount); 
 				else 

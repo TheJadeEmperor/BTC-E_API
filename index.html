@@ -104,35 +104,7 @@ include('scripts.html');
 				</tbody>
 			</table>
 			
-			<table class="table">
-				<thead class="thead-default">
-				<tr>
-					<th colspan="6">btc_trades Table <a href="cronSendTrades.php?debug=1" target="_BLANK"><input type="button" value="cronSendTrades"></a>
-					</th>
-				</tr>
-				<tr>
-					<th>Currency</th>
-					<th>Condition</th>
-					<th>Amount</th>
-					<th>Valid Until</th>
-				</tr>
-				</thead>
-				<tbody>
-				<?php
-				foreach($tradesTable as $trade) {
-					echo '<tr class="clickable" onclick="javascript:updateTradeDialog(\''.$trade->id.'\')" title="id: '.$trade->id.' | trade_until: '.$trade->until_date.' '.$trade->until_time.'">
-					<td>'.$trade->trade_currency.'</td>
-					<td>'.$trade->trade_condition.' 
-					'.$trade->trade_price.' '.$trade->trade_unit.'</td>
-					<td>'.$trade->trade_action.' '.$trade->trade_amount.'</td>
-					<td>'.$trade->until.'</td>
-				';
-				}
-
-				?>
-				</tbody>
-				</tr>
-			</table>
+		
 		</div>
     
 		<div class="col">
@@ -213,44 +185,79 @@ include('scripts.html');
 		</div>
 	</div>
 
+	<div class="row justify-content-md-center">
+		<div class="col-md-7">
+		<table class="table">
+				<thead class="thead-default">
+				<tr>
+					<th colspan="6">btc_trades Table <a href="cronSendTrades.php?debug=1" target="_BLANK"><input type="button" value="cronSendTrades"></a>
+					</th>
+				</tr>
+				<tr>
+					<th>Currency</th>
+					<th>Condition</th>
+					<th>Amount</th>
+					<th>Valid Until</th>
+				</tr>
+				</thead>
+				<tbody>
+				<?php
+				foreach($tradesTable as $trade) {
+					$trade_amount = number_format($trade->trade_amount, 4);
+					
+				
+					echo '<tr class="clickable" onclick="javascript:updateTradeDialog(\''.$trade->id.'\')" title="id: '.$trade->id.' | trade_until: '.$trade->until_date.' '.$trade->until_time.'">
+					<td>'.$trade->trade_currency.'</td>
+					<td>'.$trade->trade_condition.' 
+					'.$trade->trade_price.' '.$trade->trade_unit.'</td>
+					<td>'.$trade->trade_action.' '.$trade_amount.'</td>
+					<td>'.$trade->until_format.'</td>
+				';
+				}
 
-<div class="row justify-content-md-center">
-<div class="col">
-<table class="table">
-	<thead class="thead-default">
-		<tr>
-			<th colspan="2">Today's Winners
-			<a href="cronAutoTrade.php?debug=1" target="_BLANK"><input type="button" value="cronAutoTrade"></th>
-		</tr>
-		<tr>
-			<th>Currency</th>
-			<th>Percent Change</th>
-		</tr>
-	</thead>
-<?php
-$tickerArray = $polo->get_ticker();
-foreach($tickerArray as $currencyPair => $tickerData) {
-	$percentChange = $tickerData['percentChange'];
-	
-	list($crap, $curr) = explode('_',  $currencyPair);
-	
-	$percentChangeFormat = $percentChange * 100;
-	
-	$percentChangeFormat = number_format($percentChangeFormat, 2);
-	
-	if($crap == 'BTC') //only show BTC markets
-	if($percentChangeFormat > 10) {
-		echo '<tr>
-		<td>'.$currencyPair.'</td>
-		<td class="green">+'.$percentChangeFormat.'%</td></tr>';
+				?>
+				</tbody>
+				</tr>
+			</table>
+	</div>
+ 
+	<div class="col">
+		<table class="table">
+		<thead class="thead-default">
+			<tr>
+				<th colspan="2">Today's Winners
+				<a href="cronAutoTrade.php?debug=1" target="_BLANK"><input type="button" value="cronAutoTrade"></th>
+			</tr>
+			<tr>
+				<th>Currency</th>
+				<th>Percent Change</th>
+			</tr>
+		</thead>
+	<?php
+	$tickerArray = $polo->get_ticker();
+	foreach($tickerArray as $currencyPair => $tickerData) {
+		$percentChange = $tickerData['percentChange'];
+		
+		list($crap, $curr) = explode('_',  $currencyPair);
+		
+		$percentChangeFormat = $percentChange * 100;
+		
+		$percentChangeFormat = number_format($percentChangeFormat, 2);
+		
+		if($crap == 'BTC') //only show BTC markets
+		if($percentChangeFormat > 10) {
+			echo '<tr>
+			<td>'.$currencyPair.'</td>
+			<td class="green">+'.$percentChangeFormat.'%</td></tr>';
+		}
 	}
-}
-?>
-</table>
-</div>
-</div>
+	?>
+	</table>
+	</div>
+	</div>
 
-</div>
+
+</div><!--container-->
 
 <p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p>
 
