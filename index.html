@@ -205,8 +205,13 @@ include('scripts.html');
 				foreach($tradesTable as $trade) {
 					$trade_amount = number_format($trade->trade_amount, 4);
 					
-				
-					echo '<tr class="clickable" onclick="javascript:updateTradeDialog(\''.$trade->id.'\')" title="id: '.$trade->id.' | trade_until: '.$trade->until_date.' '.$trade->until_time.'">
+					if($trade->result==1) {
+						$style="background-color: gray";
+					}
+					else{
+						$style="background-color: white";
+					}
+					echo '<tr style="'.$style.'" class="clickable" onclick="javascript:updateTradeDialog(\''.$trade->id.'\')" title="id: '.$trade->id.' | trade_until: '.$trade->until_date.' '.$trade->until_time.'">
 					<td>'.$trade->trade_currency.'</td>
 					<td>'.$trade->trade_condition.' 
 					'.$trade->trade_price.' '.$trade->trade_unit.'</td>
@@ -388,7 +393,7 @@ include('scripts.html');
 	$tickerArray = $polo->get_ticker();
 			
 	foreach($balanceArray as $currency => $currencyBalance) {
-		if($currencyBalance > 0.001) {
+		if($currencyBalance > 0.5) {
 		
 			foreach($tickerArray as $currencyPair => $tickerData) {
 				list($crap, $curr) = explode('_',  $currencyPair);
