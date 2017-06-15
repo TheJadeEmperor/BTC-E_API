@@ -65,8 +65,11 @@ foreach($tradesTable as $trade) {
 		$priceArray = $polo->get_ticker($pair); 
 
 		$lastPrice = $priceArray['last']; //most recent price for this coin
-		//$priceArray['percentChange'].' ';
+		$percentChange = $priceArray['percentChange'] * 100;
+		$percentChangeDisplay = $percentChange.'%';
 		
+		$lastPriceDisplay = $lastPrice;
+		$tradePriceDisplay = $trade_price;
 
 		if($trade_unit == 'BTC') {
 			
@@ -84,7 +87,6 @@ foreach($tradesTable as $trade) {
 			}
 		}
 		else { //$trade_unit == %
-			$percentChange = $priceArray['percentChange'] * 100;
 			
 			if($trade_condition == '>' && $percentChange >= $trade_price) {
 				$isTradeable = 'true'; 
@@ -96,11 +98,9 @@ foreach($tradesTable as $trade) {
 				$isTradeable = 'false';
 			}
 			
-			//echo $percentChange;
 			
-			//echo ' '.$trade_price;
+			$trade_price = $lastPrice;
 			
-			$lastPrice = $percentChange.'%';
 		}
 			
 
@@ -134,7 +134,7 @@ foreach($tradesTable as $trade) {
 		$isValid = $isTradeable = ' expired';
 	} 
 		
-	$output .= $trade_exchange.' | '.$trade_currency.' | if '.$pair.' is '.$trade_condition.' '.$trade_price.' '.$trade_unit.' then '.$trade_action.' '.$trade_amount.' | last price: '.$lastPrice.' '.$newline.' valid until '.$trade_until.' | isValid: '.$isValid.' | isTradeable: '.$isTradeable.' '.$isValidOnce.'  '.$newline.$newline; 		
+	$output .= $trade_exchange.' | '.$trade_currency.' | if '.$pair.' is '.$trade_condition.' '.$tradePriceDisplay.' '.$trade_unit.' then '.$trade_action.' '.$trade_amount.' | last price: '.$lastPriceDisplay.' | percentChange: '.$percentChangeDisplay.$newline.' valid until '.$trade_until.' | isValid: '.$isValid.' | isTradeable: '.$isTradeable.' '.$isValidOnce.'  '.$newline.$newline; 		
 }
 
 

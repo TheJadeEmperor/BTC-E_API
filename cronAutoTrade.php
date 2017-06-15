@@ -55,8 +55,7 @@ foreach($tickerArray as $currencyPair => $tickerData) {
 
 			$dateInTwoWeeks = strtotime('+2 weeks');		
 			$until = date('Y-m-d h:i:m', $dateInTwoWeeks);
-			
-			
+					
 			//buy order
 			if($debug != 1) {
 				$tradeResult = $polo->buy($currencyPair, $lastPrice, $tradeAmount); 
