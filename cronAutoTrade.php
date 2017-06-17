@@ -47,7 +47,7 @@ foreach($tickerArray as $currencyPair => $tickerData) {
 	
 	$percentChangeFormat = number_format($percentChangeFormat, 2);
 
-	$stopLoss = $percentChangeFormat - 2;
+	$stopLoss = 15;
 	
 	if($market == 'BTC') //only show BTC markets
 	if($percentChangeFormat > 15 && $percentChangeFormat < 20) { //check if price > 15% && price < 20%
@@ -57,13 +57,10 @@ foreach($tickerArray as $currencyPair => $tickerData) {
 		//minus trading fees
 		$tradeAmountAfterFees = $tradeAmount - $tradeAmount * 0.0015;
 			
-
 		//check if there's a balance for the currencyPair
-		if($balanceArray[$curr] == 0) { //if no balance, then buy
+		if($balanceArray[$curr] <= 0.5) { //if no balance, then buy
 			$balanceDisplay = ' No balance ';
 			
-			
-		
 			$dateInTwoWeeks = strtotime('+2 weeks');		
 			$until = date('Y-m-d h:i:m', $dateInTwoWeeks);
 					
@@ -76,14 +73,12 @@ foreach($tickerArray as $currencyPair => $tickerData) {
 				$insert = "INSERT INTO $tradeTable (trade_exchange, trade_currency, trade_condition, trade_price, trade_action, trade_amount, trade_unit, until) values ('Poloniex', '".$dbCurrencyPair."', '<', '".$stopLoss."', 'Sell', '".$tradeAmountAfterFees."', '%', '".$until."' )";
 				
 				//create new record in trade table for currencyPair
-		
-				 $success = $db->query($insert);
+				$success = $db->query($insert);
 				if($success == 1) 
-					echo '<br />Added record '.$insert.'<br />';
+					echo $newline.'Added record '.$insert.$newline.;
 				else 
-					echo '<br />Failed to add record '.$insert.'<br />';
+					echo $newline.'Failed to add record '.$insert. $newline.;
 			}
-			
 		}
 		else { //there is a balance
 			$balanceDisplay = $balanceArray[$curr];

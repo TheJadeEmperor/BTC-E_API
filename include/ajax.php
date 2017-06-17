@@ -59,6 +59,7 @@ switch($_GET['action']) {
 			trade_action = '".$_REQUEST['trade_action']."',
             trade_amount = '".$_REQUEST['trade_amount']."',
 			trade_unit = '".$_REQUEST['trade_unit']."',
+			result = '".$_REQUEST['result']."',
 			until = '".$until."'
             WHERE id = '".$trade_id."'";
 			

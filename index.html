@@ -230,12 +230,13 @@ include('scripts.html');
 		<table class="table">
 		<thead class="thead-default">
 			<tr>
-				<th colspan="2">Today's Winners
+				<th colspan="3">Today's Winners
 				<a href="cronAutoTrade.php?debug=1" target="_BLANK"><input type="button" value="cronAutoTrade"></th>
 			</tr>
 			<tr>
 				<th>Currency</th>
 				<th>Percent Change</th>
+				<th>Last Price</th>
 			</tr>
 		</thead>
 	<?php
@@ -253,7 +254,8 @@ include('scripts.html');
 		if($percentChangeFormat > 10) {
 			echo '<tr>
 			<td>'.$currencyPair.'</td>
-			<td class="green">+'.$percentChangeFormat.'%</td></tr>';
+			<td class="green">+'.$percentChangeFormat.'%</td>
+			<td>'.$tickerData['last'].'</td></tr>';
 		}
 	}
 	?>

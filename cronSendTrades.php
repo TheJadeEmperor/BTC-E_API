@@ -141,5 +141,22 @@ foreach($tradesTable as $trade) {
 echo $output;
 
 print_r($tradeResult);
+
+
+//delete old trades 
+$timeNow = date('h', time());
+
+
+if($timeNow % 2 == 0) { //run every other hour
+	foreach($tradesTable as $trade) {
+
+	//delete old trades - with result = 1
+	echo $delete = "DELETE FROM $tradeTable WHERE trade_currency = '".$trade->trade_currency."' AND result = '1' ";
+	
+	$success = $db->query($delete); 
+	}
+}
+
+
 	
 ?>
