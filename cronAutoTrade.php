@@ -47,7 +47,7 @@ foreach($tickerArray as $currencyPair => $tickerData) {
 	
 	$percentChangeFormat = number_format($percentChangeFormat, 2);
 
-	$stopLoss = 15;
+	$stopLoss = $lastPrice - $lastPrice * 0.02;
 	
 	if($market == 'BTC') //only show BTC markets
 	if($percentChangeFormat > 15 && $percentChangeFormat < 20) { //check if price > 15% && price < 20%
@@ -68,23 +68,23 @@ foreach($tickerArray as $currencyPair => $tickerData) {
 			if($debug != 1) {
 				$tradeResult = $polo->buy($currencyPair, $lastPrice, $tradeAmount); 
 			
-			
 				//set stop loss through btc_trades table 
-				$insert = "INSERT INTO $tradeTable (trade_exchange, trade_currency, trade_condition, trade_price, trade_action, trade_amount, trade_unit, until) values ('Poloniex', '".$dbCurrencyPair."', '<', '".$stopLoss."', 'Sell', '".$tradeAmountAfterFees."', '%', '".$until."' )";
+				$insert = "INSERT INTO $tradeTable (trade_exchange, trade_currency, trade_condition, trade_price, trade_action, trade_amount, trade_unit, until) values ('Poloniex', '".$dbCurrencyPair."', '<', '".$stopLoss."', 'Sell', '".$tradeAmountAfterFees."', 'BTC', '".$until."' ) LIMIT 1";
 				
-				//create new record in trade table for currencyPair
-				$success = $db->query($insert);
+				if(isset($dbCurrencyPair) && isset($tradeAmountAfterFees))
+					$success = $db->query($insert); //create new record in trade table for currencyPair
+				
 				if($success == 1) 
-					echo $newline.'Added record '.$insert.$newline.;
+					echo $newline.'Added record '.$insert.$newline;
 				else 
-					echo $newline.'Failed to add record '.$insert. $newline.;
+					echo $newline.'Failed to add record '.$insert. $newline;
 			}
 		}
 		else { //there is a balance
 			$balanceDisplay = $balanceArray[$curr];
 		}
 		
-		echo $output = $currencyPair.' +'.$percentChangeFormat.'% | '.$balanceDisplay .' | lastPrice: '.$lastPrice.' | stopLoss: '.$stopLoss.'% | tradeAmount: '.$tradeAmount.' | tradeAmountAfterFees: '.$tradeAmountAfterFees.$newline.$newline;
+		echo $output = $currencyPair.' +'.$percentChangeFormat.'% | '.$balanceDisplay .' | lastPrice: '.$lastPrice.' | stopLoss: '.$stopLoss.' | tradeAmount: '.$tradeAmount.' | tradeAmountAfterFees: '.$tradeAmountAfterFees.$newline.$newline;
 	}
 	
 }

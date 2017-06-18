@@ -45,66 +45,11 @@ include('scripts.html');
 	
 	<div class="row justify-content-md-center">
 		<div class="col-md-7">
-			<table class="table">
-				<thead class="thead-default">
-					<th>Currency Pair</th>
-					<th>Poloniex Price</th>
-					<th>BTCe Price</th>
-				</thead>
-				<tr>
-					<td>DASH/USDT </td>
-					<td> $<?=$polo_dash_usd ?> </td>
-					<td> $<?=$btce_dash_usd ?> </td>
-				</tr>
-				<tr>
-					<td>BTC/USDT </td>
-					<td> $<?=$polo_btc_usd ?> </td>
-					<td> $<?=$btce_btc_usd ?> </td>
-				</tr>
-				</tr>
-					<td>ETH/USDT </td>
-					<td> $<?=$polo_eth_usd ?> </td>
-					<td> $<?=$btce_eth_usd ?> </td>
-				</tr>
-				</tr>
-					<td>LTC/USDT </td>
-					<td> $<?=$polo_ltc_usd ?> </td>
-					<td> $<?=$btce_ltc_usd ?> </td>
-				</tr>				
-			</table>
+		 
+			<div id="priceTable"></div>
+	
+			<div id="cronSendAlerts"></div>
 			
-			
-			<table class="table">
-				<thead class="thead-default">
-				<tr>
-					<th colspan="5">btc_alerts Table <a href="cronSendAlerts.php?debug=1" target="_BLANK"><input type="button" value="cronSendAlerts"></a>
-					</th>
-				</tr>
-				<tr>
-					<th>Currency</th>
-					<th>Condition</th>
-					<th>Price</th>
-					<th>Exchange</th>
-					<th>Sent?</th>
-				</tr>
-				</thead>
-				<tbody>
-				<?php
-				foreach($condTable as $cond) {
-					echo '<tr class="clickable" onclick="javascript:updateAlertDialog(\''.$cond->id.'\')" title="'.$cond->id.'">
-					<td>'.$cond->currency.'</td>
-					<td>'.$cond->on_condition.'</td>
-					<td>'.$cond->price.' '.$cond->unit.'</td>
-					<td>'.$cond->exchange.'</td>
-					<td>'.$cond->sent.'</td>
-				';
-				}
-
-				?>
-				</tbody>
-			</table>
-			
-		
 		</div>
     
 		<div class="col">
@@ -181,91 +126,23 @@ include('scripts.html');
 				</pre>
 			</div>
 			
-			
 		</div>
 	</div>
 
 	<div class="row justify-content-md-center">
 		<div class="col-md-7">
-		<table class="table">
-				<thead class="thead-default">
-				<tr>
-					<th colspan="6">btc_trades Table <a href="cronSendTrades.php?debug=1" target="_BLANK"><input type="button" value="cronSendTrades"></a>
-					</th>
-				</tr>
-				<tr>
-					<th>Currency</th>
-					<th>Condition</th>
-					<th>Amount</th>
-					<th>Valid Until</th>
-				</tr>
-				</thead>
-				<tbody>
-				<?php
-				foreach($tradesTable as $trade) {
-					$trade_amount = number_format($trade->trade_amount, 4);
-					
-					if($trade->result==1) {
-						$style="background-color: gray";
-					}
-					else{
-						$style="background-color: white";
-					}
-					echo '<tr style="'.$style.'" class="clickable" onclick="javascript:updateTradeDialog(\''.$trade->id.'\')" title="id: '.$trade->id.' | trade_until: '.$trade->until_date.' '.$trade->until_time.'">
-					<td>'.$trade->trade_currency.'</td>
-					<td>'.$trade->trade_condition.' 
-					'.$trade->trade_price.' '.$trade->trade_unit.'</td>
-					<td>'.$trade->trade_action.' '.$trade_amount.'</td>
-					<td>'.$trade->until_format.'</td>
-				';
-				}
-
-				?>
-				</tbody>
-				</tr>
-			</table>
+		
+		<div id="btcTrades"></div>
 	</div>
+
  
 	<div class="col">
-		<table class="table">
-		<thead class="thead-default">
-			<tr>
-				<th colspan="3">Today's Winners
-				<a href="cronAutoTrade.php?debug=1" target="_BLANK"><input type="button" value="cronAutoTrade"></th>
-			</tr>
-			<tr>
-				<th>Currency</th>
-				<th>Percent Change</th>
-				<th>Last Price</th>
-			</tr>
-		</thead>
-	<?php
-	$tickerArray = $polo->get_ticker();
-	foreach($tickerArray as $currencyPair => $tickerData) {
-		$percentChange = $tickerData['percentChange'];
-		
-		list($crap, $curr) = explode('_',  $currencyPair);
-		
-		$percentChangeFormat = $percentChange * 100;
-		
-		$percentChangeFormat = number_format($percentChangeFormat, 2);
-		
-		if($crap == 'BTC') //only show BTC markets
-		if($percentChangeFormat > 10) {
-			echo '<tr>
-			<td>'.$currencyPair.'</td>
-			<td class="green">+'.$percentChangeFormat.'%</td>
-			<td>'.$tickerData['last'].'</td></tr>';
-		}
-	}
-	?>
-	</table>
-	</div>
+		<div id="cronAutoTrade"></div>
 	</div>
 
 
 </div><!--container-->
-
+  
 <p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p>
 
 <form id="conditionTable" title="Price Alerts">
@@ -286,7 +163,6 @@ include('scripts.html');
 		<td>
 			<input type="text" name="currency" size="10" />
 		
-			<!--<div id="currencyDiv"><?=$currencyDropDown?></div>	-->
 		</td>
 		<td>
 			<div id="conditionDiv">
@@ -385,7 +261,7 @@ include('scripts.html');
 
 <form id="accountBalance" title="Account Balance">
 <h2>Poloniex</h2>
-<table>
+<table class="table">
 <tr>
 	<th>Currency</th><th>Balance</th><th>Price</th><th>Change</th><th>Chart</th>
 </tr>
@@ -408,8 +284,15 @@ include('scripts.html');
 					$percentChangeFormat = number_format($percentChangeFormat, 2);
 					
 					$lastFormat = number_format($lastFormat, 8);
+					
+					$openOrders = $polo->get_open_orders($currencyPair);
+
+					echo $currencyPair;
+					print_r($openOrders);
 				}	
 			}
+			
+			
 			
 			if($currency == 'BTC') {
 				$chartLink = 'BTCUSD';
@@ -425,13 +308,17 @@ include('scripts.html');
 			<td>'.$currencyBalance.'</td>
 			<td>'.$lastFormat.'</td>
 			<td style="color: '.$color.'">'.$percentChangeFormat.'%</td>
+			<td></td>
 			<td><a href="https://www.tradingview.com/chart/'.$chartLink.'" target="_BLANK">View</a></td>
 			</tr>';
+			
+			
 		}
 	}
 	echo $balanceTable;
 	?>
 <table>
+
 </form>
 
 
