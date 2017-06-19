@@ -1,3 +1,16 @@
+<?php
+//alert ajax calls
+$createAlert = 'include/ajax.php?action=create';
+$readAlert = 'include/ajax.php?action=read';
+$updateAlert = 'include/ajax.php?action=update';
+$deleteAlert = 'include/ajax.php?action=delete';
+
+//trade Ajax calls
+$createTrade = 'include/ajax.php?action=createTrade';
+$readTrade = 'include/ajax.php?action=readTrade';
+$updateTrade = 'include/ajax.php?action=updateTrade';
+$deleteTrade = 'include/ajax.php?action=deleteTrade';
+?>
 <script>
 	function updateAlert(id) {
 		$.ajax({ //Process the form using $.ajax()
@@ -6,7 +19,7 @@
 			data        : $('#conditionTable').serialize(), 
 			success     : function(msg) {
 				console.log(msg);
-				refresh();						
+				$('#cronSendAlerts').load('load.php?page=cronSendAlerts');						
 			}
 		});
 		event.preventDefault(); //Prevent the default submit      
@@ -106,7 +119,7 @@
 			data: $('#conditionTable').serialize(),
 			success: function(msg) {
 				console.log(msg);
-				location.reload();
+				$('#cronSendAlerts').load('load.php?page=cronSendAlerts');						
 			}
 		});
     }
@@ -168,7 +181,7 @@
 					$( this ).dialog( "close" );
 				},
 				Cancel: function() {
-					refresh();
+					$('#cronSendAlerts').load('load.php?page=cronSendAlerts');
 					$( this ).dialog( "close" );				
 				},                        
 			}
@@ -235,6 +248,7 @@
 							
 		$(".createButton").click(function() {
 
+			console.log('createbutton');
 			$("#conditionTable").dialog({
 				modal: true,
 				width: 790,

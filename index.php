@@ -13,18 +13,6 @@ error_reporting(E_ALL & ~E_NOTICE & ~E_WARNING);
 date_default_timezone_set('America/New_York');
 
 
-//alert ajax calls
-$createAlert = 'include/ajax.php?action=create4';
-$readAlert = 'include/ajax.php?action=read';
-$updateAlert = 'include/ajax.php?action=update';
-$deleteAlert = 'include/ajax.php?action=delete';
-
-//trade Ajax calls
-$createTrade = 'include/ajax.php?action=createTrade';
-$readTrade = 'include/ajax.php?action=readTrade';
-$updateTrade = 'include/ajax.php?action=updateTrade';
-$deleteTrade = 'include/ajax.php?action=deleteTrade';
-
 global $db;
 
 $db = new ezSQL_mysql($dbUser, $dbPW, $dbName, $dbHost);
@@ -97,6 +85,18 @@ foreach($unitTypes as $uType) {
 	$unitDropDown .= '<option value="'.$uType.'">'.$uType.'</option>';
 }
 $tradeUnitDropDown = '<select name="trade_unit">'.$unitDropDown.'</option>';
+
+
+$unitTypes = array(
+	'BTC',
+	'$',
+);
+
+foreach($unitTypes as $uType) {
+	$alertUnitDropDown .= '<option value="'.$uType.'">'.$uType.'</option>';
+}
+
+$unitDropDown = '<select name="unit">'.$alertUnitDropDown.'</option>';
 
 
 
