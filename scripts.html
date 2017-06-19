@@ -246,7 +246,7 @@ $loadBalanceTable = 'load.php?page=balanceTable';
 		$("#tradeTable").hide();		
 		$("#accountBalance").hide();		
 		
-		$( "#until_date" ).datepicker();
+		$("#until_date").datepicker();
 							
 		$(".createButton").click(function() {
 
@@ -326,7 +326,7 @@ $loadBalanceTable = 'load.php?page=balanceTable';
 		});
 
 		$('#priceTable').load('load.php?page=priceTable');		
-		$('#cronSendAlerts').load('load.php?page=cronSendAlerts');		
+		$('#cronSendAlerts').load('<?=$loadCronSendAlerts?>');		
 		$('#btcTrades').load('<?=$loadbtcTrades?>');						
 		$('#balanceTable').load('load.php?page=balanceTable');		
 		$('#cronAutoTrade').load('load.php?page=cronAutoTrade');		

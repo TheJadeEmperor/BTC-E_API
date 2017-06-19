@@ -39,8 +39,6 @@ include('scripts.html');
 	
 	<button class = "tradeButton btn btn-success">Add Trade</button>
 	
-	<button class = "balanceButton btn btn-danger">View Balance</button>
-
 	<br /><br />
 	
 	<div class="row justify-content-md-center">
@@ -259,78 +257,6 @@ include('scripts.html');
 		</td>
 	</tr>
 	</table>
-</form>
-
-<?exit?>
-
-<form id="accountBalance" title="Account Balance">
-<h2>Poloniex</h2>
-
-<table class="table">
-<tr>
-	<th>Currency</th><th>Balance</th><th>Price</th><th>Change</th><th>BTC Value</th><th>Chart</th>
-</tr>
-	<?php
-	$balanceArray = $polo->get_balances();
-
-	$tickerArray = $polo->get_ticker();
-			
-	foreach($balanceArray as $currency => $currencyBalance) {
-		if($currencyBalance > 0.5) {
-		
-			foreach($tickerArray as $currencyPair => $tickerData) {
-				list($crap, $curr) = explode('_',  $currencyPair);
-			
-				if($currency == $curr && $crap == 'BTC') {
-					$percentChange = $tickerData['percentChange'];
-					$lastFormat = $tickerData['last'];
-					
-					$percentChangeFormat = $percentChange * 100;
-					$percentChangeFormat = number_format($percentChangeFormat, 2);
-					
-					$lastFormat = number_format($lastFormat, 8);
-					
-					//$openOrders = $polo->get_open_orders($currencyPair);
-
-					//echo $currencyPair;
-					//print_r($openOrders);
-				}	
-			}
-
-			
-			if($currency == 'BTC') {
-				$chartLink = 'BTCUSD';
-				$percentChangeFormat = $lastFormat = 0;
-				$btcValue = $currencyBalance;
-			}
-			else { 
-				$chartLink = $currency.'BTC';
-				$btcValue = $lastFormat * $currencyBalance;
-			}
-			
-			$totalBTC += $btcValue;
-			
-			
-			if($percentChangeFormat > 0) $color = 'green';
-			else $color = 'red';
-			
-			$balanceTable .= '<tr><td>'.$currency.'</td>
-			<td>'.$currencyBalance.'</td>
-			<td>'.$lastFormat.'</td>
-			<td style="color: '.$color.'">'.$percentChangeFormat.'%</td>
-			<td>'.$btcValue.'</td>
-			<td><a href="https://www.tradingview.com/chart/'.$chartLink.'" target="_BLANK">View</a></td>
-			</tr>';
-			
-			
-		}
-	}
-	echo $balanceTable;
-	
-	?>
-</table>
-Total BTC: <?=$totalBTC?>
-
 </form>
 
 

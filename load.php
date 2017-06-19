@@ -291,7 +291,7 @@ else if($_GET['page'] == 'balanceTable'){
 	<table class="table">
 		<thead class="thead-default">
 			<tr>
-				<th colspan="5">Polo Balanace</th>
+				<th colspan="6">Polo Balance</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -306,38 +306,27 @@ else if($_GET['page'] == 'balanceTable'){
 	foreach($balanceArray as $currency => $currencyBalance) {
 		if($currencyBalance > 0.5) {
 		
-			foreach($tickerArray as $currencyPair => $tickerData) {
-				list($crap, $curr) = explode('_',  $currencyPair);
-			
-				if($currency == $curr && $crap == 'BTC') {
-					$percentChange = $tickerData['percentChange'];
-					$lastFormat = $tickerData['last'];
-					
-					$percentChangeFormat = $percentChange * 100;
-					$percentChangeFormat = number_format($percentChangeFormat, 2);
-					
-					$lastFormat = number_format($lastFormat, 8);
-					
-					//$openOrders = $polo->get_open_orders($currencyPair);
-
-					//echo $currencyPair;
-					//print_r($openOrders);
-				}	
-			}
-
-			
 			if($currency == 'BTC') {
 				$chartLink = 'BTCUSD';
-				$percentChangeFormat = $lastFormat = 0;
-				$btcValue = $currencyBalance;
+				$currencyPair = 'USDT_BTC';
+				$lastFormat = $tickerArray[$currencyPair]['last'];
+				$lastFormat = '$'.number_format($lastFormat, 2);
+				$btcValue = $currencyBalance;		
 			}
 			else { 
 				$chartLink = $currency.'BTC';
+				$currencyPair = 'BTC_'.$currency;
+				$lastFormat = $tickerArray[$currencyPair]['last'];
+				$lastFormat = number_format($lastFormat, 8);
 				$btcValue = $lastFormat * $currencyBalance;
 			}
 			
-			$totalBTC += $btcValue;
+			$percentChange = $tickerArray[$currencyPair]['percentChange'];
+			$percentChangeFormat = $percentChange * 100;
+			$percentChangeFormat = number_format($percentChangeFormat, 2);
 			
+			$btcValueFormat = number_format($btcValue, 4);
+			$totalBTC += $btcValue;
 			
 			if($percentChangeFormat > 0) $color = 'green';
 			else $color = 'red';
@@ -346,7 +335,7 @@ else if($_GET['page'] == 'balanceTable'){
 			<td>'.$currencyBalance.'</td>
 			<td>'.$lastFormat.'</td>
 			<td style="color: '.$color.'">'.$percentChangeFormat.'%</td>
-			<td>'.$btcValue.'</td>
+			<td>'.$btcValueFormat.'</td>
 			<td><a href="https://www.tradingview.com/chart/'.$chartLink.'" target="_BLANK">View</a></td>
 			</tr>';
 			
@@ -362,4 +351,3 @@ Total BTC: <?=$totalBTC?>
 <?
 }
 ?>
-		
