@@ -1,15 +1,21 @@
 <?php
-//alert ajax calls
+//alert mysql ajax calls
 $createAlert = 'include/ajax.php?action=create';
 $readAlert = 'include/ajax.php?action=read';
 $updateAlert = 'include/ajax.php?action=update';
 $deleteAlert = 'include/ajax.php?action=delete';
 
-//trade Ajax calls
+//trade mysql jax calls
 $createTrade = 'include/ajax.php?action=createTrade';
 $readTrade = 'include/ajax.php?action=readTrade';
 $updateTrade = 'include/ajax.php?action=updateTrade';
 $deleteTrade = 'include/ajax.php?action=deleteTrade';
+
+//page load ajax calls
+$loadCronSendAlerts = 'load.php?page=cronSendAlerts';
+$loadbtcTrades = 'load.php?page=btcTrades';
+$loadBalanceTable = 'load.php?page=balanceTable';
+
 ?>
 <script>
 	function updateAlert(id) {
@@ -33,7 +39,7 @@ $deleteTrade = 'include/ajax.php?action=deleteTrade';
 			data        : $('#tradeTable').serialize(), 
 			success     : function(msg) {
 				console.log(msg);
-				refresh();						
+				$('#btcTrades').load('<?=$loadbtcTrades?>');						
 			}
 		});
 		event.preventDefault(); //Prevent the default submit      
@@ -106,7 +112,7 @@ $deleteTrade = 'include/ajax.php?action=deleteTrade';
                 url: "<?=$deleteTrade?>&trade_id="+id,
                 success: function() {
                     //alert('Deleted record '+id);
-                    location.reload();
+					$('#btcTrades').load('<?=$loadbtcTrades?>');						
                 }
             })
         }    
@@ -131,14 +137,10 @@ $deleteTrade = 'include/ajax.php?action=deleteTrade';
 			data: $('#tradeTable').serialize(),
 			success: function(msg) {
 				console.log(msg);				
-				location.reload();
+				$('#btcTrades').load('<?=$loadbtcTrades?>');						
 			}
 		});
     }
-
-	function refresh() {
-		location.reload();
-	}
 	
 	function updateAlertDialog(id) {
 	
@@ -230,7 +232,7 @@ $deleteTrade = 'include/ajax.php?action=deleteTrade';
 					$( this ).dialog( "close" );
 				},
 				Cancel: function() {
-					refresh();
+					$('#btcTrades').load('<?=$loadbtcTrades?>');						
 					$( this ).dialog( "close" );				
 				},                        
 			}
@@ -325,7 +327,8 @@ $deleteTrade = 'include/ajax.php?action=deleteTrade';
 
 		$('#priceTable').load('load.php?page=priceTable');		
 		$('#cronSendAlerts').load('load.php?page=cronSendAlerts');		
-		$('#btcTrades').load('load.php?page=btcTrades');		
+		$('#btcTrades').load('<?=$loadbtcTrades?>');						
+		$('#balanceTable').load('load.php?page=balanceTable');		
 		$('#cronAutoTrade').load('load.php?page=cronAutoTrade');		
 		
     });

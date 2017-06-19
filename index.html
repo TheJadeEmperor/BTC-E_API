@@ -129,11 +129,15 @@ include('scripts.html');
 		</div>
 	</div>
 
-	<div class="row justify-content-md-center">
-		<div class="col-md-7">
+	<div class="row">
+		<div class="col-6">
 		
-		<div id="btcTrades"></div>
-	</div>
+			<div id="btcTrades"></div>
+		</div>
+		<div class="col-md-5">
+		
+			<div id="balanceTable"></div>
+		</div>
 
  
 	<div class="col">
@@ -257,13 +261,14 @@ include('scripts.html');
 	</table>
 </form>
 
-
+<?exit?>
 
 <form id="accountBalance" title="Account Balance">
 <h2>Poloniex</h2>
+
 <table class="table">
 <tr>
-	<th>Currency</th><th>Balance</th><th>Price</th><th>Change</th><th>Chart</th>
+	<th>Currency</th><th>Balance</th><th>Price</th><th>Change</th><th>BTC Value</th><th>Chart</th>
 </tr>
 	<?php
 	$balanceArray = $polo->get_balances();
@@ -291,15 +296,20 @@ include('scripts.html');
 					//print_r($openOrders);
 				}	
 			}
-			
-			
+
 			
 			if($currency == 'BTC') {
 				$chartLink = 'BTCUSD';
 				$percentChangeFormat = $lastFormat = 0;
+				$btcValue = $currencyBalance;
 			}
-			else 
+			else { 
 				$chartLink = $currency.'BTC';
+				$btcValue = $lastFormat * $currencyBalance;
+			}
+			
+			$totalBTC += $btcValue;
+			
 			
 			if($percentChangeFormat > 0) $color = 'green';
 			else $color = 'red';
@@ -308,7 +318,7 @@ include('scripts.html');
 			<td>'.$currencyBalance.'</td>
 			<td>'.$lastFormat.'</td>
 			<td style="color: '.$color.'">'.$percentChangeFormat.'%</td>
-			<td></td>
+			<td>'.$btcValue.'</td>
 			<td><a href="https://www.tradingview.com/chart/'.$chartLink.'" target="_BLANK">View</a></td>
 			</tr>';
 			
@@ -316,8 +326,10 @@ include('scripts.html');
 		}
 	}
 	echo $balanceTable;
+	
 	?>
-<table>
+</table>
+Total BTC: <?=$totalBTC?>
 
 </form>
 

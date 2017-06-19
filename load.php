@@ -142,11 +142,6 @@ if($_GET['page'] == 'priceTable'){
 		<th>BTCe Price</th>
 	</thead>
 	<tr>
-		<td>DASH/USDT </td>
-		<td> $<?=$polo_dash_usd ?> </td>
-		<td> $<?=$btce_dash_usd ?> </td>
-	</tr>
-	<tr>
 		<td>BTC/USDT </td>
 		<td> $<?=$polo_btc_usd ?> </td>
 		<td> $<?=$btce_btc_usd ?> </td>
@@ -155,6 +150,11 @@ if($_GET['page'] == 'priceTable'){
 		<td>ETH/USDT </td>
 		<td> $<?=$polo_eth_usd ?> </td>
 		<td> $<?=$btce_eth_usd ?> </td>
+	</tr>
+	<tr>
+		<td>DASH/USDT </td>
+		<td> $<?=$polo_dash_usd ?> </td>
+		<td> $<?=$btce_dash_usd ?> </td>
 	</tr>
 	<tr>
 		<td>LTC/USDT </td>
@@ -283,5 +283,83 @@ else if($_GET['page'] == 'cronAutoTrade'){
 <?
 	
 }
+else if($_GET['page'] == 'balanceTable'){
 
 ?>
+
+
+	<table class="table">
+		<thead class="thead-default">
+			<tr>
+				<th colspan="5">Polo Balanace</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<th>Currency</th><th>Balance</th><th>Price</th><th>Change</th><th>BTC Value</th><th>Chart</th>
+			</tr>
+	<?php
+	$balanceArray = $polo->get_balances();
+
+	$tickerArray = $polo->get_ticker();
+			
+	foreach($balanceArray as $currency => $currencyBalance) {
+		if($currencyBalance > 0.5) {
+		
+			foreach($tickerArray as $currencyPair => $tickerData) {
+				list($crap, $curr) = explode('_',  $currencyPair);
+			
+				if($currency == $curr && $crap == 'BTC') {
+					$percentChange = $tickerData['percentChange'];
+					$lastFormat = $tickerData['last'];
+					
+					$percentChangeFormat = $percentChange * 100;
+					$percentChangeFormat = number_format($percentChangeFormat, 2);
+					
+					$lastFormat = number_format($lastFormat, 8);
+					
+					//$openOrders = $polo->get_open_orders($currencyPair);
+
+					//echo $currencyPair;
+					//print_r($openOrders);
+				}	
+			}
+
+			
+			if($currency == 'BTC') {
+				$chartLink = 'BTCUSD';
+				$percentChangeFormat = $lastFormat = 0;
+				$btcValue = $currencyBalance;
+			}
+			else { 
+				$chartLink = $currency.'BTC';
+				$btcValue = $lastFormat * $currencyBalance;
+			}
+			
+			$totalBTC += $btcValue;
+			
+			
+			if($percentChangeFormat > 0) $color = 'green';
+			else $color = 'red';
+			
+			$balanceTable .= '<tr><td>'.$currency.'</td>
+			<td>'.$currencyBalance.'</td>
+			<td>'.$lastFormat.'</td>
+			<td style="color: '.$color.'">'.$percentChangeFormat.'%</td>
+			<td>'.$btcValue.'</td>
+			<td><a href="https://www.tradingview.com/chart/'.$chartLink.'" target="_BLANK">View</a></td>
+			</tr>';
+			
+			
+		}
+	}
+	echo $balanceTable;
+	
+	?>
+	</tbody>
+</table>
+Total BTC: <?=$totalBTC?>
+<?
+}
+?>
+		
