@@ -133,10 +133,6 @@ foreach($actionTypes as $aType) {
 $tradeActionDropDown = '<select name="trade_action">'.$actionDropDown.'</option>';
 
 
-
-include('scripts.html');
-
-
 if($_GET['page'] == 'priceTable'){
 ?>
 <table class="table">
