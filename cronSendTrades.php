@@ -118,10 +118,10 @@ foreach($tradesTable as $trade) {
 					$tradeResult = $polo->sell($pair, $trade_price, $trade_amount); 
 				
 				//update trades table with result
-				$update = "UPDATE $tradeTable SET
-				result = '1' WHERE id = '".$trade_id."'";
+				//$update = "UPDATE $tradeTable SET
+				//result = '1' WHERE id = '".$trade_id."'";
 				
-				$success = $db->query($update); 
+				//$success = $db->query($update); 
 				
 				$isValidOnce = ' | true';
 			}
@@ -133,14 +133,16 @@ foreach($tradesTable as $trade) {
 	else { //trade expired 
 		$isValid = $isTradeable = ' expired';
 	} 
+	
+	print_r($tradeResult);
+	
 		
-	$output .= $trade_exchange.' | '.$trade_currency.' | if '.$pair.' is '.$trade_condition.' '.$tradePriceDisplay.' '.$trade_unit.' then '.$trade_action.' '.$trade_amount.' | last price: '.$lastPriceDisplay.' | percentChange: '.$percentChangeDisplay.$newline.' valid until '.$trade_until.' | isValid: '.$isValid.' | isTradeable: '.$isTradeable.' '.$isValidOnce.'  '.$newline.$newline; 		
+	$output .= $trade_exchange.' | '.$trade_currency.' | if '.$pair.' is '.$trade_condition.' '.$tradePriceDisplay.' '.$trade_unit.' then '.$trade_action.' '.$trade_amount.' | last price: '.$lastPriceDisplay.' | percentChange: '.$percentChangeDisplay.$newline.' valid until '.$trade_until.' | isValid: '.$isValid.' | isTradeable: '.$isTradeable.' '.$newline.$newline; 		
 }
 
 
 echo $output;
 
-print_r($tradeResult);
 
 
 //delete old trades 
@@ -159,7 +161,7 @@ if($timeNow % 2 == 0) { //run every other hour
 	}
 	
 	//delete empty entries 
-	$deleteEmpty = "DELETE FROM $tradeTable WHERE trade_currency is NULL or trade_currency = ''";1
+	$deleteEmpty = "DELETE FROM $tradeTable WHERE trade_currency is NULL or trade_currency = ''";
 		
 	$success = $db->query($deleteEmpty); 
 	
