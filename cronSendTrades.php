@@ -98,9 +98,7 @@ foreach($tradesTable as $trade) {
 				$isTradeable = 'false';
 			}
 			
-			
-			$trade_price = $lastPrice;
-			
+			$trade_price = $lastPrice;		
 		}
 			
 
@@ -118,10 +116,10 @@ foreach($tradesTable as $trade) {
 					$tradeResult = $polo->sell($pair, $trade_price, $trade_amount); 
 				
 				//update trades table with result
-				//$update = "UPDATE $tradeTable SET
-				//result = '1' WHERE id = '".$trade_id."'";
+				$update = "UPDATE $tradeTable SET
+				result = '1' WHERE id = '".$trade_id."'";
 				
-				//$success = $db->query($update); 
+				$success = $db->query($update); 
 				
 				$isValidOnce = ' | true';
 			}
@@ -148,14 +146,14 @@ echo $output;
 //delete old trades 
 $timeNow = date('h', time());
 
-
+//if(true) {
 if($timeNow % 2 == 0) { //run every other hour
 	foreach($tradesTable as $trade) {
 
 		//delete old trades - with result = 1
 		$deleteOld = "DELETE FROM $tradeTable WHERE trade_currency = '".$trade->trade_currency."' AND result = '1' ";
 		
-		$success = $db->query($deleteOld); 
+		//$success = $db->query($deleteOld); 
 		
 		echo $deleteOld.$newline;
 	}

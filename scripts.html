@@ -98,20 +98,20 @@ $loadBalanceTable = 'load.php?page=balanceTable';
                 type: "GET",
                 url: "<?=$deleteAlert?>&id="+id,
                 success: function() {
-                    alert('Deleted record '+id);
-                    location.reload();
+                    //alert('Deleted record '+id);
+                    $('#btcTrades').load('<?=$loadCronSendAlerts?>');
                 }
             })
         }    
     }
     
 	function deleteTrade(id) {
+		console.log(id);
         if (confirm("Are you sure you want to delete record "+id+"?")) {
             $.ajax({
                 type: "GET",
                 url: "<?=$deleteTrade?>&trade_id="+id,
                 success: function() {
-                    //alert('Deleted record '+id);
 					$('#btcTrades').load('<?=$loadbtcTrades?>');						
                 }
             })
@@ -207,6 +207,8 @@ $loadBalanceTable = 'load.php?page=balanceTable';
 		$("select[name=trade_unit]").remove();	//remove action menu
 		$("#tradeUnitDiv").html('<?=$tradeUnitDropDown?>');	//re-construct the unit menu
 
+		$("#deleteTrade").remove(); //remove delete button - prevents the bug of deleting multiple records 
+		$("#deleteTradeButtonDiv").html('<button id="deleteTrade" class="btn btn-danger">Delete</button>'); //re-construct delete button 
 		
 		fillFormTrade(id);
 	
@@ -231,9 +233,9 @@ $loadBalanceTable = 'load.php?page=balanceTable';
 					updateTrade(id);
 					$( this ).dialog( "close" );
 				},
-				Cancel: function() {
+				Cancel: function() {						
+					$( this ).dialog( "close" );	
 					$('#btcTrades').load('<?=$loadbtcTrades?>');						
-					$( this ).dialog( "close" );				
 				},                        
 			}
 		});	

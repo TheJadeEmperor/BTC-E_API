@@ -49,8 +49,18 @@ foreach($tickerArray as $currencyPair => $tickerData) {
 
 	$stopLoss = $lastPrice - $lastPrice * 0.02;
 	
+	
+	$balanceDisplay = $balanceArray[$curr];
+	
+	if($balanceArray[$curr] > 0.5) {
+		//make sure amt matches balances 
+		$update = "UPDATE $tradeTable set trade_amount='".$balanceArray[$curr]."' WHERE trade_currency='".$dbCurrencyPair."'";
+		
+		$success = $db->query($update); 
+	}
+	
 	if($market == 'BTC') //only show BTC markets
-	if($percentChangeFormat > 15 && $percentChangeFormat < 20) { //check if price > 15% && price < 20%
+	if($percentChangeFormat > 16 && $percentChangeFormat < 20) { //check if price > 15% && price < 20%
 
 		$tradeAmount = 0.1 / $lastPrice;
 
@@ -69,7 +79,7 @@ foreach($tickerArray as $currencyPair => $tickerData) {
 				$tradeResult = $polo->buy($currencyPair, $lastPrice, $tradeAmount); 
 			
 				//set stop loss through btc_trades table 
-				$insert = "INSERT INTO $tradeTable (trade_exchange, trade_currency, trade_condition, trade_price, trade_action, trade_amount, trade_unit, until) values ('Poloniex', '".$dbCurrencyPair."', '<', '".$stopLoss."', 'Sell', '".$tradeAmountAfterFees."', 'BTC', '".$until."' ) LIMIT 1";
+				$insert = "INSERT INTO $tradeTable (trade_exchange, trade_currency, trade_condition, trade_price, trade_action, trade_amount, trade_unit, until) values ('Poloniex', '".$dbCurrencyPair."', '<', '".$stopLoss."', 'Sell', '".$tradeAmountAfterFees."', 'BTC', '".$until."' )";
 				
 				if(isset($dbCurrencyPair) && isset($tradeAmountAfterFees))
 					$success = $db->query($insert); //create new record in trade table for currencyPair
@@ -81,7 +91,7 @@ foreach($tickerArray as $currencyPair => $tickerData) {
 			}
 		}
 		else { //there is a balance
-			$balanceDisplay = $balanceArray[$curr];
+			
 		}
 		
 		echo $output = $currencyPair.' +'.$percentChangeFormat.'% | '.$balanceDisplay .' | lastPrice: '.$lastPrice.' | stopLoss: '.$stopLoss.' | tradeAmount: '.$tradeAmount.' | tradeAmountAfterFees: '.$tradeAmountAfterFees.$newline.$newline;
