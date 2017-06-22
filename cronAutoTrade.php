@@ -59,16 +59,25 @@ foreach($tickerArray as $currencyPair => $tickerData) {
 		$success = $db->query($update); 
 	}
 	
+	//check for existing Stop Loss trade
+	$selectCount = "SELECT count(*) as count from $tradeTable WHERE trade_currency='".$dbCurrencyPair."'";
+	$resultCount = $db->get_results($selectCount);
+	
+	$recordCount = $resultCount[0]->count;
+	
+	//echo ' '.$recordCount.' '.$dbCurrencyPair.' ';
+	
 	if($market == 'BTC') //only show BTC markets
-	if($percentChangeFormat > 16 && $percentChangeFormat < 20) { //check if price > 15% && price < 20%
+	if($percentChangeFormat > 16 && $percentChangeFormat < 20) {
 
+		$tradeAmount = 0.000000;
 		$tradeAmount = 0.1 / $lastPrice;
 
 		//minus trading fees
 		$tradeAmountAfterFees = $tradeAmount - $tradeAmount * 0.0015;
 			
-		//check if there's a balance for the currencyPair
-		if($balanceArray[$curr] <= 0.5) { //if no balance, then buy
+		//check if there's a balance & SL trade for the currencyPair
+		if($balanceArray[$curr] <= 0.5 && $recordCount == 0) { 
 			$balanceDisplay = ' No balance ';
 			
 			$dateInTwoWeeks = strtotime('+2 weeks');		
@@ -76,7 +85,7 @@ foreach($tickerArray as $currencyPair => $tickerData) {
 					
 			//buy order
 			if($debug != 1) {
-				$tradeResult = $polo->buy($currencyPair, $lastPrice, $tradeAmount); 
+				$tradeResult = $polo->buy($currencyPair, $lastPrice, $tradeAmount, 'immediateOrCancel'); 
 			
 				//set stop loss through btc_trades table 
 				$insert = "INSERT INTO $tradeTable (trade_exchange, trade_currency, trade_condition, trade_price, trade_action, trade_amount, trade_unit, until) values ('Poloniex', '".$dbCurrencyPair."', '<', '".$stopLoss."', 'Sell', '".$tradeAmountAfterFees."', 'BTC', '".$until."' )";
