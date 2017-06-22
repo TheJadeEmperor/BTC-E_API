@@ -111,9 +111,9 @@ foreach($tradesTable as $trade) {
 			
 			if($dbResult != 1) { //only trade once 
 				if($trade_action == 'Buy')
-					$tradeResult = $polo->buy($pair, $trade_price, $trade_amount); 
+					$tradeResult = $polo->buy($pair, $trade_price, $trade_amount, 'immediateOrCancel'); 
 				else 
-					$tradeResult = $polo->sell($pair, $trade_price, $trade_amount); 
+					$tradeResult = $polo->sell($pair, $trade_price, $trade_amount, 'immediateOrCancel'); 
 				
 				//update trades table with result
 				$update = "UPDATE $tradeTable SET

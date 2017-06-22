@@ -118,13 +118,17 @@
 			);
 		}
 		
-		public function sell($pair, $rate, $amount) {
+		public function sell($pair, $rate, $amount, $extra) {
+
+			if(isset($extra)) $value = 1;
+
 			return $this->query( 
 				array(
 					'command' => 'sell',	
 					'currencyPair' => strtoupper($pair),
 					'rate' => $rate,
-					'amount' => $amount
+					'amount' => $amount,
+					'immediateOrCancel' => $value
 				)
 			);
 		}
