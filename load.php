@@ -269,6 +269,10 @@ else if($_GET['page'] == 'cronAutoTrade'){
 		
 		if($crap == 'BTC') //only show BTC markets
 		if($percentChangeFormat > 10) {
+			
+			if($percentChangeFormat > 16) {
+				$percentChangeFormat = '<b>'.$percentChangeFormat.'</b>';
+			}
 			echo '<tr>
 			<td>'.$currencyPair.'</td>
 			<td class="green">+'.$percentChangeFormat.'%</td>
