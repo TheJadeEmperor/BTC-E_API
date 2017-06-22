@@ -70,8 +70,8 @@ foreach($tickerArray as $currencyPair => $tickerData) {
 	if($market == 'BTC') //only show BTC markets
 	if($percentChangeFormat > 16 && $percentChangeFormat < 20) {
 
-		$tradeAmount = 0.000000;
 		$tradeAmount = 0.1 / $lastPrice;
+		$tradeAmount = number_format($tradeAmount, 8);
 
 		//minus trading fees
 		$tradeAmountAfterFees = $tradeAmount - $tradeAmount * 0.0015;
