@@ -33,7 +33,7 @@ else {
 	$newline = "\n";
 }
 
-//print_r($balanceArray);
+
 
 foreach($tickerArray as $currencyPair => $tickerData) {
 	
@@ -47,17 +47,11 @@ foreach($tickerArray as $currencyPair => $tickerData) {
 	
 	$percentChangeFormat = number_format($percentChangeFormat, 2);
 
-	$stopLoss = $lastPrice - $lastPrice * 0.02;
-	
+	$stopLoss = $lastPrice - $lastPrice * 0.03;
+	$stopLoss = number_format($stopLoss, 8);
 	
 	$balanceDisplay = $balanceArray[$curr];
 	
-	if($balanceArray[$curr] > 0.5) {
-		//make sure amt matches balances 
-		$update = "UPDATE $tradeTable set trade_amount='".$balanceArray[$curr]."' WHERE trade_currency='".$dbCurrencyPair."'";
-		
-		$success = $db->query($update); 
-	}
 	
 	//check for existing Stop Loss trade
 	$selectCount = "SELECT count(*) as count from $tradeTable WHERE trade_currency='".$dbCurrencyPair."'";
@@ -67,21 +61,36 @@ foreach($tickerArray as $currencyPair => $tickerData) {
 	
 	//echo ' '.$recordCount.' '.$dbCurrencyPair.' ';
 	
+	$tradeAmount = 0.1 / $lastPrice;
+	$tradeAmount = number_format($tradeAmount, 8);
+
+	//minus trading fees
+	$tradeAmountAfterFees = $tradeAmount - $tradeAmount * 0.0015;
+	
+		
+	$dateInTwoWeeks = strtotime('+2 weeks');		
+	$until = date('Y-m-d h:i:m', $dateInTwoWeeks);
+	
+	//missing a stop loss trade
+	if($market == 'BTC') //only show BTC markets
+	if($recordCount == 0 && $balanceArray[$curr] > 0.1) {
+		//set stop loss through btc_trades table 
+		$insert = "INSERT INTO $tradeTable (trade_exchange, trade_currency, trade_condition, trade_price, trade_action, trade_amount, trade_unit, until) values ('Poloniex', '".$dbCurrencyPair."', '<', '".$stopLoss."', 'Sell', '".$tradeAmountAfterFees."', 'BTC', '".$until."' )";
+		
+		if(isset($dbCurrencyPair) && isset($tradeAmountAfterFees))
+			$success = $db->query($insert); //create new record in trade table for currencyPair
+		
+		$recordCount = 1;
+	}
+		
+	
 	if($market == 'BTC') //only show BTC markets
 	if($percentChangeFormat > 16 && $percentChangeFormat < 20) {
-
-		$tradeAmount = 0.1 / $lastPrice;
-		$tradeAmount = number_format($tradeAmount, 8);
-
-		//minus trading fees
-		$tradeAmountAfterFees = $tradeAmount - $tradeAmount * 0.0015;
-			
+	
 		//check if there's a balance & SL trade for the currencyPair
-		if($balanceArray[$curr] <= 0.5 && $recordCount == 0) { 
+		if($balanceArray[$curr] <= 0.1 && $recordCount == 0) { 
 			$balanceDisplay = ' No balance ';
-			
-			$dateInTwoWeeks = strtotime('+2 weeks');		
-			$until = date('Y-m-d h:i:m', $dateInTwoWeeks);
+		
 					
 			//buy order
 			if($debug != 1) {
@@ -99,12 +108,13 @@ foreach($tickerArray as $currencyPair => $tickerData) {
 					echo $newline.'Failed to add record '.$insert. $newline;
 			}
 		}
-		else { //there is a balance
-			
-		}
+		
+		
 		
 		echo $output = $currencyPair.' +'.$percentChangeFormat.'% | '.$balanceDisplay .' | lastPrice: '.$lastPrice.' | stopLoss: '.$stopLoss.' | tradeAmount: '.$tradeAmount.' | tradeAmountAfterFees: '.$tradeAmountAfterFees.$newline.$newline;
 	}
+	
+	
 	
 }
 

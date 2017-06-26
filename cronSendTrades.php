@@ -12,11 +12,10 @@ date_default_timezone_set('America/New_York');
 //get timestamp
 $currentTime = date('Y-m-d H:i:s', time());
 
+$debug = $_GET['debug'];
+
 //database connection
 $db = new ezSQL_mysql($dbUser, $dbPW, $dbName, $dbHost);
-
-
-$debug = $_GET['debug'];
 
 //connect to the BTC Database
 $tableData = new Database($db);
@@ -24,8 +23,12 @@ $tableData = new Database($db);
 //connect to Poloniex
 $polo = new poloniex($polo_api_key, $polo_api_secret);
 
+$balanceArray = $polo->get_balances(); //account balances
+
+
 //get all records from the alerts table
 $tradesTable = $tableData->tradesTable();
+
 
 if($debug == 1) {
 	$newline = '<br />';
@@ -52,15 +55,38 @@ foreach($tradesTable as $trade) {
 	
 	if($trade_exchange == 'Poloniex') { //set the currency in poloniex
 		
-		list($first, $second) = explode('/', $trade_currency);
-		$pair = $second.'_'.$first; //currency format is xxx_yyy
+		list($coin, $market) = explode('/', $trade_currency); // XXX/BTC
+		$pair = $market.'_'.$coin; //currency format is BTC_XXX
 	}
+	
+	echo $coin.': '.$balanceArray[$coin].' ';
+	
+	if($balanceArray[$coin] > 0.1) {
+		//make sure tradeAmt matches balance amount 
+		$updateAmt = "UPDATE $tradeTable set trade_amount='".$balanceArray[$coin]."' WHERE trade_currency='".$trade_currency."'";
+		
+		$success = $db->query($updateAmt); 
+		
+		echo $updateAmt.$newline;
+		
+	}
+	else { //balance < 0.1
+	
+		//delete trades that has no balance and trade_action='Sell'
+		//can't sell what you don't have
+		$deleteOld = "DELETE FROM $tradeTable WHERE trade_currency = '".$trade->trade_currency."' AND trade_action='Sell'";
+		
+		$success = $db->query($deleteOld); 
+		
+		echo $deleteOld.$newline;
+	}
+	
 		
 	//check timestamp
 	$dbTimestamp = strtotime($trade_until);
 	
 	if($dbTimestamp >= time()) { //has trade expired yet
-		$isValid = ' active';
+		$isExpired = 'No';
 			
 		$priceArray = $polo->get_ticker($pair); 
 
@@ -101,41 +127,39 @@ foreach($tradesTable as $trade) {
 			$trade_price = $lastPrice;		
 		}
 			
-
-		$queryT = "SELECT result from $tradeTable WHERE id='".$trade_id."'";
-		$resultT = $db->get_results($queryT);
-	
-		$dbResult = $resultT[0]->result;
+ 
 		
 		if($isTradeable == 'true') {
 			
-			if($dbResult != 1) { //only trade once 
+			if(/*$trade_result != 1*/ true ) { //only trade once 
 				if($trade_action == 'Buy')
 					$tradeResult = $polo->buy($pair, $trade_price, $trade_amount, 'immediateOrCancel'); 
-				else 
+				else {
+					$tradeResult = $polo->sell($pair, $trade_price, $trade_amount, 'fillOrKill'); 
 					$tradeResult = $polo->sell($pair, $trade_price, $trade_amount, 'immediateOrCancel'); 
-				
+				}
+					
 				//update trades table with result
 				$update = "UPDATE $tradeTable SET
 				result = '1' WHERE id = '".$trade_id."'";
 				
 				$success = $db->query($update); 
 				
-				$isValidOnce = ' | true';
+				//$isValidOnce = ' | true';
 			}
 			else { //trade already processed
-				$isValidOnce = ' | false';
+				//$isValidOnce = ' | false';
 			}
 		}
 	}
 	else { //trade expired 
-		$isValid = $isTradeable = ' expired';
+		$isExpired = 'Yes';	$isTradeable = 'False';
 	} 
 	
 	print_r($tradeResult);
 	
 		
-	$output .= $trade_exchange.' | '.$trade_currency.' | if '.$pair.' is '.$trade_condition.' '.$tradePriceDisplay.' '.$trade_unit.' then '.$trade_action.' '.$trade_amount.' | last price: '.$lastPriceDisplay.' | percentChange: '.$percentChangeDisplay.$newline.' valid until '.$trade_until.' | isValid: '.$isValid.' | isTradeable: '.$isTradeable.' '.$newline.$newline; 		
+	$output .= $trade_exchange.' | '.$trade_currency.' | if '.$pair.' is '.$trade_condition.' '.$tradePriceDisplay.' '.$trade_unit.' then '.$trade_action.' '.$trade_amount.' | last price: '.$lastPriceDisplay.' | percentChange: '.$percentChangeDisplay.$newline.' valid until '.$trade_until.' | expired: '.$isExpired.' | isTradeable: '.$isTradeable.' '.$newline.$newline; 		
 }
 
 
@@ -145,17 +169,7 @@ echo $output;
 //delete old trades 
 $timeNow = date('h', time());
 
-
 if($timeNow % 2 == 1) { //run every other hour
-	foreach($tradesTable as $trade) {
-
-		//delete old trades - with result = 1
-		$deleteOld = "DELETE FROM $tradeTable WHERE trade_currency = '".$trade->trade_currency."' AND result = '1' ";
-		
-		$success = $db->query($deleteOld); 
-		
-		echo $deleteOld.$newline;
-	}
 	
 	//delete empty entries 
 	$deleteEmpty = "DELETE FROM $tradeTable WHERE trade_currency is NULL or trade_currency = ''";
