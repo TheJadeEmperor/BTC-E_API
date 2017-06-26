@@ -134,6 +134,8 @@ $tradeActionDropDown = '<select name="trade_action">'.$actionDropDown.'</option>
 
 
 if($_GET['page'] == 'priceTable'){
+	
+	
 ?>
 <table class="table">
 	<thead class="thead-default">
@@ -172,7 +174,7 @@ else if($_GET['page'] == 'cronSendAlerts') {
 			<table class="table">
 				<thead class="thead-default">
 				<tr>
-					<th colspan="5">btc_alerts Table <a href="cronSendAlerts.php?debug=1" target="_BLANK"><input type="button" value="cronSendAlerts"></a>
+					<th colspan="5">btc_alerts Table 
 					</th>
 				</tr>
 				<tr>
@@ -206,7 +208,8 @@ else if($_GET['page'] == 'btcTrades'){
 		<table class="table">
 				<thead class="thead-default">
 				<tr>
-					<th colspan="6">btc_trades Table <a href="cronSendTrades.php?debug=1" target="_BLANK"><input type="button" value="cronSendTrades"></a>
+					<th colspan="6">btc_trades Table 
+					
 					</th>
 				</tr>
 				<tr>
@@ -248,7 +251,7 @@ else if($_GET['page'] == 'cronAutoTrade'){
 		<thead class="thead-default">
 			<tr>
 				<th colspan="3">Today's Winners
-				<a href="cronAutoTrade.php?debug=1" target="_BLANK"><input type="button" value="cronAutoTrade"></th>
+				</th>
 			</tr>
 			<tr>
 				<th>Currency</th>
@@ -295,7 +298,7 @@ else if($_GET['page'] == 'balanceTable'){
 	<table class="table">
 		<thead class="thead-default">
 			<tr>
-				<th colspan="6">Polo Balance</th>
+				<th colspan="6">Polo Balance <img src="include/refresh.png" class="clickable" onclick="javascript:reloadBalanceTable()" width="25px" /> </th>
 			</tr>
 		</thead>
 		<tbody>

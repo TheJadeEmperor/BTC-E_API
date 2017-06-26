@@ -240,6 +240,12 @@ $loadBalanceTable = 'load.php?page=balanceTable';
 			}
 		});	
 	}
+	
+	
+	function reloadBalanceTable(){
+		$('#balanceTable').load('load.php?page=balanceTable');		
+	}
+		
 
     $(document).ready(function () {
 		
