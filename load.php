@@ -335,7 +335,12 @@ else if($_GET['page'] == 'balanceTable'){
 			if($percentChangeFormat > 0) $color = 'green';
 			else $color = 'red';
 			
-			$balanceTable .= '<tr><td>'.$currency.'</td>
+			if($currency == 'BTC' || $currency == 'ETH')
+				$formatting = 'style="font-weight: bold;"';
+			else
+				$formatting = 'style="font-weight: normal;"';
+			
+			$balanceTable .= '<tr '.$formatting.'><td>'.$currency.'</td>
 			<td>'.$currencyBalance.'</td>
 			<td>'.$lastFormat.'</td>
 			<td style="color: '.$color.'">'.$percentChangeFormat.'%</td>
