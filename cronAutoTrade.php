@@ -113,9 +113,6 @@ foreach($tickerArray as $currencyPair => $tickerData) {
 		
 		echo $output = $currencyPair.' +'.$percentChangeFormat.'% | '.$balanceDisplay .' | lastPrice: '.$lastPrice.' | stopLoss: '.$stopLoss.' | tradeAmount: '.$tradeAmount.' | tradeAmountAfterFees: '.$tradeAmountAfterFees.$newline.$newline;
 	}
-	
-	
-	
 }
 
 

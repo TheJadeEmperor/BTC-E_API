@@ -136,7 +136,11 @@ foreach($tradesTable as $trade) {
 					$tradeResult = $polo->buy($pair, $trade_price, $trade_amount, 'immediateOrCancel'); 
 				else {
 					$tradeResult = $polo->sell($pair, $trade_price, $trade_amount, 'fillOrKill'); 
-					$tradeResult = $polo->sell($pair, $trade_price, $trade_amount, 'immediateOrCancel'); 
+					
+					print_r($tradeResult);
+					
+					if($tradeResult['amountUnfilled'] > 0)
+						$tradeResult = $polo->sell($pair, $trade_price, $trade_amount, 'immediateOrCancel'); 
 				}
 					
 				//update trades table with result
