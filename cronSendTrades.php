@@ -20,14 +20,16 @@ $db = new ezSQL_mysql($dbUser, $dbPW, $dbName, $dbHost);
 //connect to the BTC Database
 $tableData = new Database($db);
 
+//get all records from the alerts table
+$tradesTable = $tableData->tradesTable();
+
+
 //connect to Poloniex
 $polo = new poloniex($polo_api_key, $polo_api_secret);
 
-$balanceArray = $polo->get_balances(); //account balances
+ //account balances
+$balanceArray = $polo->get_balances();
 
-
-//get all records from the alerts table
-$tradesTable = $tableData->tradesTable();
 
 
 if($debug == 1) {
@@ -59,7 +61,7 @@ foreach($tradesTable as $trade) {
 		$pair = $market.'_'.$coin; //currency format is BTC_XXX
 	}
 	
-	echo $coin.': '.$balanceArray[$coin].' ';
+	$output .= $coin.' | '.$balanceArray[$coin].' | ';
 	
 	if($balanceArray[$coin] > 0.1) {
 		//make sure tradeAmt matches balance amount 
@@ -67,8 +69,7 @@ foreach($tradesTable as $trade) {
 		
 		$success = $db->query($updateAmt); 
 		
-		echo $updateAmt.$newline;
-		
+		$output .= $updateAmt.$newline;
 	}
 	else { //balance < 0.1
 	
@@ -78,7 +79,7 @@ foreach($tradesTable as $trade) {
 		
 		$success = $db->query($deleteOld); 
 		
-		echo $deleteOld.$newline;
+		$output .=  $deleteOld.$newline;
 	}
 	
 		
@@ -127,20 +128,22 @@ foreach($tradesTable as $trade) {
 			$trade_price = $lastPrice;		
 		}
 			
- 
 		
 		if($isTradeable == 'true') {
 			
 			if(/*$trade_result != 1*/ true ) { //only trade once 
-				if($trade_action == 'Buy')
-					$tradeResult = $polo->buy($pair, $trade_price, $trade_amount, 'immediateOrCancel'); 
-				else {
-					$tradeResult = $polo->sell($pair, $trade_price, $trade_amount, 'fillOrKill'); 
-					
-					print_r($tradeResult);
-					
-					if($tradeResult['amountUnfilled'] > 0)
-						$tradeResult = $polo->sell($pair, $trade_price, $trade_amount, 'immediateOrCancel'); 
+				if($trade_action == 'Buy') {
+					$tradeResult = $polo->buy($pair, $lastPrice, $trade_amount, 'immediateOrCancel'); 
+				}
+				else { 
+					 for ($i = 0; $i <= 5; $i++) {
+						$tradeResult = $polo->sell($pair, $lastPrice, $trade_amount, 'immediateOrCancel'); 
+						//echo '<br />'.$i.' '.($tradeResult['amountUnfilled']).'<br />';
+						 
+						print_r($tradeResult);
+						
+						if($tradeResult['amountUnfilled'] == 0) break;
+					}
 				}
 					
 				//update trades table with result
@@ -149,10 +152,6 @@ foreach($tradesTable as $trade) {
 				
 				$success = $db->query($update); 
 				
-				//$isValidOnce = ' | true';
-			}
-			else { //trade already processed
-				//$isValidOnce = ' | false';
 			}
 		}
 	}
@@ -163,7 +162,7 @@ foreach($tradesTable as $trade) {
 	print_r($tradeResult);
 	
 		
-	$output .= $trade_exchange.' | '.$trade_currency.' | if '.$pair.' is '.$trade_condition.' '.$tradePriceDisplay.' '.$trade_unit.' then '.$trade_action.' '.$trade_amount.' | last price: '.$lastPriceDisplay.' | percentChange: '.$percentChangeDisplay.$newline.' valid until '.$trade_until.' | expired: '.$isExpired.' | isTradeable: '.$isTradeable.' '.$newline.$newline; 		
+	$output .= $newline.$trade_exchange.' | '.$trade_currency.' | if '.$pair.' is '.$trade_condition.' '.$tradePriceDisplay.' '.$trade_unit.' then '.$trade_action.' '.$trade_amount.' | last price: '.$lastPriceDisplay.' | percentChange: '.$percentChangeDisplay.$newline.' valid until '.$trade_until.' | expired: '.$isExpired.' | isTradeable: '.$isTradeable.' '.$newline.$newline; 		
 }
 
 
@@ -184,5 +183,4 @@ if($timeNow % 2 == 1) { //run every other hour
 }
 
 
-	
 ?>
