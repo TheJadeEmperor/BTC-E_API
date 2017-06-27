@@ -25,21 +25,10 @@ $tableData = new Database($db);
 $polo = new poloniex($polo_api_key, $polo_api_secret);
 
 
-				 
-$pair = 'BTC_ETH';
-$trade_amount = 0.87209948;
-//$trade_price = 0.00088031;
+$num = 33964;
 
-$priceArray = $polo->get_ticker($pair); 
-$lastPrice = $priceArray['last']; //most recent price
+$tradeAmount = number_format($num, 8, '.', '');
 
-echo ' '.$lastPrice.' ';
+echo $tradeAmount;
 
-for ($i = 0; $i <= 5; $i++) {
-	$tradeResult = $polo->sell($pair, $lastPrice, $trade_amount, 'immediateOrCancel'); 
-	echo '<br />'.$i.' '.($tradeResult['amountUnfilled']).'<br />';
-	 
-
-	if($tradeResult['amountUnfilled'] == 0) break;
-}
 ?>
