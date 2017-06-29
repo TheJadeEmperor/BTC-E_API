@@ -47,7 +47,7 @@ foreach($tickerArray as $currencyPair => $tickerData) {
 	
 	$percentChangeFormat = number_format($percentChangeFormat, 2);
 
-	$stopLoss = $lastPrice - $lastPrice * 0.03;
+	$stopLoss = $lastPrice - $lastPrice * 0.05; //5% below entry point
 	$stopLoss = number_format($stopLoss, 8);
 	
 	$balanceDisplay = $balanceArray[$curr];

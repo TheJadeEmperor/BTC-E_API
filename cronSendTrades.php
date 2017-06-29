@@ -137,29 +137,27 @@ foreach($tradesTable as $trade) {
 			
 		
 		if($isTradeable == 'true') {
-			
-			if(/*$trade_result != 1*/ true ) { //only trade once 
-				if($trade_action == 'Buy') {
-					$tradeResult = $polo->buy($pair, $lastPrice, $trade_amount, 'immediateOrCancel'); 
-				}
-				else { 
-					 for ($i = 0; $i <= 5; $i++) {
-						$tradeResult = $polo->sell($pair, $lastPrice, $trade_amount, 'immediateOrCancel'); 
-						//echo '<br />'.$i.' '.($tradeResult['amountUnfilled']).'<br />';
-						 
-						print_r($tradeResult);
-						
-						if($tradeResult['amountUnfilled'] == 0) break;
-					}
-				}
-					
-				//update trades table with result
-				$update = "UPDATE $tradeTable SET
-				result = '1' WHERE id = '".$trade_id."'";
-				
-				$success = $db->query($update); 
-				
+
+			if($trade_action == 'Buy') {
+				$tradeResult = $polo->buy($pair, $lastPrice, $trade_amount, 'immediateOrCancel'); 
 			}
+			else { 
+				 for ($i = 0; $i <= 7; $i++) {
+					$tradeResult = $polo->sell($pair, $lastPrice, $trade_amount, 'immediateOrCancel'); 
+					//echo '<br />'.$i.' '.($tradeResult['amountUnfilled']).'<br />';
+					 
+					print_r($tradeResult);
+					
+					if($tradeResult['amountUnfilled'] == 0) break;
+				}
+			}
+				
+			//update trades table with result
+			$update = "UPDATE $tradeTable SET
+			result = '1' WHERE id = '".$trade_id."'";
+			
+			$success = $db->query($update); 
+
 		}
 	}
 	else { //trade expired 
@@ -172,9 +170,6 @@ foreach($tradesTable as $trade) {
 	$output .= $newline.$trade_exchange.' | '.$trade_currency.' | if '.$pair.' is '.$trade_condition.' '.$tradePriceDisplay.' '.$trade_unit.' then '.$trade_action.' '.$trade_amount.' | last price: '.$lastPriceDisplay.' | percentChange: '.$percentChangeDisplay.$newline.' valid until '.$trade_until.' | expired: '.$isExpired.' | isTradeable: '.$isTradeable.' '.$newline.$newline; 		
 }
 
-
 echo $output;
-
-
 
 ?>
