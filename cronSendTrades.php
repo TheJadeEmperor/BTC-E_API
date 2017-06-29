@@ -63,6 +63,12 @@ foreach($tradesTable as $trade) {
 	
 	$output .= $coin.' | '.$balanceArray[$coin].' | ';
 	
+	if(!isset($balanceArray[$coin])) {//cannot read balance
+		$output .= "Can't connect to Poloniex"; 
+		echo $output; 
+		exit;
+	}
+ 
 	if($balanceArray[$coin] > 0.1) {
 		//make sure tradeAmt matches balance amount 
 		$updateAmt = "UPDATE $tradeTable set trade_amount='".$balanceArray[$coin]."' WHERE trade_currency='".$trade_currency."'";
@@ -81,9 +87,7 @@ foreach($tradesTable as $trade) {
 		
 		$output .=  $deleteOld.$newline;
 	}
-	else { //cannot read balance
-		$output .= "Can't connect to Poloniex";
-	}
+	
 	
 		
 	//check timestamp
