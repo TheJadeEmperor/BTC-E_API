@@ -71,7 +71,7 @@ foreach($tradesTable as $trade) {
 		
 		$output .= $updateAmt.$newline;
 	}
-	else { //balance < 0.1
+	else if ($balanceArray[$coin] < 0.1) { //balance < 0.1
 	
 		//delete trades that has no balance and trade_action='Sell'
 		//can't sell what you don't have
@@ -80,6 +80,9 @@ foreach($tradesTable as $trade) {
 		$success = $db->query($deleteOld); 
 		
 		$output .=  $deleteOld.$newline;
+	}
+	else { //cannot read balance
+		$output .= "Can't connect to Poloniex";
 	}
 	
 		
@@ -168,19 +171,6 @@ foreach($tradesTable as $trade) {
 
 echo $output;
 
-
-//delete old trades 
-$timeNow = date('h', time());
-
-if($timeNow % 2 == 1) { //run every other hour
-	
-	//delete empty entries 
-	$deleteEmpty = "DELETE FROM $tradeTable WHERE trade_currency is NULL or trade_currency = ''";
-		
-	$success = $db->query($deleteEmpty); 
-	
-	echo $deleteEmpty.$newline;
-}
 
 
 ?>
