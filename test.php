@@ -25,10 +25,12 @@ $tableData = new Database($db);
 $polo = new poloniex($polo_api_key, $polo_api_secret);
 
 
-$num = 33964;
+$num = 0.00023780;
 
-$tradeAmount = number_format($num, 8, '.', '');
+$sl = $num - $num * 0.1;
 
-echo $tradeAmount;
+$sl = number_format($sl, 8);
+
+echo $sl;
 
 ?>
