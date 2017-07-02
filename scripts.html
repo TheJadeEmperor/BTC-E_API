@@ -245,7 +245,23 @@ $loadBalanceTable = 'load.php?page=balanceTable';
 	function reloadBalanceTable(){
 		$('#balanceTable').load('load.php?page=balanceTable');		
 	}
+	
+	function reloadPriceTable() {
+		$('#priceTable').load('load.php?page=priceTable');		
+	}
 		
+	function reloadAlertsTable() {
+		$('#cronSendAlerts').load('<?=$loadCronSendAlerts?>');		
+	}
+	
+	function reloadTradesTable() {
+		$('#btcTrades').load('<?=$loadbtcTrades?>');	
+	}
+		
+	function cronAutoTrade() {
+		$('#cronAutoTrade').load('load.php?page=cronAutoTrade');		
+	}
+	
 
     $(document).ready(function () {
 		
@@ -333,11 +349,15 @@ $loadBalanceTable = 'load.php?page=balanceTable';
 			})
 		});
 
-		$('#priceTable').load('load.php?page=priceTable');		
-		$('#cronSendAlerts').load('<?=$loadCronSendAlerts?>');		
-		$('#btcTrades').load('<?=$loadbtcTrades?>');						
-		$('#balanceTable').load('load.php?page=balanceTable');		
-		$('#cronAutoTrade').load('load.php?page=cronAutoTrade');		
+		reloadPriceTable();
 		
+		reloadBalanceTable();
+		
+		reloadAlertsTable();
+		
+		reloadTradesTable();
+
+		cronAutoTrade();
+					
     });
 </script>

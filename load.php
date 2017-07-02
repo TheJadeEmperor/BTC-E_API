@@ -12,9 +12,9 @@ error_reporting(E_ALL & ~E_NOTICE & ~E_WARNING);
 //set timezone
 date_default_timezone_set('America/New_York');
 
-
+/*
 //alert ajax calls
-$createAlert = 'include/ajax.php?action=create4';
+$createAlert = 'include/ajax.php?action=create';
 $readAlert = 'include/ajax.php?action=read';
 $updateAlert = 'include/ajax.php?action=update';
 $deleteAlert = 'include/ajax.php?action=delete';
@@ -24,6 +24,7 @@ $createTrade = 'include/ajax.php?action=createTrade';
 $readTrade = 'include/ajax.php?action=readTrade';
 $updateTrade = 'include/ajax.php?action=updateTrade';
 $deleteTrade = 'include/ajax.php?action=deleteTrade';
+*/
 
 global $db;
 
@@ -139,9 +140,14 @@ if($_GET['page'] == 'priceTable'){
 ?>
 <table class="table">
 	<thead class="thead-default">
+	<tr>
+		<th colspan="3">Price Table <img src="include/refresh.png" class="clickable" onclick="javascript:reloadPriceTable()" width="25px" /></th>
+	</tr>
+	<tr>
 		<th>Currency Pair</th>
 		<th>Poloniex Price</th>
 		<th>BTCe Price</th>
+	</tr>
 	</thead>
 	<tr>
 		<td>BTC/USDT </td>
@@ -169,80 +175,78 @@ if($_GET['page'] == 'priceTable'){
 else if($_GET['page'] == 'cronSendAlerts') {
 
 ?>
+	<table class="table">
+		<thead class="thead-default">
+		<tr>
+			<th colspan="5">btc_alerts Table <img src="include/refresh.png" class="clickable" onclick="javascript:reloadAlertTable()" width="25px" />
+			</th>
+		</tr>
+		<tr>
+			<th>Currency</th>
+			<th>Condition</th>
+			<th>Price</th>
+			<th>Exchange</th>
+			<th>Sent?</th>
+		</tr>
+		</thead>
+		<tbody>
+		<?php
+		foreach($condTable as $cond) {
+			echo '<tr class="clickable" onclick="javascript:updateAlertDialog(\''.$cond->id.'\')" title="'.$cond->id.'">
+			<td>'.$cond->currency.'</td>
+			<td>'.$cond->on_condition.'</td>
+			<td>'.$cond->price.' '.$cond->unit.'</td>
+			<td>'.$cond->exchange.'</td>
+			<td>'.$cond->sent.'</td>
+		';
+		}
 
-
-			<table class="table">
-				<thead class="thead-default">
-				<tr>
-					<th colspan="5">btc_alerts Table 
-					</th>
-				</tr>
-				<tr>
-					<th>Currency</th>
-					<th>Condition</th>
-					<th>Price</th>
-					<th>Exchange</th>
-					<th>Sent?</th>
-				</tr>
-				</thead>
-				<tbody>
-				<?php
-				foreach($condTable as $cond) {
-					echo '<tr class="clickable" onclick="javascript:updateAlertDialog(\''.$cond->id.'\')" title="'.$cond->id.'">
-					<td>'.$cond->currency.'</td>
-					<td>'.$cond->on_condition.'</td>
-					<td>'.$cond->price.' '.$cond->unit.'</td>
-					<td>'.$cond->exchange.'</td>
-					<td>'.$cond->sent.'</td>
-				';
-				}
-
-				?>
-				</tbody>
-			</table>
+		?>
+		</tbody>
+	</table>
 			
 <?
 }
 else if($_GET['page'] == 'btcTrades'){
 ?>
-		<table class="table">
-				<thead class="thead-default">
-				<tr>
-					<th colspan="6">btc_trades Table 
-					
-					</th>
-				</tr>
-				<tr>
-					<th>Currency</th>
-					<th>Condition</th>
-					<th>Amount</th>
-					<th>Valid Until</th>
-				</tr>
-				</thead>
-				<tbody>
-				<?php
-				foreach($tradesTable as $trade) {
-					$trade_amount = number_format($trade->trade_amount, 4);
-					
-					if($trade->result==1) {
-						$style="background-color: gray";
-					}
-					else{
-						$style="background-color: white";
-					}
-					echo '<tr style="'.$style.'" class="clickable" onclick="javascript:updateTradeDialog(\''.$trade->id.'\')" title="id: '.$trade->id.' | trade_until: '.$trade->until_date.' '.$trade->until_time.'">
-					<td>'.$trade->trade_currency.'</td>
-					<td>'.$trade->trade_condition.' 
-					'.$trade->trade_price.' '.$trade->trade_unit.'</td>
-					<td>'.$trade->trade_action.' '.$trade_amount.'</td>
-					<td>'.$trade->until_format.'</td>
-				';
-				}
+	<table class="table">
+		<thead class="thead-default">
+		<tr>
+			<th colspan="6">btc_trades Table 
+			<img src="include/refresh.png" class="clickable" onclick="javascript:reloadTradesTable()" width="25px" />
+			</th>
+		</tr>
+		<tr>
+			<th>Currency</th>
+			<th>Condition</th>
+			<th>Amount</th>
+			<th>Valid Until</th>
+		</tr>
+		</thead>
+		<tbody>
+		<?php
+		foreach($tradesTable as $trade) {
+			$trade_amount = number_format($trade->trade_amount, 4);
+			
+			if($trade->result==1) {
+				$style="background-color: gray";
+			}
+			else{
+				$style="background-color: white";
+			}
+			echo '<tr style="'.$style.'" class="clickable" onclick="javascript:updateTradeDialog(\''.$trade->id.'\')" title="id: '.$trade->id.' | trade_until: '.$trade->until_date.' '.$trade->until_time.'">
+			<td>'.$trade->trade_currency.'</td>
+			<td>'.$trade->trade_condition.' 
+			'.$trade->trade_price.' '.$trade->trade_unit.'</td>
+			<td>'.$trade->trade_action.' '.$trade_amount.'</td>
+			<td>'.$trade->until_format.'</td>
+		';
+		}
 
-				?>
-				</tbody>
-				</tr>
-			</table>
+		?>
+		</tbody>
+		</tr>
+	</table>
 <?
 }
 else if($_GET['page'] == 'cronAutoTrade'){
@@ -250,7 +254,7 @@ else if($_GET['page'] == 'cronAutoTrade'){
 <table class="table">
 		<thead class="thead-default">
 			<tr>
-				<th colspan="3">Today's Winners
+				<th colspan="3">Today's Winners <img src="include/refresh.png" class="clickable" onclick="javascript:cronAutTrade()" width="25px" />
 				</th>
 			</tr>
 			<tr>
