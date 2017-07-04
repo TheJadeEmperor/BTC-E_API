@@ -85,13 +85,12 @@ foreach($tickerArray as $currencyPair => $tickerData) {
 		
 	
 	if($market == 'BTC') //only show BTC markets
-	if($percentChangeFormat > 16 && $percentChangeFormat < 20) {
+	if($percentChangeFormat < -10 && $percentChangeFormat > -15) {
 	
 		//check if there's a balance & SL trade for the currencyPair
 		if($balanceArray[$curr] <= 0.1 && $recordCount == 0) { 
 			$balanceDisplay = ' No balance ';
 		
-					
 			//buy order
 			if($debug != 1) {
 				$tradeResult = $polo->buy($currencyPair, $lastPrice, $tradeAmount, 'immediateOrCancel'); 
@@ -109,9 +108,7 @@ foreach($tickerArray as $currencyPair => $tickerData) {
 			}
 		}
 		
-		
-		
-		echo $output = $currencyPair.' +'.$percentChangeFormat.'% | '.$balanceDisplay .' | lastPrice: '.$lastPrice.' | stopLoss: '.$stopLoss.' | tradeAmount: '.$tradeAmount.' | tradeAmountAfterFees: '.$tradeAmountAfterFees.$newline.$newline;
+		echo $output = $currencyPair.' '.$percentChangeFormat.'% | '.$balanceDisplay .' | lastPrice: '.$lastPrice.' | stopLoss: '.$stopLoss.' | tradeAmount: '.$tradeAmount.' | tradeAmountAfterFees: '.$tradeAmountAfterFees.$newline.$newline;
 	}
 }
 
