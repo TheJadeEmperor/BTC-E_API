@@ -12,19 +12,7 @@ error_reporting(E_ALL & ~E_NOTICE & ~E_WARNING);
 //set timezone
 date_default_timezone_set('America/New_York');
 
-/*
-//alert ajax calls
-$createAlert = 'include/ajax.php?action=create';
-$readAlert = 'include/ajax.php?action=read';
-$updateAlert = 'include/ajax.php?action=update';
-$deleteAlert = 'include/ajax.php?action=delete';
 
-//trade Ajax calls
-$createTrade = 'include/ajax.php?action=createTrade';
-$readTrade = 'include/ajax.php?action=readTrade';
-$updateTrade = 'include/ajax.php?action=updateTrade';
-$deleteTrade = 'include/ajax.php?action=deleteTrade';
-*/
 
 global $db;
 
@@ -42,6 +30,25 @@ $condTable = $tableData->alertsTable();
 
 $tradesTable = $tableData->tradesTable();
 
+
+
+//get prices from btc-e
+$btce_dash_usd = $btce->getLastPrice('dsh_usd');
+
+$btce_btc_usd = $btce->getLastPrice('btc_usd');
+
+$btce_eth_usd = $btce->getLastPrice('eth_usd');
+
+$btce_ltc_usd = $btce->getLastPrice('ltc_usd');
+
+//format btc-e currencies
+$btce_dash_usd =  number_format($btce_dash_usd, 2);
+
+$btce_btc_usd = number_format($btce_btc_usd, 0);
+
+$btce_eth_usd = number_format($btce_eth_usd, 2);
+
+$btce_ltc_usd =  number_format($btce_ltc_usd, 2);
 
 //get prices from poloniex
 $POLO_USDT_DASH = $polo->get_ticker('USDT_DASH');
@@ -63,24 +70,29 @@ $polo_eth_usd = number_format($POLO_USDT_ETH['last'], 2);
 $polo_ltc_usd = number_format($POLO_USDT_LTC['last'], 2);
 
 
-//get prices from btc-e
-$btce_dash_usd = $btce->getLastPrice('dsh_usd');
+//format polo percentChanges
+$dash_percent_raw = $POLO_USDT_DASH['percentChange'] * 100;
+$btc_percent_raw = $POLO_USDT_BTC['percentChange'] * 100;
+$eth_percent_raw = $POLO_USDT_ETH['percentChange'] * 100;
+$ltc_percent_raw = $POLO_USDT_LTC['percentChange'] * 100;
 
-$btce_btc_usd = $btce->getLastPrice('btc_usd');
+$dash_percent_display = format_percent_display($dash_percent_raw);
+$btc_percent_display = format_percent_display($btc_percent_raw);
+$eth_percent_display = format_percent_display($eth_percent_raw);
+$ltc_percent_display = format_percent_display($ltc_percent_raw);
 
-$btce_eth_usd = $btce->getLastPrice('eth_usd');
-
-$btce_ltc_usd = $btce->getLastPrice('ltc_usd');
-
-//format btc-e currencies
-$btce_dash_usd =  number_format($btce_dash_usd, 2);
-
-$btce_btc_usd = number_format($btce_btc_usd, 0);
-
-$btce_eth_usd = number_format($btce_eth_usd, 2);
-
-$btce_ltc_usd =  number_format($btce_ltc_usd, 2);
-
+function format_percent_display($percent_number) {
+	$percent_number = number_format($percent_number, 2).'%';
+	
+	if($percent_number > 0) {
+		$percent_number = '<span style="class: green">+'.$percent_number.'</span>';
+	} 
+	else{
+		$percent_number = '<span style="class: red">'.$percent_number.'</span>';		
+	}
+	
+	return $percent_number;
+}
 
 
 $conditionDropDown = '<select name="on_condition"><option value=">"> > </option><option value="<"> < </option></select>';
@@ -150,22 +162,22 @@ if($_GET['page'] == 'priceTable'){
 	</tr>
 	</thead>
 	<tr>
-		<td>BTC/USDT </td>
+		<td>BTC/USDT <?=$btc_percent_display?></td>
 		<td> $<?=$polo_btc_usd ?> </td>
 		<td> $<?=$btce_btc_usd ?> </td>
 	</tr>
 	</tr>
-		<td>ETH/USDT </td>
+		<td>ETH/USDT <?=$eth_percent_display?></td>
 		<td> $<?=$polo_eth_usd ?> </td>
 		<td> $<?=$btce_eth_usd ?> </td>
 	</tr>
 	<tr>
-		<td>DASH/USDT </td>
+		<td>DASH/USDT <?=$dash_percent_display?></td>
 		<td> $<?=$polo_dash_usd ?> </td>
 		<td> $<?=$btce_dash_usd ?> </td>
 	</tr>
 	<tr>
-		<td>LTC/USDT </td>
+		<td>LTC/USDT <?=$ltc_percent_display?></td>
 		<td> $<?=$polo_ltc_usd ?> </td>
 		<td> $<?=$btce_ltc_usd ?> </td>
 	</tr>				
@@ -251,10 +263,13 @@ else if($_GET['page'] == 'btcTrades'){
 }
 else if($_GET['page'] == 'cronAutoTrade'){
 ?>
-<table class="table">
+
+<div class="row">
+	<div class="col">
+	<table class="table">
 		<thead class="thead-default">
 			<tr>
-				<th colspan="3">Today's Winners <img src="include/refresh.png" class="clickable" onclick="javascript:cronAutTrade()" width="25px" />
+				<th colspan="3">Today's Winners <img src="include/refresh.png" class="clickable" onclick="javascript:cronAutoTrade()" width="25px" />
 				</th>
 			</tr>
 			<tr>
@@ -290,7 +305,48 @@ else if($_GET['page'] == 'cronAutoTrade'){
 	</table>
 	</div>
 	
-
+	<div class="col">
+	<table class="table">
+		<thead class="thead-default">
+			<tr>
+				<th colspan="3">Today's Losers <img src="include/refresh.png" class="clickable" onclick="javascript:cronAutoTrade()" width="25px" />
+				</th>
+			</tr>
+			<tr>
+				<th>Currency</th>
+				<th>Percent Change</th>
+				<th>Last Price</th>
+			</tr>
+		</thead>
+	<?php
+	$tickerArray = $polo->get_ticker();
+	foreach($tickerArray as $currencyPair => $tickerData) {
+		$percentChange = $tickerData['percentChange'];
+		
+		list($crap, $curr) = explode('_',  $currencyPair);
+		
+		$percentChangeFormat = $percentChange * 100;
+		
+		$percentChangeFormat = number_format($percentChangeFormat, 2);
+		
+		if($crap == 'BTC') //only show BTC markets
+		if($percentChangeFormat < -10) {
+			
+			if($percentChangeFormat < -15) {
+				$percentChangeFormat = '<b>'.$percentChangeFormat.'</b>';
+			}
+			echo '<tr>
+			<td>'.$currencyPair.'</td>
+			<td class="red">'.$percentChangeFormat.'%</td>
+			<td>'.$tickerData['last'].'</td></tr>';
+		}
+	}
+	?>
+	</table>
+	</div>
+	
+</div>
+	
 <?
 	
 }

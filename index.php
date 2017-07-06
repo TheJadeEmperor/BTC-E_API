@@ -1,13 +1,4 @@
 <?php
-/*
-$dir = 'include/';
-include($dir.'api_database.php');
-include($dir.'api_poloniex.php');
-include($dir.'api_btce.php');
-include($dir.'config.php');
-include($dir.'ez_sql_core.php');
-include($dir.'ez_sql_mysql.php');
-*/
 
 error_reporting(E_ALL & ~E_NOTICE & ~E_WARNING);
 
@@ -110,6 +101,10 @@ $tradeActionDropDown = '<select name="trade_action">'.$actionDropDown.'</option>
 	.green {
 		color: green;
 	}
+	
+	.red {
+		color: red;
+	}
 </style>
 
 <?
@@ -143,7 +138,6 @@ include('scripts.html');
 			
 			<br />
 		
-			
 		</div>
     
 		<div class="col">
@@ -225,20 +219,17 @@ include('scripts.html');
 
 	<div class="row">
 		<div class="col-6">
-		
 			<div id="btcTrades"></div>
 		</div>
 		<div class="col-md-5">
-		
 			<div id="balanceTable"></div>
 		</div>
 
- 
-	<div class="col">
-		<div id="cronAutoTrade"></div>
+		<div class="col">
+			<div id="cronAutoTrade"></div>
+		</div>
+
 	</div>
-
-
 </div><!--container-->
   
 <p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p>

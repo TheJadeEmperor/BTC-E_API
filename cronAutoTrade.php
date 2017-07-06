@@ -34,7 +34,6 @@ else {
 }
 
 
-
 foreach($tickerArray as $currencyPair => $tickerData) {
 	
 	$percentChange = $tickerData['percentChange'];
@@ -43,8 +42,13 @@ foreach($tickerArray as $currencyPair => $tickerData) {
 	list($market, $curr) = explode('_',  $currencyPair);
 	$dbCurrencyPair = $curr.'/'.$market;
 	
-	$percentChangeFormat = $percentChange * 100;
+	//useless coins
+	if($currencyPair == 'BTC_SJCX') continue;
 	
+	//only show BTC markets
+	if($market != 'BTC') continue; 
+	
+	$percentChangeFormat = $percentChange * 100;
 	$percentChangeFormat = number_format($percentChangeFormat, 2);
 
 	$stopLoss = $lastPrice - $lastPrice * 0.05; //5% below entry point
@@ -72,8 +76,9 @@ foreach($tickerArray as $currencyPair => $tickerData) {
 	$until = date('Y-m-d h:i:m', $dateInTwoWeeks);
 	
 	//missing a stop loss trade
-	if($market == 'BTC') //only show BTC markets
+	//if($market == 'BTC') //only show BTC markets
 	if($recordCount == 0 && $balanceArray[$curr] > 0.1) {
+
 		//set stop loss through btc_trades table 
 		$insert = "INSERT INTO $tradeTable (trade_exchange, trade_currency, trade_condition, trade_price, trade_action, trade_amount, trade_unit, until) values ('Poloniex', '".$dbCurrencyPair."', '<', '".$stopLoss."', 'Sell', '".$tradeAmountAfterFees."', 'BTC', '".$until."' )";
 		
@@ -84,7 +89,7 @@ foreach($tickerArray as $currencyPair => $tickerData) {
 	}
 		
 	
-	if($market == 'BTC') //only show BTC markets
+	
 	if($percentChangeFormat < -10 && $percentChangeFormat > -15) {
 	
 		//check if there's a balance & SL trade for the currencyPair
