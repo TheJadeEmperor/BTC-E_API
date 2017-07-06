@@ -77,7 +77,6 @@ foreach($tickerArray as $currencyPair => $tickerData) {
 	$until = date('Y-m-d h:i:m', $dateInTwoWeeks);
 	
 	//missing a stop loss trade
-	//if($market == 'BTC') //only show BTC markets
 	if($recordCount == 0 && $balanceArray[$curr] > 0.1) {
 
 		//set stop loss through btc_trades table 
@@ -90,8 +89,6 @@ foreach($tickerArray as $currencyPair => $tickerData) {
 	}
 		
 	
-
-	if($market == 'BTC') //only show BTC markets
 	if($percentChangeFormat < -15 && $percentChangeFormat > -20) {
 
 		//check if there's a balance & SL trade for the currencyPair

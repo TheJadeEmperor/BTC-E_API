@@ -119,7 +119,12 @@ class BTCeAPI {
         return $json;
     }
     
-	//$pair = symbol_symbol2
+	public function getAllPairs() {
+		$json = $this->retrieveJSON($this->public_api.'info');
+		return $json['pairs'];
+	}
+	
+	//$pair = symbolA_symbolB
     public function getLastPrice($pair) {
         $json = $this->retrieveJSON($this->public_api.'ticker/'.$pair);        
         return $json[$pair]['last'];
