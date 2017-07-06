@@ -85,7 +85,7 @@ foreach($tickerArray as $currencyPair => $tickerData) {
 		
 	
 	if($market == 'BTC') //only show BTC markets
-	if($percentChangeFormat < -10 && $percentChangeFormat > -15) {
+	if($percentChangeFormat < -15 && $percentChangeFormat > -20) {
 	
 		//check if there's a balance & SL trade for the currencyPair
 		if($balanceArray[$curr] <= 0.1 && $recordCount == 0) { 
