@@ -42,11 +42,12 @@ foreach($tickerArray as $currencyPair => $tickerData) {
 	list($market, $curr) = explode('_',  $currencyPair);
 	$dbCurrencyPair = $curr.'/'.$market;
 	
+	//only show BTC markets
+	if($market != 'BTC') continue; 
+
 	//useless coins
 	if($currencyPair == 'BTC_SJCX') continue;
 	
-	//only show BTC markets
-	if($market != 'BTC') continue; 
 	
 	$percentChangeFormat = $percentChange * 100;
 	$percentChangeFormat = number_format($percentChangeFormat, 2);
@@ -89,9 +90,10 @@ foreach($tickerArray as $currencyPair => $tickerData) {
 	}
 		
 	
-	
-	if($percentChangeFormat < -10 && $percentChangeFormat > -15) {
-	
+
+	if($market == 'BTC') //only show BTC markets
+	if($percentChangeFormat < -15 && $percentChangeFormat > -20) {
+
 		//check if there's a balance & SL trade for the currencyPair
 		if($balanceArray[$curr] <= 0.1 && $recordCount == 0) { 
 			$balanceDisplay = ' No balance ';
