@@ -64,9 +64,8 @@ foreach($tickerArray as $currencyPair => $tickerData) {
 	
 	$recordCount = $resultCount[0]->count;
 	
-	//echo ' '.$recordCount.' '.$dbCurrencyPair.' ';
-	
-	$tradeAmount = 0.1 / $lastPrice;
+
+	$tradeAmount = 0.05 / $lastPrice;
 	$tradeAmount = number_format($tradeAmount, 8, '.', '');
 
 	//minus trading fees
