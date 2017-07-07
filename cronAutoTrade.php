@@ -46,7 +46,7 @@ foreach($tickerArray as $currencyPair => $tickerData) {
 	if($market != 'BTC') continue; 
 
 	//useless coins
-	if($currencyPair == 'BTC_SJCX' || $currencyPair == 'BTC_VIA') continue;
+	if($curr == 'SJCX' || $curr == 'VIA' || $curr == 'VTC') continue;
 	
 	
 	$percentChangeFormat = $percentChange * 100;
