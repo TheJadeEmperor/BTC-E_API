@@ -12,10 +12,12 @@ $updateTrade = 'include/ajax.php?action=updateTrade';
 $deleteTrade = 'include/ajax.php?action=deleteTrade';
 
 //page load ajax calls
-$loadCronSendAlerts = 'load.php?page=cronSendAlerts';
-$loadbtcTrades = 'load.php?page=btcTrades';
-$loadBalanceTable = 'load.php?page=balanceTable';
-
+$accessKey = 'YoMamaSoFat';
+$loadCronSendAlerts = 'load.php?page=cronSendAlerts&key='.$accessKey;
+$loadbtcTrades = 'load.php?page=btcTrades&key='.$accessKey;
+$loadBalanceTable = 'load.php?page=balanceTable&key='.$accessKey;
+$loadPriceTable = 'load.php?page=priceTable&key='.$accessKey;
+$loadCronAutoTrade = 'load.php?page=cronAutoTrade&key='.$accessKey;
 ?>
 <script>
 	function updateAlert(id) {
@@ -241,13 +243,15 @@ $loadBalanceTable = 'load.php?page=balanceTable';
 		});	
 	}
 	
-	
+	$accessKey = 'YoMamaSoFat';
+ 
+ 
 	function reloadBalanceTable(){
-		$('#balanceTable').load('load.php?page=balanceTable');		
+		$('#balanceTable').load('<?=$loadBalanceTable?>');		
 	}
 	
 	function reloadPriceTable() {
-		$('#priceTable').load('load.php?page=priceTable');		
+		$('#priceTable').load('<?=$loadPriceTable?>');		
 	}
 		
 	function reloadAlertsTable() {
@@ -259,7 +263,7 @@ $loadBalanceTable = 'load.php?page=balanceTable';
 	}
 		
 	function cronAutoTrade() {
-		$('#cronAutoTrade').load('load.php?page=cronAutoTrade');		
+		$('#cronAutoTrade').load('<?=$loadCronAutoTrade?>');		
 	}
 	
 
