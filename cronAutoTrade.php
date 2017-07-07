@@ -46,7 +46,7 @@ foreach($tickerArray as $currencyPair => $tickerData) {
 	if($market != 'BTC') continue; 
 
 	//useless coins
-	if($currencyPair == 'BTC_SJCX') continue;
+	if($currencyPair == 'BTC_SJCX' || $currencyPair == 'BTC_VIA') continue;
 	
 	
 	$percentChangeFormat = $percentChange * 100;
@@ -88,7 +88,7 @@ foreach($tickerArray as $currencyPair => $tickerData) {
 	}
 		
 	
-	if($percentChangeFormat < -15 && $percentChangeFormat > -20) {
+	if($percentChangeFormat < -16 && $percentChangeFormat > -20) {
 
 		//check if there's a balance & SL trade for the currencyPair
 		if($balanceArray[$curr] <= 0.1 && $recordCount == 0) { 
