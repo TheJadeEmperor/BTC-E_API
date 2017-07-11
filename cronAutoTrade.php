@@ -46,13 +46,13 @@ foreach($tickerArray as $currencyPair => $tickerData) {
 	if($market != 'BTC') continue; 
 
 	//useless coins
-	if($curr == 'SJCX' || $curr == 'VIA' || $curr == 'VTC') continue;
+	if($curr == 'SJCX' || $curr == 'LBC' || $curr == 'VTC') continue;
 	
 	
 	$percentChangeFormat = $percentChange * 100;
 	$percentChangeFormat = number_format($percentChangeFormat, 2);
 
-	$stopLoss = $lastPrice - $lastPrice * 0.05; //5% below entry point
+	$stopLoss = $lastPrice - $lastPrice * 0.10; //10% below entry point
 	$stopLoss = number_format($stopLoss, 8);
 	
 	$balanceDisplay = $balanceArray[$curr];
@@ -65,7 +65,7 @@ foreach($tickerArray as $currencyPair => $tickerData) {
 	$recordCount = $resultCount[0]->count;
 	
 
-	$tradeAmount = 0.05 / $lastPrice;
+	$tradeAmount = 0.05 / $lastPrice; //0.05 btc 
 	$tradeAmount = number_format($tradeAmount, 8, '.', '');
 
 	//minus trading fees
@@ -86,13 +86,17 @@ foreach($tickerArray as $currencyPair => $tickerData) {
 		
 		$recordCount = 1;
 	}
+	
+	
 		
 	
-	if($percentChangeFormat < -16 && $percentChangeFormat > -20) {
+	if($percentChangeFormat < -16) {
 
 		//check if there's a balance & SL trade for the currencyPair
-		if($balanceArray[$curr] <= 0.1 && $recordCount == 0) { 
+		if($balanceArray[$curr] <= 0.2 && $recordCount == 0) { 
 			$balanceDisplay = ' No balance ';
+		
+		exit;
 		
 			//buy order
 			if($debug != 1) {

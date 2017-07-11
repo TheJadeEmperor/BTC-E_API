@@ -151,7 +151,36 @@ $eth_percent_display = format_percent_display($eth_percent_raw);
 $ltc_percent_display = format_percent_display($ltc_percent_raw);
 
 
+
+$bittrexURL = 'http://bestpayingsites.com/admin/btcTradingAPI/bittrex/';
 ?>
+
+<script>
+ $(document).ready(function () {
+	 $.ajax({
+
+		// The 'type' property sets the HTTP method.
+		// A value of 'PUT' or 'DELETE' will trigger a preflight request.
+		type: 'GET',
+
+		// The URL to make the request to.
+		url: '<?=$bittrexURL?>?curr=btc',
+
+
+		contentType: 'text/plain',
+
+		
+
+		success: function(data) {
+			alert(data);
+			$( "#usdt_btc_last" ).html( data );
+		},
+	  
+		 //$( "#usdt_btc_last" ).html( '<?=$bittrexURL?>?curr=btc' );
+	 });
+	});
+</script>
+
 <table class="table">
 	<thead class="thead-default">
 	<tr>
@@ -162,12 +191,14 @@ $ltc_percent_display = format_percent_display($ltc_percent_raw);
 		<th>Percent Change</th>
 		<th>Poloniex Price</th>
 		<th>BTCe Price</th>
+		<th>Bittrex Price</th>
 	</tr>
 	</thead>
 	<tr>
 		<td>BTC/USDT</td><td><?=$btc_percent_display?></td>
 		<td> $<?=$polo_btc_usd ?> </td>
 		<td> $<?=$btce_btc_usd ?> </td>
+		<td> <iframe src='<?=$bittrexURL?>?curr=btc' height="25px" border="0"></iframe></td>
 	</tr>
 	</tr>
 		<td>ETH/USDT</td><td><?=$eth_percent_display?></td>

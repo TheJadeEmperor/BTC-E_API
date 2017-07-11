@@ -1,54 +1,75 @@
-<!DOCTYPE html>
-<html lang="en">
-    <head>
+<?php
+include('../include/config.php');
+include('api_bittrex.php');
 
-		<title>Bittrex Api</title>
-		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1">
-    	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-		    <!-- Latest compiled and minified CSS -->
-		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+error_reporting(E_ALL & ~E_NOTICE & ~E_WARNING);
 
-		<!-- Optional theme -->
-		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+session_start();
+	 
+	
+$_SESSION['key'] = '6ebadd9db0504586bf7f26a5adae9ccf';
+$_SESSION['secret'] = 'f04b39348a884448837641d0c2504588';
 
-		<!-- Latest compiled and minified JavaScript -->
-		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
-        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
-        
+	 
+$bittrex = new Client ($_SESSION['key'], $_SESSION['secret']);
 
-    </head>
-    <body>
-   
-<nav class="navbar navbar-default">
-  <div class="container-fluid">
-    <div class="navbar-header">
-      <a class="navbar-brand" href="#">Bittrex</a>
-    </div>
-    <ul class="nav navbar-nav">
-      <li class="active"><a href="index.php">Login</a></li>
-      <li ><a href="account.php">Account</a></li>
-      <li ><a href="check_price.php">Check Price</a></li>
-      <li ><a href="trade.php">Trade</a></li>
-    </ul>
-  </div>
-</nav>
-    <div class = "container">
+		
+$usdt_btc_price = $bittrex->getTicker('USDT-BTC');
+$usdt_btc_last = $usdt_btc_price->Last;
 
-		<form action="operation.php" method="post" name="Login_Form" class="form-signin">       
-		  <div class="form-group">
-		    <label for="apikey">Api Key:</label>
-		    <input type="text" id="apikey" class="form-control" name="apikey" placeholder="Api Key" required="" />
-		  </div>
-		  <div class="form-group">
-		    <label for="secret">Secret:</label>
-		    <input type="password" class="form-control" id="secret" name="secret" placeholder="Secret" required=""/>     		  
-		  </div>
-		  <button type="submit" name="validate" value="Validate" class="btn btn-default">Submit</button>
-		</form>
+	
+$usdt_eth_price = $bittrex->getTicker('USDT-ETH');
+$usdt_eth_last = $usdt_eth_price->Last;
 
-	</div>
-	</body>
-	<link rel="stylesheet" type="text/css" href="assets/css/style.css">
-	<script type="text/javascript" src="assets/js/script.js"></script>    
-</html>
+
+$btc_ltc_price = $bittrex->getTicker('BTC-LTC');
+$btc_ltc_last = $btc_ltc_price->Last;
+
+
+$usdt_ltc_last = $btc_ltc_last * $usdt_btc_last;
+
+
+$btc_dash_price = $bittrex->getTicker('BTC-DASH');
+$btc_dash_last = $btc_dash_price->Last;
+
+$usdt_dash_last = $btc_dash_last * $usdt_btc_last;
+
+//echo '<br>';
+
+
+if($_GET['curr'] == 'btc') {
+	echo $usdt_btc_last;
+}
+else if($_GET['curr'] == 'eth') {
+	echo $usdt_eth_last;	
+}
+else if($_GET['curr'] == 'ltc') {
+	echo $usdt_ltc_last;
+}
+else if($_GET['curr'] == 'dash') {
+	echo $usdt_dash_last;
+}
+else {
+	 
+//print_r($bittrex->getBalance('btc'));
+  
+  
+	$balance = $bittrex->getBalances();
+
+	print_r($balance);
+
+}
+//echo '<br>';
+
+//echo '<br>';
+
+
+
+
+//echo $btc_ltc_last;
+
+//echo '<br>';
+
+
+
+	?>
