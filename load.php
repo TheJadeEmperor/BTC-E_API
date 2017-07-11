@@ -191,14 +191,13 @@ $bittrexURL = 'http://bestpayingsites.com/admin/btcTradingAPI/bittrex/';
 		<th>Percent Change</th>
 		<th>Poloniex Price</th>
 		<th>BTCe Price</th>
-		<th>Bittrex Price</th>
 	</tr>
 	</thead>
 	<tr>
 		<td>BTC/USDT</td><td><?=$btc_percent_display?></td>
 		<td> $<?=$polo_btc_usd ?> </td>
 		<td> $<?=$btce_btc_usd ?> </td>
-		<td> <iframe src='<?=$bittrexURL?>?curr=btc' height="25px" border="0"></iframe></td>
+		<td></td>
 	</tr>
 	</tr>
 		<td>ETH/USDT</td><td><?=$eth_percent_display?></td>
