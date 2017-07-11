@@ -13,6 +13,38 @@ class Database {
         $this->db = $db; //database connection object
     }
     
+	
+	public function format_percent_display($percent_number) {
+		$percent_number = number_format($percent_number, 2).'%';
+		
+		if($percent_number > 0) {
+			$percent_number = '<span class="green">+'.$percent_number.'</span>';
+		} 
+		else{
+			$percent_number = '<span class="red">'.$percent_number.'</span>';		
+		}
+		
+		return $percent_number;
+	}
+
+	
+	function coinbasePrice ($currencyPair) {
+	
+		$url = 'https://api.coinbase.com/v2/prices/'.$currencyPair.'/spot';
+
+		$ch = curl_init();
+		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+		curl_setopt($ch, CURLOPT_URL, $url);
+		$result=curl_exec($ch);
+		curl_close($ch);
+
+		$decode = json_decode($result, true);
+		
+		return $decode['data']['amount'];
+	}
+
+	
     public function tradesTable() {
 		$queryT = "SELECT *, date_format(until, '%m/%d/%Y') as until_date,
 		date_format(until, '%H:%i:%s') as until_time,

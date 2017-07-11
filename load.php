@@ -7,6 +7,39 @@ include($dir.'config.php');
 include($dir.'ez_sql_core.php');
 include($dir.'ez_sql_mysql.php');
 
+
+function format_percent_display($percent_number) {
+	$percent_number = number_format($percent_number, 2).'%';
+	
+	if($percent_number > 0) {
+		$percent_number = '<span class="green">+'.$percent_number.'</span>';
+	} 
+	else{
+		$percent_number = '<span class="red">'.$percent_number.'</span>';		
+	}
+	
+	return $percent_number;
+}
+
+function coinbasePrice ($currencyPair) {
+	
+	$url = 'https://api.coinbase.com/v2/prices/'.$currencyPair.'/spot';
+
+	$ch = curl_init();
+	curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+	curl_setopt($ch, CURLOPT_URL, $url);
+	$result=curl_exec($ch);
+	curl_close($ch);
+
+	$decode = json_decode($result, true);
+	
+	return $decode['data']['amount'];
+}
+
+
+
+
 error_reporting(E_ALL & ~E_NOTICE & ~E_WARNING);
 
 //set timezone
@@ -14,6 +47,7 @@ date_default_timezone_set('America/New_York');
 
 
 if($_GET['key'] != 'YoMamaSoFat') exit;
+
 
 
 global $db;
@@ -31,20 +65,6 @@ $tableData = new Database($db);
 $condTable = $tableData->alertsTable();
 
 $tradesTable = $tableData->tradesTable();
-
-function format_percent_display($percent_number) {
-	$percent_number = number_format($percent_number, 2).'%';
-	
-	if($percent_number > 0) {
-		$percent_number = '<span class="green">+'.$percent_number.'</span>';
-	} 
-	else{
-		$percent_number = '<span class="red">'.$percent_number.'</span>';		
-	}
-	
-	return $percent_number;
-}
-
 
 
 
@@ -188,31 +208,35 @@ $bittrexURL = 'http://bestpayingsites.com/admin/btcTradingAPI/bittrex/';
 	</tr>
 	<tr>
 		<th>Currency Pair</th>
-		<th>Percent Change</th>
-		<th>Poloniex Price</th>
-		<th>BTCe Price</th>
+		<th>% Change</th>
+		<th>Poloniex</th>
+		<th>BTC-E</th>
+		<th>Coinbase</th>
 	</tr>
 	</thead>
 	<tr>
 		<td>BTC/USDT</td><td><?=$btc_percent_display?></td>
 		<td> $<?=$polo_btc_usd ?> </td>
 		<td> $<?=$btce_btc_usd ?> </td>
-		<td></td>
+		<td> $<?=coinbasePrice('btc-usd') ?></td>
 	</tr>
 	</tr>
 		<td>ETH/USDT</td><td><?=$eth_percent_display?></td>
 		<td> $<?=$polo_eth_usd ?> </td>
 		<td> $<?=$btce_eth_usd ?> </td>
+		<td> $<?=coinbasePrice('eth-usd') ?></td>
 	</tr>
 	<tr>
 		<td>DASH/USDT</td><td> <?=$dash_percent_display?></td>
 		<td> $<?=$polo_dash_usd ?> </td>
 		<td> $<?=$btce_dash_usd ?> </td>
+		<td> :*( </td>
 	</tr>
 	<tr>
 		<td>LTC/USDT</td><td> <?=$ltc_percent_display?></td>
 		<td> $<?=$polo_ltc_usd ?> </td>
 		<td> $<?=$btce_ltc_usd ?> </td>
+		<td> $<?=coinbasePrice('ltc-usd') ?></td>
 	</tr>				
 </table>
 <?
