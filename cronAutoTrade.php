@@ -88,15 +88,13 @@ foreach($tickerArray as $currencyPair => $tickerData) {
 	}
 	
 	
-		
-	
-	if($percentChangeFormat < -16) {
+	if($percentChangeFormat < -16 || $percentChangeFormat > 16) {
 
 		//check if there's a balance & SL trade for the currencyPair
 		if($balanceArray[$curr] <= 0.2 && $recordCount == 0) { 
 			$balanceDisplay = ' No balance ';
 		
-		exit;
+		//exit;
 		
 			//buy order
 			if($debug != 1) {
