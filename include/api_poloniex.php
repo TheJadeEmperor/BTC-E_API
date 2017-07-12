@@ -102,22 +102,6 @@
 				)
 			);
 		}
-		/*
-		public function buy($pair, $rate, $amount, $extra) {
-			
-			if(isset($extra)) $value = 1;
-			
-			return $this->query( 
-				array(
-					'command' => 'buy',	
-					'currencyPair' => strtoupper($pair),
-					'rate' => $rate,
-					'amount' => $amount,
-					'immediateOrCancel' => $value
-				)
-			);
-		}*/
-		
 		
 		public function buy($pair, $rate, $amount, $orderType) {
 			
@@ -135,21 +119,6 @@
 			);
 		}
 		
-		/*
-		public function sell($pair, $rate, $amount, $extra) {
-
-			if(isset($extra)) $value = 1;
-
-			return $this->query( 
-				array(
-					'command' => 'sell',	
-					'currencyPair' => strtoupper($pair),
-					'rate' => $rate,
-					'amount' => $amount,
-					'immediateOrCancel' => $value
-				)
-			);
-		}*/
 		
 		public function sell($pair, $rate, $amount, $orderType) {
 

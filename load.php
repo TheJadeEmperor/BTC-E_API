@@ -103,164 +103,180 @@ foreach($actionTypes as $aType) {
 }
 $tradeActionDropDown = '<select name="trade_action">'.$actionDropDown.'</option>';
 
-
-	//get prices from btc-e
-	$btce_dash_usd_raw = $btce->getLastPrice('dsh_usd');
-
+	/*
+	================
+	BTC-e prices
+	================
+	*/
 	$btce_btc_usd_raw = $btce->getLastPrice('btc_usd');
 
 	$btce_eth_usd_raw = $btce->getLastPrice('eth_usd');
 
 	$btce_ltc_usd_raw = $btce->getLastPrice('ltc_usd');
 
-	//format btc-e currencies
-	$btce_dash_usd =  number_format($btce_dash_usd_raw, 2);
+	$btce_dash_usd_raw = $btce->getLastPrice('dsh_usd');
 
+	
+	//format btc-e currencies
 	$btce_btc_usd = number_format($btce_btc_usd_raw, 0);
 
 	$btce_eth_usd = number_format($btce_eth_usd_raw, 2);
 
 	$btce_ltc_usd =  number_format($btce_ltc_usd_raw, 2);
 
+	$btce_dash_usd = number_format($btce_dash_usd_raw, 2);
+
+	/*
+	===================
+	Poloniex prices
+	===================
+	*/
+	$polo_btc_usd_ticker = $polo->get_ticker('USDT_BTC');
+
+	$polo_eth_usd_ticker = $polo->get_ticker('USDT_ETH');
+
+	$polo_ltc_usd_ticker = $polo->get_ticker('USDT_LTC');
+
+	$polo_dash_usd_ticker = $polo->get_ticker('USDT_DASH');
 	
-	//get prices from poloniex
-	$POLO_USDT_DASH = $polo->get_ticker('USDT_DASH');
+	//Raw prices
+	
+	$polo_btc_usd_raw = $polo_btc_usd_ticker['last'];
+	
+	$polo_eth_usd_raw = $polo_eth_usd_ticker['last'];
+	
+	$polo_ltc_usd_raw = $polo_ltc_usd_ticker['last'];
 
-	$POLO_USDT_BTC = $polo->get_ticker('USDT_BTC');
-
-	$POLO_USDT_ETH = $polo->get_ticker('USDT_ETH');
-
-	$POLO_USDT_LTC = $polo->get_ticker('USDT_LTC');
-
+	$polo_dash_usd_raw = $polo_dash_usd_ticker['last'];
 
 	//format polo currencies
-	$polo_dash_usd = number_format($POLO_USDT_DASH['last'], 2);
 
-	$polo_btc_usd = number_format($POLO_USDT_BTC['last'], 0);
+	$polo_btc_usd = number_format($polo_btc_usd_raw, 0);
 
-	$polo_eth_usd = number_format($POLO_USDT_ETH['last'], 2);
+	$polo_eth_usd = number_format($polo_eth_usd_raw, 2);
 
-	$polo_ltc_usd = number_format($POLO_USDT_LTC['last'], 2);
+	$polo_ltc_usd = number_format($polo_ltc_usd_raw, 2);
 
+	$polo_dash_usd = number_format($polo_dash_usd_raw, 2);
 
+	
 	//format polo percentChanges
-	$dash_percent_raw = $POLO_USDT_DASH['percentChange'] * 100;
-	$btc_percent_raw = $POLO_USDT_BTC['percentChange'] * 100;
-	$eth_percent_raw = $POLO_USDT_ETH['percentChange'] * 100;
-	$ltc_percent_raw = $POLO_USDT_LTC['percentChange'] * 100;
+	$btc_percent_raw = $polo_btc_usd_ticker['percentChange'] * 100;
+	$eth_percent_raw = $polo_eth_usd_ticker['percentChange'] * 100;
+	$ltc_percent_raw = $polo_ltc_usd_ticker['percentChange'] * 100;
+	$dash_percent_raw = $polo_dash_usd_ticker['percentChange'] * 100;
 
-	$dash_percent_display = format_percent_display($dash_percent_raw);
 	$btc_percent_display = format_percent_display($btc_percent_raw);
 	$eth_percent_display = format_percent_display($eth_percent_raw);
 	$ltc_percent_display = format_percent_display($ltc_percent_raw);
+	$dash_percent_display = format_percent_display($dash_percent_raw);
 
 
 	$coinbase_btc_usd = $tableData->coinbasePrice('btc-usd');
 	$coinbase_eth_usd = $tableData->coinbasePrice('eth-usd');
 	$coinbase_ltc_usd = $tableData->coinbasePrice('ltc-usd');
 
+	
 	if($_GET['page'] == 'arb') {
 		
 		
 		
-function transfer($r1_btc){
+function transfer($bal) {
 	
-global $polo_btc, $polo_eth, $coinbase_btc, $coinbase_eth;
+	global $exchange1, $exchange2;
 
-$fee = 0.0025; //0.25% fee
+	$ex1_c1_amt = $bal / $exchange1['coin1_price'];
+	$ex1_c1_amt = $ex1_c1_amt - ($ex_c1_amt * $exchange1['fee']);
 	
-	echo 'Polo BTC: '.$r1_btc.'<br />';
+	echo $exchange1['name'].' USDT: '.$bal.' <br />'.
+	$exchange1['name'].' '.$exchange1['coin1_name'].': '.$ex1_c1_amt.'<br />';
+
 	
-	$r1_usdt = $polo_btc * $r1_btc;
-	$r1_usdt = $r1_usdt - ($r1_usdt * $fee);
+	$ex2_usd_amt = $ex1_c1_amt * $exchange2['coin1_price'];
+	$ex2_usd_amt = $ex2_usd_amt - ($ex2_usd_amt * $exchange2['fee']);
 	
-	echo 'Polo USDT: '.$r1_usdt.'<br />';
+	$ex2_c2_amt = $ex2_usd_amt / $exchange2['coin2_price'];
+	$ex2_c2_amt = $ex2_c2_amt - ($ex2_c2_amt * $exchange2['fee']);
 	
-	$r1_coin = $r1_usdt / $polo_eth;
-	$r1_coin = $r1_coin - ($r1_coin * $fee);
+	echo '<br />Transfer to '.$exchange2['name'].'...<br />';
 	
-	echo 'Polo ETH: '.$r1_coin.'<br />';
-	echo '<br />Transfer to CB...<br />';
-	echo 'CB ETH: '.$r1_coin.'<br />';
-	
-	
-	
-	$r2_usdt = $r1_coin * $coinbase_eth;
-	$r2_usdt = $r2_usdt - ($r2_usdt * $fee);
-	
-	echo 'CB USDT: '.$r2_usdt.'<br />';
-	
-	$r2_btc = $r2_usdt / $coinbase_btc;
-	$r2_btc = $r2_btc - ($r2_btc * $fee);
+	echo $exchange2['name'].' '.$exchange2['coin1_name'].' '.$ex1_c1_amt.'<br />';
+	echo $exchange2['name'].' USDT: '.$ex2_usd_amt.'<br />';
+	echo $exchange2['name'].' '.$exchange2['coin2_name'].' '.$ex2_c2_amt.'<br />';
 	
 	
-	echo 'CB BTC: '.$r2_btc.'<br />'; 
+	$ex1_usd_amt = $ex2_c2_amt * $exchange2['coin2_price'];
+	$ex1_usd_amt = $ex1_usd_amt - ($ex1_usd_amt * $exchange2['fee']);
 	
-	return $r2_btc;
+	echo '<br />Transfer to '.$exchange1['name'].'...<br />';
+	
+	echo $exchange1['name'].' '.$exchange1['coin2_name'].': '.$ex2_c2_amt.'<br />
+	'.$exchange1['name'].' USDT: '.$ex1_usd_amt.' <br />';
+
+	
+	return $ex1_usd_amt;
 }
 
 global $polo_btc, $polo_eth, $coinbase_btc, $coinbase_eth;
+global $exchange1, $exchange2;
 
-$polo_btc = $POLO_USDT_BTC['last'];
-$polo_eth = $POLO_USDT_ETH['last'];
+$exchange1 = array(
+	'name' => 'BTC-E',
+	'fee' => 0.0025,
+	'coin1_name' => 'BTC',
+	'coin1_price' => $btce_btc_usd_raw,
+	'coin2_name' => 'LTC',
+	'coin2_price' => $btce_ltc_usd_raw,
+);
 
-$coinbase_btc = 2317;
-$coinbase_eth = 185;
+$exchange2 = array (
+	'name' => 'Polo',
+	'fee' => 0.0025,
+	'coin1_name' => 'BTC',
+	'coin1_price' => $polo_btc_usd_raw,
+	'coin2_name' => 'LTC',
+	'coin2_price' => $polo_ltc_usd_raw
+);
+	
 
 if($_POST['balance']) {
 	
 	$bal = $_POST['balance'];
 	
-	echo 'Start balance: '.$bal.'<br /><br />';
-	
-	$r1_btc = $bal / $polo_btc;
+	echo 'Start balance: '.$bal.' USD<br /><br />';
 	
 	echo 'Round 1<br />';
-	$round1_btc = transfer($r1_btc);
+	
+	$bal = transfer($bal);
 	
 	echo '<br /><br />Round 2<br />';
 	
-	transfer($round1_btc);
+	transfer($bal);
 }
+
+
 ?>
 <br />
-<form method=post>
-<input type="text" name="balance">USD<input type=submit>
+<form method="POST">
+	<input type="text" name="balance" value="<?=$_POST['balance']?>">Starting USD
+	<input type=submit>
 </form>
+<?
+echo $exchange1['name'].' <br />
+'.$exchange1['coin1_name'].' '.$exchange1['coin1_price'].'<br />
+'.$exchange1['coin2_name'].' '.$exchange1['coin2_price'].'<br />
+<br /><br />'.
 
-Polo <br />
-BTC - <?=$polo_btc?> <br />
-ETH - <?=$polo_eth?> <br />
+$exchange2['name'].' <br />
+'.$exchange2['coin1_name'].' '.$exchange2['coin1_price'].'<br />
+'.$exchange2['coin2_name'].' '.$exchange2['coin2_price'].'<br />';
 
-<br /><br />
-Coinbase <br />
-BTC - <?=$coinbase_btc?> <br />
-ETH - <?=$coinbase_eth?> <br />
-<br /><br />
-	
-	<?
+
 	}
 	
 	
 if($_GET['page'] == 'priceTable'){
 		
-	/*
-	function marketSpread ($polo_price, $btce_price, $coinbase_price) {
-		echo ($polo_price - $btce_price);
-		
-		if($polo_price - $btce_price <= 0) {
-			$compare = $polo_price; 
-		}
-		else {
-			$compare = $btce_price;
-		}
-		
-		return $compare / $coinbase_price * 100;
-		
-	}*/
- 
-	//echo marketSpread ($POLO_USDT_BTC, $btce_btc_usd_raw, $coinbase_btc_usd);
-
 $bittrexURL = 'http://bestpayingsites.com/admin/btcTradingAPI/bittrex/';
 ?>
 
@@ -290,17 +306,17 @@ $bittrexURL = 'http://bestpayingsites.com/admin/btcTradingAPI/bittrex/';
 		<td> $<?=$coinbase_eth_usd ?></td>
 	</tr>
 	<tr>
-		<td>DASH/USDT</td><td> <?=$dash_percent_display?></td>
-		<td> $<?=$polo_dash_usd ?> </td>
-		<td> $<?=$btce_dash_usd ?> </td>
-		<td> :*( </td>
-	</tr>
-	<tr>
 		<td>LTC/USDT</td><td> <?=$ltc_percent_display?></td>
 		<td> $<?=$polo_ltc_usd ?> </td>
 		<td> $<?=$btce_ltc_usd ?> </td>
 		<td> $<?=$coinbase_ltc_usd ?></td>
 	</tr>				
+	<tr>
+		<td>DASH/USDT</td><td> <?=$dash_percent_display?></td>
+		<td> $<?=$polo_dash_usd ?> </td>
+		<td> $<?=$btce_dash_usd ?> </td>
+		<td> :*( </td>
+	</tr>
 </table>
 <?
 }
@@ -310,7 +326,7 @@ else if($_GET['page'] == 'cronSendAlerts') {
 	<table class="table">
 		<thead class="thead-default">
 		<tr>
-			<th colspan="5">btc_alerts Table <img src="include/refresh.png" class="clickable" onclick="javascript:reloadAlertTable()" width="25px" />
+			<th colspan="5">btc_alerts Table <img src="include/refresh.png" class="clickable" onclick="javascript:reloadAlertsTable()" width="25px" />
 			</th>
 		</tr>
 		<tr>
