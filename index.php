@@ -126,6 +126,8 @@ include('scripts.html');
 	
 	<a href="cronSendAlerts.php?debug=1" target="_BLANK"><input type="button" value="cronSendAlerts"></a>
 	
+	<a href="load.php?page=arb&key=<?=$accessKey?>" target="_BLANK"><input type="button" value="Arb"></a>
+	
 	<br /><br />
 	
 	

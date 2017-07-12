@@ -8,21 +8,6 @@ include($dir.'ez_sql_core.php');
 include($dir.'ez_sql_mysql.php');
 
 
-function format_percent_display($percent_number) {
-	$percent_number = number_format($percent_number, 2).'%';
-	
-	if($percent_number > 0) {
-		$percent_number = '<span class="green">+'.$percent_number.'</span>';
-	} 
-	else{
-		$percent_number = '<span class="red">'.$percent_number.'</span>';		
-	}
-	
-	return $percent_number;
-}
-
-
-
 
 error_reporting(E_ALL & ~E_NOTICE & ~E_WARNING);
 
@@ -166,12 +151,12 @@ $tradeActionDropDown = '<select name="trade_action">'.$actionDropDown.'</option>
 	$ltc_percent_raw = $polo_ltc_usd_ticker['percentChange'] * 100;
 	$dash_percent_raw = $polo_dash_usd_ticker['percentChange'] * 100;
 
-	$btc_percent_display = format_percent_display($btc_percent_raw);
-	$eth_percent_display = format_percent_display($eth_percent_raw);
-	$ltc_percent_display = format_percent_display($ltc_percent_raw);
-	$dash_percent_display = format_percent_display($dash_percent_raw);
+	$btc_percent_display = $tableData->format_percent_display($btc_percent_raw);
+	$eth_percent_display = $tableData->format_percent_display($eth_percent_raw);
+	$ltc_percent_display = $tableData->format_percent_display($ltc_percent_raw);
+	$dash_percent_display = $tableData->format_percent_display($dash_percent_raw);
 
-
+	
 	$coinbase_btc_usd = $tableData->coinbasePrice('btc-usd');
 	$coinbase_eth_usd = $tableData->coinbasePrice('eth-usd');
 	$coinbase_ltc_usd = $tableData->coinbasePrice('ltc-usd');
@@ -217,7 +202,7 @@ function transfer($bal) {
 	return $ex1_usd_amt;
 }
 
-global $polo_btc, $polo_eth, $coinbase_btc, $coinbase_eth;
+
 global $exchange1, $exchange2;
 
 $exchange1 = array(
@@ -226,14 +211,14 @@ $exchange1 = array(
 	'coin1_name' => 'BTC',
 	'coin1_price' => $btce_btc_usd_raw,
 	'coin2_name' => 'LTC',
-	'coin2_price' => $btce_ltc_usd_raw,
+	'coin2_price' => $coinbase_ltc_usd,
 );
 
 $exchange2 = array (
-	'name' => 'Polo',
+	'name' => 'GDAX',
 	'fee' => 0.0025,
 	'coin1_name' => 'BTC',
-	'coin1_price' => $polo_btc_usd_raw,
+	'coin1_price' => $coinbase_btc_usd,
 	'coin2_name' => 'LTC',
 	'coin2_price' => $polo_ltc_usd_raw
 );
