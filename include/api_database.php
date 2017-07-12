@@ -27,7 +27,7 @@ class Database {
 		return $percent_number;
 	}
 
-	
+	 
 	function coinbasePrice ($currencyPair) {
 	
 		$url = 'https://api.coinbase.com/v2/prices/'.$currencyPair.'/spot';

@@ -21,22 +21,6 @@ function format_percent_display($percent_number) {
 	return $percent_number;
 }
 
-function coinbasePrice ($currencyPair) {
-	
-	$url = 'https://api.coinbase.com/v2/prices/'.$currencyPair.'/spot';
-
-	$ch = curl_init();
-	curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-	curl_setopt($ch, CURLOPT_URL, $url);
-	$result=curl_exec($ch);
-	curl_close($ch);
-
-	$decode = json_decode($result, true);
-	
-	return $decode['data']['amount'];
-}
-
 
 
 
@@ -65,6 +49,7 @@ $tableData = new Database($db);
 $condTable = $tableData->alertsTable();
 
 $tradesTable = $tableData->tradesTable();
+
 
 
 
@@ -119,87 +104,165 @@ foreach($actionTypes as $aType) {
 $tradeActionDropDown = '<select name="trade_action">'.$actionDropDown.'</option>';
 
 
-if($_GET['page'] == 'priceTable'){
+	//get prices from btc-e
+	$btce_dash_usd_raw = $btce->getLastPrice('dsh_usd');
+
+	$btce_btc_usd_raw = $btce->getLastPrice('btc_usd');
+
+	$btce_eth_usd_raw = $btce->getLastPrice('eth_usd');
+
+	$btce_ltc_usd_raw = $btce->getLastPrice('ltc_usd');
+
+	//format btc-e currencies
+	$btce_dash_usd =  number_format($btce_dash_usd_raw, 2);
+
+	$btce_btc_usd = number_format($btce_btc_usd_raw, 0);
+
+	$btce_eth_usd = number_format($btce_eth_usd_raw, 2);
+
+	$btce_ltc_usd =  number_format($btce_ltc_usd_raw, 2);
+
 	
-//get prices from btc-e
-$btce_dash_usd = $btce->getLastPrice('dsh_usd');
+	//get prices from poloniex
+	$POLO_USDT_DASH = $polo->get_ticker('USDT_DASH');
 
-$btce_btc_usd = $btce->getLastPrice('btc_usd');
+	$POLO_USDT_BTC = $polo->get_ticker('USDT_BTC');
 
-$btce_eth_usd = $btce->getLastPrice('eth_usd');
+	$POLO_USDT_ETH = $polo->get_ticker('USDT_ETH');
 
-$btce_ltc_usd = $btce->getLastPrice('ltc_usd');
-
-//format btc-e currencies
-$btce_dash_usd =  number_format($btce_dash_usd, 2);
-
-$btce_btc_usd = number_format($btce_btc_usd, 0);
-
-$btce_eth_usd = number_format($btce_eth_usd, 2);
-
-$btce_ltc_usd =  number_format($btce_ltc_usd, 2);
-
-//get prices from poloniex
-$POLO_USDT_DASH = $polo->get_ticker('USDT_DASH');
-
-$POLO_USDT_BTC = $polo->get_ticker('USDT_BTC');
-
-$POLO_USDT_ETH = $polo->get_ticker('USDT_ETH');
-
-$POLO_USDT_LTC = $polo->get_ticker('USDT_LTC');
+	$POLO_USDT_LTC = $polo->get_ticker('USDT_LTC');
 
 
-//format polo currencies
-$polo_dash_usd = number_format($POLO_USDT_DASH['last'], 2);
+	//format polo currencies
+	$polo_dash_usd = number_format($POLO_USDT_DASH['last'], 2);
 
-$polo_btc_usd = number_format($POLO_USDT_BTC['last'], 0);
+	$polo_btc_usd = number_format($POLO_USDT_BTC['last'], 0);
 
-$polo_eth_usd = number_format($POLO_USDT_ETH['last'], 2);
+	$polo_eth_usd = number_format($POLO_USDT_ETH['last'], 2);
 
-$polo_ltc_usd = number_format($POLO_USDT_LTC['last'], 2);
-
-
-//format polo percentChanges
-$dash_percent_raw = $POLO_USDT_DASH['percentChange'] * 100;
-$btc_percent_raw = $POLO_USDT_BTC['percentChange'] * 100;
-$eth_percent_raw = $POLO_USDT_ETH['percentChange'] * 100;
-$ltc_percent_raw = $POLO_USDT_LTC['percentChange'] * 100;
-
-$dash_percent_display = format_percent_display($dash_percent_raw);
-$btc_percent_display = format_percent_display($btc_percent_raw);
-$eth_percent_display = format_percent_display($eth_percent_raw);
-$ltc_percent_display = format_percent_display($ltc_percent_raw);
+	$polo_ltc_usd = number_format($POLO_USDT_LTC['last'], 2);
 
 
+	//format polo percentChanges
+	$dash_percent_raw = $POLO_USDT_DASH['percentChange'] * 100;
+	$btc_percent_raw = $POLO_USDT_BTC['percentChange'] * 100;
+	$eth_percent_raw = $POLO_USDT_ETH['percentChange'] * 100;
+	$ltc_percent_raw = $POLO_USDT_LTC['percentChange'] * 100;
+
+	$dash_percent_display = format_percent_display($dash_percent_raw);
+	$btc_percent_display = format_percent_display($btc_percent_raw);
+	$eth_percent_display = format_percent_display($eth_percent_raw);
+	$ltc_percent_display = format_percent_display($ltc_percent_raw);
+
+
+	$coinbase_btc_usd = $tableData->coinbasePrice('btc-usd');
+	$coinbase_eth_usd = $tableData->coinbasePrice('eth-usd');
+	$coinbase_ltc_usd = $tableData->coinbasePrice('ltc-usd');
+
+	if($_GET['page'] == 'arb') {
+		
+		
+		
+function transfer($r1_btc){
+	
+global $polo_btc, $polo_eth, $coinbase_btc, $coinbase_eth;
+
+$fee = 0.0025; //0.25% fee
+	
+	echo 'Polo BTC: '.$r1_btc.'<br />';
+	
+	$r1_usdt = $polo_btc * $r1_btc;
+	$r1_usdt = $r1_usdt - ($r1_usdt * $fee);
+	
+	echo 'Polo USDT: '.$r1_usdt.'<br />';
+	
+	$r1_coin = $r1_usdt / $polo_eth;
+	$r1_coin = $r1_coin - ($r1_coin * $fee);
+	
+	echo 'Polo ETH: '.$r1_coin.'<br />';
+	echo '<br />Transfer to CB...<br />';
+	echo 'CB ETH: '.$r1_coin.'<br />';
+	
+	
+	
+	$r2_usdt = $r1_coin * $coinbase_eth;
+	$r2_usdt = $r2_usdt - ($r2_usdt * $fee);
+	
+	echo 'CB USDT: '.$r2_usdt.'<br />';
+	
+	$r2_btc = $r2_usdt / $coinbase_btc;
+	$r2_btc = $r2_btc - ($r2_btc * $fee);
+	
+	
+	echo 'CB BTC: '.$r2_btc.'<br />'; 
+	
+	return $r2_btc;
+}
+
+global $polo_btc, $polo_eth, $coinbase_btc, $coinbase_eth;
+
+$polo_btc = $POLO_USDT_BTC['last'];
+$polo_eth = $POLO_USDT_ETH['last'];
+
+$coinbase_btc = 2317;
+$coinbase_eth = 185;
+
+if($_POST['balance']) {
+	
+	$bal = $_POST['balance'];
+	
+	echo 'Start balance: '.$bal.'<br /><br />';
+	
+	$r1_btc = $bal / $polo_btc;
+	
+	echo 'Round 1<br />';
+	$round1_btc = transfer($r1_btc);
+	
+	echo '<br /><br />Round 2<br />';
+	
+	transfer($round1_btc);
+}
+?>
+<br />
+<form method=post>
+<input type="text" name="balance">USD<input type=submit>
+</form>
+
+Polo <br />
+BTC - <?=$polo_btc?> <br />
+ETH - <?=$polo_eth?> <br />
+
+<br /><br />
+Coinbase <br />
+BTC - <?=$coinbase_btc?> <br />
+ETH - <?=$coinbase_eth?> <br />
+<br /><br />
+	
+	<?
+	}
+	
+	
+if($_GET['page'] == 'priceTable'){
+		
+	/*
+	function marketSpread ($polo_price, $btce_price, $coinbase_price) {
+		echo ($polo_price - $btce_price);
+		
+		if($polo_price - $btce_price <= 0) {
+			$compare = $polo_price; 
+		}
+		else {
+			$compare = $btce_price;
+		}
+		
+		return $compare / $coinbase_price * 100;
+		
+	}*/
+ 
+	//echo marketSpread ($POLO_USDT_BTC, $btce_btc_usd_raw, $coinbase_btc_usd);
 
 $bittrexURL = 'http://bestpayingsites.com/admin/btcTradingAPI/bittrex/';
 ?>
-
-<script>
- $(document).ready(function () {
-	 $.ajax({
-
-		// The 'type' property sets the HTTP method.
-		// A value of 'PUT' or 'DELETE' will trigger a preflight request.
-		type: 'GET',
-
-		// The URL to make the request to.
-		url: '<?=$bittrexURL?>?curr=btc',
-
-
-		contentType: 'text/plain',
-
-		
-
-		success: function(data) {
-			alert(data);
-			$( "#usdt_btc_last" ).html( data );
-		},
-	  
-		 //$( "#usdt_btc_last" ).html( '<?=$bittrexURL?>?curr=btc' );
-	 });
-	});
-</script>
 
 <table class="table">
 	<thead class="thead-default">
@@ -218,13 +281,13 @@ $bittrexURL = 'http://bestpayingsites.com/admin/btcTradingAPI/bittrex/';
 		<td>BTC/USDT</td><td><?=$btc_percent_display?></td>
 		<td> $<?=$polo_btc_usd ?> </td>
 		<td> $<?=$btce_btc_usd ?> </td>
-		<td> $<?=coinbasePrice('btc-usd') ?></td>
+		<td> $<?=$coinbase_btc_usd ?></td>
 	</tr>
 	</tr>
 		<td>ETH/USDT</td><td><?=$eth_percent_display?></td>
 		<td> $<?=$polo_eth_usd ?> </td>
 		<td> $<?=$btce_eth_usd ?> </td>
-		<td> $<?=coinbasePrice('eth-usd') ?></td>
+		<td> $<?=$coinbase_eth_usd ?></td>
 	</tr>
 	<tr>
 		<td>DASH/USDT</td><td> <?=$dash_percent_display?></td>
@@ -236,7 +299,7 @@ $bittrexURL = 'http://bestpayingsites.com/admin/btcTradingAPI/bittrex/';
 		<td>LTC/USDT</td><td> <?=$ltc_percent_display?></td>
 		<td> $<?=$polo_ltc_usd ?> </td>
 		<td> $<?=$btce_ltc_usd ?> </td>
-		<td> $<?=coinbasePrice('ltc-usd') ?></td>
+		<td> $<?=$coinbase_ltc_usd ?></td>
 	</tr>				
 </table>
 <?
