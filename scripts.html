@@ -27,7 +27,7 @@ $loadCronAutoTrade = 'load.php?page=cronAutoTrade&key='.$accessKey;
 			data        : $('#conditionTable').serialize(), 
 			success     : function(msg) {
 				console.log(msg);
-				$('#cronSendAlerts').load('load.php?page=cronSendAlerts');						
+				reloadAlertsTable();				
 			}
 		});
 		event.preventDefault(); //Prevent the default submit      
@@ -127,7 +127,7 @@ $loadCronAutoTrade = 'load.php?page=cronAutoTrade&key='.$accessKey;
 			data: $('#conditionTable').serialize(),
 			success: function(msg) {
 				console.log(msg);
-				$('#cronSendAlerts').load('load.php?page=cronSendAlerts');						
+				reloadAlertsTable();				
 			}
 		});
     }
@@ -185,7 +185,7 @@ $loadCronAutoTrade = 'load.php?page=cronAutoTrade&key='.$accessKey;
 					$( this ).dialog( "close" );
 				},
 				Cancel: function() {
-					$('#cronSendAlerts').load('load.php?page=cronSendAlerts');
+					reloadAlertsTable();
 					$( this ).dialog( "close" );				
 				},                        
 			}

@@ -94,7 +94,7 @@ foreach($tickerArray as $currencyPair => $tickerData) {
 		if($balanceArray[$curr] <= 0.2 && $recordCount == 0) { 
 			$balanceDisplay = ' No balance ';
 		
-		exit;
+		exit; 
 		
 			//buy order
 			if($debug != 1) {
