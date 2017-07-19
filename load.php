@@ -14,9 +14,7 @@ error_reporting(E_ALL & ~E_NOTICE & ~E_WARNING);
 //set timezone
 date_default_timezone_set('America/New_York');
 
-
 if($_GET['key'] != 'YoMamaSoFat') exit;
-
 
 
 global $db;
@@ -34,6 +32,10 @@ $tableData = new Database($db);
 $condTable = $tableData->alertsTable();
 
 $tradesTable = $tableData->tradesTable();
+
+$optionsTable = $tableData->getSettingsFromDB();
+
+
 
 
 
@@ -259,6 +261,7 @@ $exchange2['name'].' <br />
 
 	}
 	
+
 	
 if($_GET['page'] == 'priceTable'){
 		

@@ -70,8 +70,6 @@ foreach($actionTypes as $aType) {
 }
 $tradeActionDropDown = '<select name="trade_action">'.$actionDropDown.'</option>';
 
-
-//include('index.html');
 ?>
 
 <head>
@@ -115,7 +113,7 @@ include('scripts.html');
 <body>
 <div class="container">
 
-	<button class = "createButton btn btn-primary">Add Alert</button>
+ 	<button class = "createButton btn btn-primary">Add Alert</button>
 	
 	<button class = "tradeButton btn btn-success">Add Trade</button>
 	
@@ -131,8 +129,8 @@ include('scripts.html');
 	<br /><br />
 	
 	
-	<div class="row justify-content-md-center">
-		<div class="col-md-7">
+	<div class="row">
+		<div class="col-6">
 		 
 			<div id="priceTable"></div>
 	
@@ -143,6 +141,13 @@ include('scripts.html');
 		</div>
     
 		<div class="col">
+		
+			<div id="notesArea">
+			<textarea rows="9" cols="50" id="notes"></textarea>
+			</div>
+			
+			<br />
+		
 			<div id="links_to_charts">
 				<h3>Links to Charts</h3>
 				<pre class="xdebug-var-dump">

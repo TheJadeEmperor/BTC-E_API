@@ -65,6 +65,17 @@ class Database {
 		return $resultA;
 	}
 	
+	
+	public function getSettingsFromDB() {
+		
+		$queryO = 'SELECT * FROM '.$this->context['optionsTable'].' ORDER BY opt, setting';
+        
+		$resultO = $this->db->get_results($queryO);
+		
+		return $resultO;
+	}
+	
+	
     public function sendMail($sendEmailBody) {
 		global $emailTo;
 		global $textTo;
