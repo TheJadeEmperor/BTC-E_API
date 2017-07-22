@@ -75,6 +75,9 @@ foreach($tickerArray as $currencyPair => $tickerData) {
 	$dateInTwoWeeks = strtotime('+2 weeks');		
 	$until = date('Y-m-d h:i:m', $dateInTwoWeeks);
 	
+		
+		exit; 
+		
 	//missing a stop loss trade
 	if($recordCount == 0 && $balanceArray[$curr] > 0.1) {
 
@@ -88,13 +91,12 @@ foreach($tickerArray as $currencyPair => $tickerData) {
 	}
 	
 	
-	if($percentChangeFormat < -16 || ($percentChangeFormat > 16 && $percentChangeFormat < 20)) {
+	if($percentChangeFormat < -16) {
 
 		//check if there's a balance & SL trade for the currencyPair
 		if($balanceArray[$curr] <= 0.2 && $recordCount == 0) { 
 			$balanceDisplay = ' No balance ';
-		
-		exit; 
+	
 		
 			//buy order
 			if($debug != 1) {

@@ -18,8 +18,13 @@ $loadbtcTrades = 'load.php?page=btcTrades&key='.$accessKey;
 $loadBalanceTable = 'load.php?page=balanceTable&key='.$accessKey;
 $loadPriceTable = 'load.php?page=priceTable&key='.$accessKey;
 $loadCronAutoTrade = 'load.php?page=cronAutoTrade&key='.$accessKey;
+
+$loadNotesAjax = 'include/ajax.php?action=updateNotes';
+$loadNotes = 'load.php?page=notes&key='.$accessKey;
 ?>
 <script>
+	
+
 	function updateAlert(id) {
 		$.ajax({ //Process the form using $.ajax()
 			type        : 'POST', //Method type
@@ -243,6 +248,10 @@ $loadCronAutoTrade = 'load.php?page=cronAutoTrade&key='.$accessKey;
 		});	
 	}
 	
+	function reloadNotes(){
+		//alert('<?=$loadNotes?>');
+		$('#notesDiv').load('<?=$loadNotes?>');		
+	}
  
 	function reloadBalanceTable(){
 		$('#balanceTable').load('<?=$loadBalanceTable?>');		
@@ -350,7 +359,9 @@ $loadCronAutoTrade = 'load.php?page=cronAutoTrade&key='.$accessKey;
 				}
 			})
 		});
-
+		
+		reloadNotes(); 
+	
 		reloadPriceTable();
 		
 		reloadBalanceTable();

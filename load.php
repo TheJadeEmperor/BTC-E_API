@@ -35,8 +35,48 @@ $tradesTable = $tableData->tradesTable();
 
 $optionsTable = $tableData->getSettingsFromDB();
 
+//print_r($condTable);
+
+foreach($optionsTable as $option) {
+	if($option->opt == 'notes') 
+		$notes = $option->setting;
+}
 
 
+if($_GET['page'] == 'notes') {
+
+	$loadNotesAjax = 'include/ajax.php?action=updateNotes';
+	$loadNotes = 'load.php?page=notes&key='.$accessKey;
+	?>
+	<script>
+	function updateNotes() {
+		$.ajax({ //Process the form using $.ajax()
+			type        : 'POST', //Method type
+			url         : '<?=$loadNotesAjax?>', //Your form processing file url
+			data        : $('#notesForm').serialize(), 
+			success     : function(msg) {
+				console.log( msg );
+				reloadNotes();
+			}
+		});
+		event.preventDefault(); //Prevent the default submit      
+	}
+	
+	$(document).ready(function () {
+		$( "input[name=updateNotes]" ).click(function() {
+			updateNotes();
+		});
+	});
+	</script>
+
+	<div id="notesArea">
+		<form id="notesForm">
+		<textarea rows="7" cols="50" name="notes"><?=$notes?></textarea><br />
+		<input type="button" class="btn btn-success" name="updateNotes" value="Submit">
+		</form>
+	</div>
+	<?
+}
 
 
 
@@ -265,48 +305,49 @@ $exchange2['name'].' <br />
 	
 if($_GET['page'] == 'priceTable'){
 		
-$bittrexURL = 'http://bestpayingsites.com/admin/btcTradingAPI/bittrex/';
-?>
+	$bittrexURL = 'http://bestpayingsites.com/admin/btcTradingAPI/bittrex/';
+	
+	?>
 
-<table class="table">
-	<thead class="thead-default">
-	<tr>
-		<th colspan="5">Price Table <img src="include/refresh.png" class="clickable" onclick="javascript:reloadPriceTable()" width="25px" /></th>
-	</tr>
-	<tr>
-		<th>Currency Pair</th>
-		<th>% Change</th>
-		<th>Poloniex</th>
-		<th>BTC-E</th>
-		<th>Coinbase</th>
-	</tr>
-	</thead>
-	<tr>
-		<td>BTC/USDT</td><td><?=$btc_percent_display?></td>
-		<td> $<?=$polo_btc_usd ?> </td>
-		<td> $<?=$btce_btc_usd ?> </td>
-		<td> $<?=$coinbase_btc_usd ?></td>
-	</tr>
-	</tr>
-		<td>ETH/USDT</td><td><?=$eth_percent_display?></td>
-		<td> $<?=$polo_eth_usd ?> </td>
-		<td> $<?=$btce_eth_usd ?> </td>
-		<td> $<?=$coinbase_eth_usd ?></td>
-	</tr>
-	<tr>
-		<td>LTC/USDT</td><td> <?=$ltc_percent_display?></td>
-		<td> $<?=$polo_ltc_usd ?> </td>
-		<td> $<?=$btce_ltc_usd ?> </td>
-		<td> $<?=$coinbase_ltc_usd ?></td>
-	</tr>				
-	<tr>
-		<td>DASH/USDT</td><td> <?=$dash_percent_display?></td>
-		<td> $<?=$polo_dash_usd ?> </td>
-		<td> $<?=$btce_dash_usd ?> </td>
-		<td> :*( </td>
-	</tr>
-</table>
-<?
+	<table class="table">
+		<thead class="thead-default">
+		<tr>
+			<th colspan="5">Price Table <img src="include/refresh.png" class="clickable" onclick="javascript:reloadPriceTable()" width="25px" /></th>
+		</tr>
+		<tr>
+			<th>Currency Pair</th>
+			<th>% Change</th>
+			<th>Poloniex</th>
+			<th>BTC-E</th>
+			<th>Coinbase</th>
+		</tr>
+		</thead>
+		<tr>
+			<td>BTC/USDT</td><td><?=$btc_percent_display?></td>
+			<td> $<?=$polo_btc_usd ?> </td>
+			<td> $<?=$btce_btc_usd ?> </td>
+			<td> $<?=$coinbase_btc_usd ?></td>
+		</tr>
+		</tr>
+			<td>ETH/USDT</td><td><?=$eth_percent_display?></td>
+			<td> $<?=$polo_eth_usd ?> </td>
+			<td> $<?=$btce_eth_usd ?> </td>
+			<td> $<?=$coinbase_eth_usd ?></td>
+		</tr>
+		<tr>
+			<td>LTC/USDT</td><td> <?=$ltc_percent_display?></td>
+			<td> $<?=$polo_ltc_usd ?> </td>
+			<td> $<?=$btce_ltc_usd ?> </td>
+			<td> $<?=$coinbase_ltc_usd ?></td>
+		</tr>				
+		<tr>
+			<td>DASH/USDT</td><td> <?=$dash_percent_display?></td>
+			<td> $<?=$polo_dash_usd ?> </td>
+			<td> $<?=$btce_dash_usd ?> </td>
+			<td> :*( </td>
+		</tr>
+	</table>
+	<?
 }
 else if($_GET['page'] == 'cronSendAlerts') {
 

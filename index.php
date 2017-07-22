@@ -142,9 +142,7 @@ include('scripts.html');
     
 		<div class="col">
 		
-			<div id="notesArea">
-			<textarea rows="9" cols="50" id="notes"></textarea>
-			</div>
+			<div id="notesDiv"></div>
 			
 			<br />
 		

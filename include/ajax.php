@@ -125,11 +125,23 @@ switch($_GET['action']) {
         break;
 		
     case 'read':	//readAlert
-    default:
-        $result = $db->get_row("SELECT * FROM $tableName WHERE id='".$id."'");
+		$result = $db->get_row("SELECT * FROM $tableName WHERE id='".$id."'");
 
         echo json_encode($result);
         break;
+	
+	case 'updateNotes': 
+	
+		$update = "UPDATE $optionsTable set setting='".$_REQUEST['notes']."' WHERE opt='notes'";
+			
+        $success = $db->query($update); 
+        
+        if($success == 1)
+            echo 'Updated record: '.$update;
+        else 
+            echo 'Failed to update record: '.$update;
+        break;
+   
 }
 
 
