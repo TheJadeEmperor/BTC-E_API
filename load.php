@@ -2,7 +2,6 @@
 $dir = 'include/';
 include($dir.'api_database.php');
 include($dir.'api_poloniex.php');
-include($dir.'api_btce.php');
 include($dir.'config.php');
 include($dir.'ez_sql_core.php');
 include($dir.'ez_sql_mysql.php');
@@ -25,7 +24,7 @@ $db = new ezSQL_mysql($dbUser, $dbPW, $dbName, $dbHost);
 //requires the extension php_openssl to work
 $polo = new poloniex($polo_api_key, $polo_api_secret);
 
-$btce = new BTCeAPI();
+//$btce = new BTCeAPI();
 
 $tableData = new Database($db);
 
@@ -135,13 +134,13 @@ $tradeActionDropDown = '<select name="trade_action">'.$actionDropDown.'</option>
 	BTC-e prices
 	================
 	*/
-	$btce_btc_usd_raw = $btce->getLastPrice('btc_usd');
+	//$btce_btc_usd_raw = $btce->getLastPrice('btc_usd');
 
-	$btce_eth_usd_raw = $btce->getLastPrice('eth_usd');
+	//$btce_eth_usd_raw = $btce->getLastPrice('eth_usd');
 
-	$btce_ltc_usd_raw = $btce->getLastPrice('ltc_usd');
+	//$btce_ltc_usd_raw = $btce->getLastPrice('ltc_usd');
 
-	$btce_dash_usd_raw = $btce->getLastPrice('dsh_usd');
+	//$btce_dash_usd_raw = $btce->getLastPrice('dsh_usd');
 
 	
 	//format btc-e currencies
@@ -318,32 +317,32 @@ if($_GET['page'] == 'priceTable'){
 			<th>Currency Pair</th>
 			<th>% Change</th>
 			<th>Poloniex</th>
-			<th>BTC-E</th>
+			
 			<th>Coinbase</th>
 		</tr>
 		</thead>
 		<tr>
 			<td>BTC/USDT</td><td><?=$btc_percent_display?></td>
 			<td> $<?=$polo_btc_usd ?> </td>
-			<td> $<?=$btce_btc_usd ?> </td>
+			
 			<td> $<?=$coinbase_btc_usd ?></td>
 		</tr>
 		</tr>
 			<td>ETH/USDT</td><td><?=$eth_percent_display?></td>
 			<td> $<?=$polo_eth_usd ?> </td>
-			<td> $<?=$btce_eth_usd ?> </td>
+			
 			<td> $<?=$coinbase_eth_usd ?></td>
 		</tr>
 		<tr>
 			<td>LTC/USDT</td><td> <?=$ltc_percent_display?></td>
 			<td> $<?=$polo_ltc_usd ?> </td>
-			<td> $<?=$btce_ltc_usd ?> </td>
+			
 			<td> $<?=$coinbase_ltc_usd ?></td>
 		</tr>				
 		<tr>
 			<td>DASH/USDT</td><td> <?=$dash_percent_display?></td>
 			<td> $<?=$polo_dash_usd ?> </td>
-			<td> $<?=$btce_dash_usd ?> </td>
+			
 			<td> :*( </td>
 		</tr>
 	</table>

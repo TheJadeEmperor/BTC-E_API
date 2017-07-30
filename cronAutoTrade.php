@@ -78,18 +78,6 @@ foreach($tickerArray as $currencyPair => $tickerData) {
 		
 		exit; 
 		
-	//missing a stop loss trade
-	if($recordCount == 0 && $balanceArray[$curr] > 0.1) {
-
-		//set stop loss through btc_trades table 
-		$insert = "INSERT INTO $tradeTable (trade_exchange, trade_currency, trade_condition, trade_price, trade_action, trade_amount, trade_unit, until) values ('Poloniex', '".$dbCurrencyPair."', '<', '".$stopLoss."', 'Sell', '".$tradeAmountAfterFees."', 'BTC', '".$until."' )";
-		
-		if(isset($dbCurrencyPair) && isset($tradeAmountAfterFees))
-			$success = $db->query($insert); //create new record in trade table for currencyPair
-		
-		$recordCount = 1;
-	}
-	
 	
 	if($percentChangeFormat < -16) {
 
@@ -97,7 +85,7 @@ foreach($tickerArray as $currencyPair => $tickerData) {
 		if($balanceArray[$curr] <= 0.2 && $recordCount == 0) { 
 			$balanceDisplay = ' No balance ';
 	
-		
+		exit;
 			//buy order
 			if($debug != 1) {
 				$tradeResult = $polo->buy($currencyPair, $lastPrice, $tradeAmount, 'immediateOrCancel'); 
