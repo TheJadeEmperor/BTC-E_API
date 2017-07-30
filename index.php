@@ -124,7 +124,7 @@ include('scripts.html');
 	
 	<a href="cronSendAlerts.php?debug=1" target="_BLANK"><input type="button" value="cronSendAlerts"></a>
 	
-	<a href="load.php?page=arb&key=<?=$accessKey?>" target="_BLANK"><input type="button" value="Arb"></a>
+	<a href="buy_sell_all.php?key=<?=$accessKey?>" target="_BLANK"><input type="button" value="Buy & Sell"></a>
 	
 	<br /><br />
 	
@@ -176,10 +176,7 @@ include('scripts.html');
 				<table class="">
 					<tr valign="top">
 						<td>
-							<a href="https://www.coinbase.com/trade" target="_blank">Buy/Sell Screen</a>
-							 
-							<br /><br />
-							
+
 							<a href="https://www.coinbase.com/accounts" target="_blank">Coinbase Funds</a>
 							
 							<br /><br />
@@ -202,11 +199,11 @@ include('scripts.html');
 							
 							<br /><br />
 							
-							<a href="https://poloniex.com/balances" target="_blank">Polo Funds</a>
+							<a href="https://poloniex.com/exchange" target="_blank">Polo Exchange</a>
 							
 							<br /><br />
 							
-							<a href="https://poloniex.com/exchange" target="_blank">Polo Exchange</a>
+							<a href="https://poloniex.com/balances" target="_blank">Polo Funds</a>
 							
 							<br /><br />
 							
