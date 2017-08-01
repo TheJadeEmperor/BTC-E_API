@@ -118,8 +118,6 @@ include('scripts.html');
 	<button class = "tradeButton btn btn-success">Add Trade</button>
 	
 	
-	<a href="cronAutoTrade.php?debug=1" target="_BLANK"><input type="button" value="cronAutoTrade"></a>
-	
 	<a href="cronSendTrades.php?debug=1" target="_BLANK"><input type="button" value="cronSendTrades"></a>
 	
 	<a href="cronSendAlerts.php?debug=1" target="_BLANK"><input type="button" value="cronSendAlerts"></a>

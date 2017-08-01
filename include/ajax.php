@@ -3,7 +3,7 @@ include($dir.'config.php');
 include($dir.'ez_sql_core.php');
 include($dir.'ez_sql_mysql.php');
 
-error_reporting(0);
+//error_reporting(0);
 
 
 $id = $_REQUEST['id'];
@@ -132,14 +132,14 @@ switch($_GET['action']) {
 	
 	case 'updateNotes': 
 	
-		$update = "UPDATE $optionsTable set setting='".$_REQUEST['notes']."' WHERE opt='notes'";
+		$update = "UPDATE $optionsTable SET setting=\"".$_REQUEST['notes']."\" WHERE opt='notes'";
 			
         $success = $db->query($update); 
         
         if($success == 1)
-            echo 'Updated record: '.$update;
+            echo 'Updated notes: '.$_REQUEST['notes'];
         else 
-            echo 'Failed to update record: '.$update;
+            echo 'Failed to update notes: '.$_REQUEST['notes'];
         break;
    
 }
