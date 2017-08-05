@@ -31,8 +31,10 @@ $dir = 'include/'
 <p>&nbsp;</p>
 <p>Admin Login</p>
 
+
 <?=$err ?>
 <form method=POST>
+
     
     <div class="loginBox">
     <div class="panel panel-primary">

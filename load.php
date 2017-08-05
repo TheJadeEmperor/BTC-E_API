@@ -55,6 +55,7 @@ if($_GET['page'] == 'notes') {
 			data        : $('#notesForm').serialize(), 
 			success     : function(msg) {
 				console.log( msg );
+				alert(msg);
 				reloadNotes();
 			}
 		});
