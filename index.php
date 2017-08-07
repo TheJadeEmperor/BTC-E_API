@@ -4,7 +4,7 @@ session_start();
 
 if($_POST['login']) {
     if($_POST['username'] == 'SetoKaiba' && $_POST['password'] == 'password') {
-        $_SESSION['admin']['username'] = $adminUser;
+        $_SESSION['admin'] = $_POST['username'];
         header('Location: main.php');
 }
     else {
@@ -16,8 +16,7 @@ $bootDir = $dir.'include/bootstrap/';
 $dir = 'include/'
 ?>
 <head>
-	<link href="<?=$dir?>admin.css" rel="stylesheet" type="text/css"/>
-	
+	<link href="<?=$dir?>admin.css" rel="stylesheet" type="text/css"/>	
 	<link href="<?= $bootDir ?>css/bootstrap-theme.css" rel="stylesheet" />
 	<link href="<?= $bootDir ?>css/bootstrap.css" rel="stylesheet" />
 
@@ -31,11 +30,8 @@ $dir = 'include/'
 <p>&nbsp;</p>
 <p>Admin Login</p>
 
-
 <?=$err ?>
 <form method=POST>
-
-    
     <div class="loginBox">
     <div class="panel panel-primary">
         <div class="panel-heading"><h2 class="panel-title">Control Panel</h2></div>

@@ -1,10 +1,13 @@
 <?php
+session_start();
+
+if(!isset($_SESSION['admin']))//if not logged in, redirect back to login page
+    header('Location: index.php'); 
 
 error_reporting(E_ALL & ~E_NOTICE & ~E_WARNING);
 
 //set timezone
 date_default_timezone_set('America/New_York');
-
 
 
 
@@ -116,9 +119,6 @@ include('scripts.html');
  	<button class = "createButton btn btn-primary">Add Alert</button>
 	
 	<button class = "tradeButton btn btn-success">Add Trade</button>
-	
-	
-	<a href="cronAutoTrade.php?debug=1" target="_BLANK"><input type="button" value="cronAutoTrade"></a>
 	
 	<a href="cronSendTrades.php?debug=1" target="_BLANK"><input type="button" value="cronSendTrades"></a>
 	
