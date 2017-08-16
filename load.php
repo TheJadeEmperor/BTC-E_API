@@ -7,13 +7,12 @@ include($dir.'ez_sql_core.php');
 include($dir.'ez_sql_mysql.php');
 
 
-
 error_reporting(E_ALL & ~E_NOTICE & ~E_WARNING);
 
 //set timezone
 date_default_timezone_set('America/New_York');
 
-if($_GET['key'] != 'YoMamaSoFat') exit;
+if($_GET['accessKey'] != 'KickInTheDick') exit;
 
 
 global $db;
@@ -45,7 +44,7 @@ foreach($optionsTable as $option) {
 if($_GET['page'] == 'notes') {
 
 	$loadNotesAjax = 'include/ajax.php?action=updateNotes';
-	$loadNotes = 'load.php?page=notes&key='.$accessKey;
+	$loadNotes = 'load.php?page=notes&accessKey='.$accessKey;
 	?>
 	<script>
 	function updateNotes() {
@@ -130,28 +129,6 @@ foreach($actionTypes as $aType) {
 }
 $tradeActionDropDown = '<select name="trade_action">'.$actionDropDown.'</option>';
 
-	/*
-	================
-	BTC-e prices
-	================
-	*/
-	//$btce_btc_usd_raw = $btce->getLastPrice('btc_usd');
-
-	//$btce_eth_usd_raw = $btce->getLastPrice('eth_usd');
-
-	//$btce_ltc_usd_raw = $btce->getLastPrice('ltc_usd');
-
-	//$btce_dash_usd_raw = $btce->getLastPrice('dsh_usd');
-
-	
-	//format btc-e currencies
-	$btce_btc_usd = number_format($btce_btc_usd_raw, 0);
-
-	$btce_eth_usd = number_format($btce_eth_usd_raw, 2);
-
-	$btce_ltc_usd =  number_format($btce_ltc_usd_raw, 2);
-
-	$btce_dash_usd = number_format($btce_dash_usd_raw, 2);
 
 	/*
 	===================
@@ -518,8 +495,6 @@ else if($_GET['page'] == 'cronAutoTrade'){
 else if($_GET['page'] == 'balanceTable'){
 
 ?>
-
-
 	<table class="table">
 		<thead class="thead-default">
 			<tr>
@@ -544,6 +519,15 @@ else if($_GET['page'] == 'balanceTable'){
 				$lastFormat = $tickerArray[$currencyPair]['last'];
 				$lastFormat = '$'.number_format($lastFormat, 2);
 				$btcValue = $currencyBalance;		
+				
+				
+				
+			}
+			else if($currency == 'USDT') {
+				$currencyPair = 'USDT_BTC';
+				$lastFormat = $tickerArray[$currencyPair]['last'];
+				$btcValue = $currencyBalance / $lastFormat;	
+				$totalUSDT = $lastFormat;
 			}
 			else { 
 				$chartLink = $currency.'BTC';
@@ -553,12 +537,16 @@ else if($_GET['page'] == 'balanceTable'){
 				$btcValue = $lastFormat * $currencyBalance;
 			}
 			
+			$btcPrice = $tickerArray['USDT_BTC']['last'];
+			
 			$percentChange = $tickerArray[$currencyPair]['percentChange'];
 			$percentChangeFormat = $percentChange * 100;
 			$percentChangeFormat = number_format($percentChangeFormat, 2);
 			
 			$btcValueFormat = number_format($btcValue, 4);
 			$totalBTC += $btcValue;
+			
+			
 			
 			if($percentChangeFormat > 0) $color = 'green';
 			else $color = 'red';
@@ -576,15 +564,24 @@ else if($_GET['page'] == 'balanceTable'){
 			<td><a href="https://www.tradingview.com/chart/'.$chartLink.'" target="_BLANK">View</a></td>
 			</tr>';
 			
-			
 		}
 	}
 	echo $balanceTable;
 	
-	?>
-	</tbody>
-</table>
-Total BTC: <?=$totalBTC?>
-<?
+	$totalBTCFormat = number_format($totalBTC, 8);
+	
+	$totalUSDT = $totalBTC * $btcPrice;
+	$totalUSDTFormat = number_format($totalUSDT, 2);
+	
+	echo '<tr><td colspan="10">Total BTC: '.$totalBTCFormat.' &nbsp;&nbsp; Total USDT: '.$totalUSDTFormat.'</td>';
+	
+	echo '</tbody>
+	</table>';
+	
+
+	
+	
+	//echo $lastFormat;
+	
 }
 ?>

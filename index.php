@@ -16,6 +16,8 @@ $bootDir = $dir.'include/bootstrap/';
 $dir = 'include/'
 ?>
 <head>
+	<title>BTC API Dashboard</title>
+
 	<link href="<?=$dir?>admin.css" rel="stylesheet" type="text/css"/>	
 	<link href="<?= $bootDir ?>css/bootstrap-theme.css" rel="stylesheet" />
 	<link href="<?= $bootDir ?>css/bootstrap.css" rel="stylesheet" />

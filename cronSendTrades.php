@@ -66,7 +66,7 @@ foreach($tradesTable as $trade) {
 	if(!isset($balanceArray[$coin])) {//cannot read balance
 		$output .= "Can't connect to Poloniex"; 
 		echo $output; 
-		exit;
+	//	exit;
 	}
  
 	if($balanceArray[$coin] > 0.1) {

@@ -1,4 +1,6 @@
 <?php
+include('include/config.php');
+
 session_start();
 
 if(!isset($_SESSION['admin']))//if not logged in, redirect back to login page
@@ -124,7 +126,7 @@ include('scripts.html');
 	
 	<a href="cronSendAlerts.php?debug=1" target="_BLANK"><input type="button" value="cronSendAlerts"></a>
 	
-	<a href="buy_sell_all.php?key=<?=$accessKey?>" target="_BLANK"><input type="button" value="Buy & Sell"></a>
+	<a href="buy_sell_all.php?accessKey=<?=$accessKey?>" target="_BLANK"><input type="button" value="Buy & Sell"></a>
 	
 	<br /><br />
 	

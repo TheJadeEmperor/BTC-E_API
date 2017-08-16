@@ -12,19 +12,17 @@ $updateTrade = 'include/ajax.php?action=updateTrade';
 $deleteTrade = 'include/ajax.php?action=deleteTrade';
 
 //page load ajax calls
-$accessKey = 'YoMamaSoFat';
-$loadCronSendAlerts = 'load.php?page=cronSendAlerts&key='.$accessKey;
-$loadbtcTrades = 'load.php?page=btcTrades&key='.$accessKey;
-$loadBalanceTable = 'load.php?page=balanceTable&key='.$accessKey;
-$loadPriceTable = 'load.php?page=priceTable&key='.$accessKey;
-$loadCronAutoTrade = 'load.php?page=cronAutoTrade&key='.$accessKey;
+$loadCronSendAlerts = 'load.php?page=cronSendAlerts&accessKey='.$accessKey;
+$loadbtcTrades = 'load.php?page=btcTrades&accessKey='.$accessKey;
+$loadBalanceTable = 'load.php?page=balanceTable&accessKey='.$accessKey;
+$loadPriceTable = 'load.php?page=priceTable&accessKey='.$accessKey;
+$loadCronAutoTrade = 'load.php?page=cronAutoTrade&accessKey='.$accessKey;
 
 $loadNotesAjax = 'include/ajax.php?action=updateNotes';
-$loadNotes = 'load.php?page=notes&key='.$accessKey;
+$loadNotes = 'load.php?page=notes&accessKey='.$accessKey;
 ?>
 <script>
 	
-
 	function updateAlert(id) {
 		$.ajax({ //Process the form using $.ajax()
 			type        : 'POST', //Method type
@@ -249,7 +247,6 @@ $loadNotes = 'load.php?page=notes&key='.$accessKey;
 	}
 	
 	function reloadNotes(){
-		//alert('<?=$loadNotes?>');
 		$('#notesDiv').load('<?=$loadNotes?>');		
 	}
  
@@ -370,8 +367,6 @@ $loadNotes = 'load.php?page=notes&key='.$accessKey;
 		
 		reloadTradesTable();
 
-		cronAutoTrade();
-		
-		
+		cronAutoTrade();	
     });
 </script>
