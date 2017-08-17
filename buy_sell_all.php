@@ -46,7 +46,12 @@ if($_POST['sub']) {
 			echo '<pre>'.print_r($tradeResult).'</pre>';
 
 			
-			if($tradeResult['amountUnfilled'] == 0) break;
+			if($tradeResult['amountUnfilled'] != 0) 
+				$tradeAmount = $tradeAmount - $tradeResult['amountUnfilled'];
+			else 
+				break;
+			
+			echo $tradeAmount.' ';
 		}
 	}
 	else {
@@ -67,6 +72,7 @@ if($_POST['sub']) {
 	}
 }
 
+$loadBalanceTable = 'load.php?page=balanceTable&accessKey='.$accessKey;
 ?>
 <head>
 	<title>BTC API Dashboard</title>
@@ -82,15 +88,46 @@ if($_POST['sub']) {
 	<script src="http://code.jquery.com/jquery-latest.min.js" type='text/javascript' /></script>
 
 	<script src="include/jquery-ui/ui/jquery-ui.js"></script>
+	
+	<script>
+		$(document).ready(function () {
+			
+			reloadBalanceTable();
+			
+		});	
+
+		function reloadBalanceTable(){
+			$('#balanceTable').load('<?=$loadBalanceTable?>');		
+		}
+			
+	
+	</script>
 </head>
 
-<table>
-	<tr valign="top">
-		<td>
-		<form method="POST">
+
+
+<div class="container">
+<div class="row"> 
+<div class="col-md-5">
+	<div id="balanceTable"></div>
+</div>
+</div>
+
+<div class="row"> 
+<div class="col">
+	<form method="POST">
 		
-		currencyPair <input type="text" name="pair" value=""><br />
-		tradeAmount <input type="text" name="tradeAmount"><br />
+		<table>
+			<tr>
+				<td>currencyPair</td>
+				<td> <input type="text" name="pair" value=""></td>
+			</tr>
+			<tr>
+				<td>tradeAmount</td>
+				<td> <input type="text" name="tradeAmount"></td>
+			</tr>
+		</table>
+		
 		
 		<br />
 		<input type="submit" name="sub" class="btn btn-success" value="Buy All">
@@ -99,18 +136,27 @@ if($_POST['sub']) {
 		<br /><br />
 		Asks<br />
 		<?php
-		 
+		if(is_array($order_book))
 		foreach($order_book['asks'] as $key => $arr) {
 			echo 'price: '.$arr[0].' amt: '.$arr[1] .' <br />'; 
 		}
 		
 		?>
-	</td>
-	<td>
-		<form method="POST">
-		currencyPair <input type="text" name="pair" value="<?=$_POST['pair']?>"><br />
-		tradeAmount <input type="text" name="tradeAmount"><br />
-	
+</div>
+<div class="col">
+	<form method="POST">
+		
+		<table>
+			<tr>
+				<td>currencyPair </td>
+				<td><input type="text" name="pair" value="<?=$_POST['pair']?>"></td>
+			</tr>
+			<tr>
+				<td>tradeAmount</td>
+				<td> <input type="text" name="tradeAmount"></td>
+			</tr>
+		</table>
+			
 		<br />
 		<input type="submit" name="sub" class="btn btn-danger" value="Sell All">
 		</form>
@@ -118,15 +164,16 @@ if($_POST['sub']) {
 		<br /><br />
 		Bids<br />
 		<?php
-		
-//echo		$lastBidPrice = $order_book['bids'][0][0];
-
+	
+		if(is_array($order_book))
 		foreach($order_book['bids'] as $key => $arr) {
 			echo 'price: '.$arr[0].' amt: '.$arr[1] .' <br />'; 
 		}
 		
 		?>
-	</td>
-	</tr>
-	</table>
-</form>
+</div>
+
+
+</div>
+</div> 
+</div>
