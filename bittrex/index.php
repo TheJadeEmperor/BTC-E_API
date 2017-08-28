@@ -56,7 +56,7 @@ else {
   
 	$balance = $bittrex->getBalances();
 
-	print_r($balance);
+	//print_r($balance);
 
 }
 //echo '<br>';

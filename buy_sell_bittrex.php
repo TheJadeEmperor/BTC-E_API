@@ -1,16 +1,16 @@
 <?php
 $dir = 'include/';
 include($dir.'api_database.php');
-include($dir.'api_poloniex.php');
+include($dir.'api_bittrex.php');
 include($dir.'config.php');
 include($dir.'ez_sql_core.php');
 include($dir.'ez_sql_mysql.php');
 
 
-//connect to Poloniex
-$polo = new poloniex($polo_api_key, $polo_api_secret);
-
+//connect to Bittrex
+$bittrex = new Client ($bittrex_api_key, $bittrex_api_secret);
 	
+
 set_time_limit ( 100 );
 
 
@@ -26,49 +26,29 @@ if($_POST['sub']) {
 	
 	list($coin, $market) = explode('/', $pair); // XXX/BTC
 	$currencyPair = $market.'_'.$coin; //currency format is BTC_XXX
+	
+	//get currency format for Bittrex
 
 	$priceArray = $polo->get_ticker($currencyPair); 
 
 	$lastPrice = $priceArray['last']; //most recent price for this coin
 
 	
-	
 	if($action == 'Buy All') {
 		
-		while (true) {
-	
-			$order_book = $polo->get_order_book($currencyPair);
-	
-			echo $lastAskPrice = $order_book['asks'][0][0];
-	
-			$tradeResult = $polo->buy($currencyPair, $lastAskPrice, $tradeAmount, 'immediateOrCancel'); 
-
-			echo '<pre>'.print_r($tradeResult).'</pre>';
-
-			
-			if($tradeResult['amountUnfilled'] != 0) 
-				$tradeAmount = $tradeResult['amountUnfilled'];
-			else 
-				break;
-			
-			echo $tradeAmount.' ';
-		}
+		//$tradeResult = buyMarket($pair, $tradeAmount);
+		
+		echo '<pre>'.print_r($tradeResult).'</pre>';
+		
+	 
 	}
 	else {
 	
-		while (true) {
-			
-			$order_book = $polo->get_order_book($currencyPair);
+		//$tradeResult = sellMarket ($pair, $tradeAmount);
+		
+		echo '<pre>'.print_r($tradeResult).'</pre>';
 	
-			
-			echo $lastBidPrice = $order_book['bids'][0][0];
-			
-			$tradeResult = $polo->sell($currencyPair, $lastBidPrice, $tradeAmount, 'immediateOrCancel'); 
-
-			echo '<pre>'.print_r($tradeResult).'</pre>';
-			
-			if($tradeResult['amountUnfilled'] == 0) break;
-		}
+		
 	}
 }
 
@@ -92,12 +72,12 @@ $loadBalanceTable = 'load.php?page=balanceTable&accessKey='.$accessKey;
 	<script>
 		$(document).ready(function () {
 			
-			reloadBalanceTable();
+			//reloadBalanceTable();
 			
 		});	
 
 		function reloadBalanceTable(){
-			$('#balanceTable').load('<?=$loadBalanceTable?>');		
+			//$('#balanceTable').load('<?=$loadBalanceTable?>');		
 		}
 			
 	
@@ -130,7 +110,7 @@ $loadBalanceTable = 'load.php?page=balanceTable&accessKey='.$accessKey;
 		
 		
 		<br />
-		<input type="submit" name="sub" class="btn btn-success" value="Buy All">
+		<input type="submit" name="sub" class="btn btn-success" value="Buy All" onclick="return confirm('You are about to place an order!')" />
 		</form>
 
 		<br /><br />
@@ -158,7 +138,7 @@ $loadBalanceTable = 'load.php?page=balanceTable&accessKey='.$accessKey;
 		</table>
 			
 		<br />
-		<input type="submit" name="sub" class="btn btn-danger" value="Sell All">
+		<input type="submit" name="sub" class="btn btn-danger" value="Sell All" onclick="return confirm('You are about to place an order!')" />
 		</form>
 		
 		<br /><br />

@@ -349,5 +349,3 @@ class Client
 		return $this->call ('account/getdeposithistory', $params, true);
 	}
 }
-
-// vim: noexpandtab
