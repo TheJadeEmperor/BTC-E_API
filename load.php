@@ -16,14 +16,12 @@ if($_GET['accessKey'] != 'KickInTheDick') exit;
 
 
 global $db;
-
 $db = new ezSQL_mysql($dbUser, $dbPW, $dbName, $dbHost);
 
 
 //requires the extension php_openssl to work
 $polo = new poloniex($polo_api_key, $polo_api_secret);
 
-//$btce = new BTCeAPI();
 
 $tableData = new Database($db);
 
@@ -498,7 +496,7 @@ else if($_GET['page'] == 'balanceTable'){
 	<table class="table">
 		<thead class="thead-default">
 			<tr>
-				<th colspan="6">Polo Balance <img src="include/refresh.png" class="clickable" onclick="javascript:reloadBalanceTable()" width="25px" /> </th>
+				<th colspan="8">Polo Balance <img src="include/refresh.png" class="clickable" onclick="javascript:reloadBalanceTable()" width="25px" /> </th>
 			</tr>
 		</thead>
 		<tbody>
@@ -582,9 +580,5 @@ else if($_GET['page'] == 'balanceTable'){
 	</table>';
 	
 
-	
-	
-	//echo $lastFormat;
-	
 }
 ?>

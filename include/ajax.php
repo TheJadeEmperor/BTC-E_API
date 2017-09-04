@@ -3,8 +3,6 @@ include($dir.'config.php');
 include($dir.'ez_sql_core.php');
 include($dir.'ez_sql_mysql.php');
 
-//error_reporting(0);
-
 
 $id = $_REQUEST['id'];
 $trade_id = $_REQUEST['trade_id'];
@@ -12,11 +10,6 @@ $trade_id = $_REQUEST['trade_id'];
 global $db;
 
 $db = new ezSQL_mysql($dbUser, $dbPW, $dbName, $dbHost);
-
-
-foreach($_REQUEST as $request => $value) {
-    $_REQUEST[$request] = mysql_real_escape_string($value);
-}
 
 
 //handle date and time field

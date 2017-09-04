@@ -29,6 +29,7 @@ $loadNotes = 'load.php?page=notes&accessKey='.$accessKey;
 			url         : '<?=$updateAlert?>', //Your form processing file url
 			data        : $('#conditionTable').serialize(), 
 			success     : function(msg) {
+				console.log($('#conditionTable').serialize());
 				console.log(msg);
 				reloadAlertsTable();				
 			}
@@ -51,31 +52,35 @@ $loadNotes = 'load.php?page=notes&accessKey='.$accessKey;
 	}
 	
 	function fillFormAlert(id) {
-		$.getJSON("<?=$readAlert?>&id="+id+"", function( data ) {
-		
-		$.each( data, function( key, val ) {
-			if(data.hasOwnProperty(key))
-				$('input[name='+key+']').val(val);
 
-			if(key == 'currency') {						
-				$('select[name="currency"]').find('option:contains("'+val+'")').attr("selected",true);	
-			}
-			
-			if(key == 'on_condition') {					
-				$('select[name="on_condition"]').find('option:contains("'+val+'")').attr("selected",true);	
-			}
+		var link = "<?=$readAlert?>&id="+id;
+		console.log( link );
 		
-			if(key == 'unit') {
-				$('select[name="unit"]').find('option:contains("'+val+'")').attr("selected",true);	
-			}
+		$.getJSON("<?=$readAlert?>&id="+id, function( data ) {
+		
+			$.each( data, function( key, val ) {
+				if(data.hasOwnProperty(key))
+					$('input[name='+key+']').val(val);
+
+				if(key == 'currency') {						
+					$('select[name="currency"]').find('option:contains("'+val+'")').attr("selected",true);	
+				}
+				
+				if(key == 'on_condition') {					
+					$('select[name="on_condition"]').find('option:contains("'+val+'")').attr("selected",true);	
+				}
 			
-			if(key == 'exchange' || key == 'sent') {
-				$('select[name="'+key+'"]').find('option:contains("'+val+'")').attr("selected",true);	
-			}
-			
+				if(key == 'unit') {
+					$('select[name="unit"]').find('option:contains("'+val+'")').attr("selected",true);	
+				}
+				
+				if(key == 'exchange' || key == 'sent') {
+					$('select[name="'+key+'"]').find('option:contains("'+val+'")').attr("selected",true);	
+				}
             });
-        });
-    }
+
+		});
+	}
 	
 	function fillFormTrade(id) {
 
