@@ -141,8 +141,9 @@ $tradeActionDropDown = '<select name="trade_action">'.$actionDropDown.'</option>
 
 	$polo_dash_usd_ticker = $polo->get_ticker('USDT_DASH');
 	
-	//Raw prices
+	$polo_bch_usd_ticker = $polo->get_ticker('USDT_BCH');
 	
+	//Raw prices	
 	$polo_btc_usd_raw = $polo_btc_usd_ticker['last'];
 	
 	$polo_eth_usd_raw = $polo_eth_usd_ticker['last'];
@@ -150,6 +151,8 @@ $tradeActionDropDown = '<select name="trade_action">'.$actionDropDown.'</option>
 	$polo_ltc_usd_raw = $polo_ltc_usd_ticker['last'];
 
 	$polo_dash_usd_raw = $polo_dash_usd_ticker['last'];
+	
+	$polo_bch_usd_raw = $polo_bch_usd_ticker['last'];
 
 	//format polo currencies
 
@@ -161,18 +164,20 @@ $tradeActionDropDown = '<select name="trade_action">'.$actionDropDown.'</option>
 
 	$polo_dash_usd = number_format($polo_dash_usd_raw, 2);
 
+	$polo_bch_usd = number_format($polo_bch_usd_raw, 2);
 	
 	//format polo percentChanges
 	$btc_percent_raw = $polo_btc_usd_ticker['percentChange'] * 100;
 	$eth_percent_raw = $polo_eth_usd_ticker['percentChange'] * 100;
 	$ltc_percent_raw = $polo_ltc_usd_ticker['percentChange'] * 100;
 	$dash_percent_raw = $polo_dash_usd_ticker['percentChange'] * 100;
+	$bch_percent_raw = $polo_bch_usd_ticker['percentChange'] * 100;
 
 	$btc_percent_display = $tableData->format_percent_display($btc_percent_raw);
 	$eth_percent_display = $tableData->format_percent_display($eth_percent_raw);
 	$ltc_percent_display = $tableData->format_percent_display($ltc_percent_raw);
 	$dash_percent_display = $tableData->format_percent_display($dash_percent_raw);
-
+	$bch_percent_display = $tableData->format_percent_display($bch_percent_raw);
 	
 	$coinbase_btc_usd = $tableData->coinbasePrice('btc-usd');
 	$coinbase_eth_usd = $tableData->coinbasePrice('eth-usd');
@@ -223,21 +228,21 @@ function transfer($bal) {
 global $exchange1, $exchange2;
 
 $exchange1 = array(
-	'name' => 'BTC-E',
+	'name' => 'Polo',
 	'fee' => 0.0025,
 	'coin1_name' => 'BTC',
-	'coin1_price' => $btce_btc_usd_raw,
-	'coin2_name' => 'LTC',
-	'coin2_price' => $coinbase_ltc_usd,
+	'coin1_price' => $polo_btc_usd_raw,
+	'coin2_name' => 'ETH',
+	'coin2_price' => $polo_eth_usd_raw,
 );
 
 $exchange2 = array (
-	'name' => 'GDAX',
-	'fee' => 0.0025,
+	'name' => 'Coinbase',
+	'fee' => 0.001,
 	'coin1_name' => 'BTC',
 	'coin1_price' => $coinbase_btc_usd,
-	'coin2_name' => 'LTC',
-	'coin2_price' => $polo_ltc_usd_raw
+	'coin2_name' => 'ETH',
+	'coin2_price' => $coinbase_eth_usd
 );
 	
 
@@ -272,8 +277,6 @@ echo $exchange1['name'].' <br />
 $exchange2['name'].' <br />
 '.$exchange2['coin1_name'].' '.$exchange2['coin1_price'].'<br />
 '.$exchange2['coin2_name'].' '.$exchange2['coin2_price'].'<br />';
-
-
 	}
 	
 
@@ -318,6 +321,12 @@ if($_GET['page'] == 'priceTable'){
 		<tr>
 			<td>DASH/USDT</td><td> <?=$dash_percent_display?></td>
 			<td> $<?=$polo_dash_usd ?> </td>
+			
+			<td> :*( </td>
+		</tr>
+		<tr>
+			<td>BCH/USDT</td><td> <?=$bch_percent_display?></td>
+			<td> $<?=$polo_bch_usd ?> </td>
 			
 			<td> :*( </td>
 		</tr>
