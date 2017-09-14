@@ -9,10 +9,8 @@ include($dir.'ez_sql_mysql.php');
 
 //connect to Bittrex
 $bittrex = new Client ($bittrex_api_key, $bittrex_api_secret);
-	
 
 set_time_limit ( 100 );
-
 
 
 
@@ -24,31 +22,38 @@ if($_POST['sub']) {
 
 	$tradeAmount = $_POST['tradeAmount'];
 	
-	list($coin, $market) = explode('/', $pair); // XXX/BTC
-	$currencyPair = $market.'_'.$coin; //currency format is BTC_XXX
-	
 	//get currency format for Bittrex
-
-	$priceArray = $polo->get_ticker($currencyPair); 
-
-	$lastPrice = $priceArray['last']; //most recent price for this coin
-
+	$ticker = $bittrex->getTicker($pair);
+	 
+	echo $rate = $ticker->Last;
+	
 	
 	if($action == 'Buy All') {
 		
-		//$tradeResult = buyMarket($pair, $tradeAmount);
-		
-		echo '<pre>'.print_r($tradeResult).'</pre>';
-		
+		try {
+
+			$tradeResult = $bittrex->buyLimit($pair, $tradeAmount, $rate);
+			 
+			echo 'Result: <pre>';print_r($tradeResult); echo '</pre>';
+		} 
+		catch(Exception $e){
+			echo 'Error occurred : '.$e->getMessage(); 
+		}
 	 
 	}
 	else {
-	
-		//$tradeResult = sellMarket ($pair, $tradeAmount);
-		
-		echo '<pre>'.print_r($tradeResult).'</pre>';
-	
-		
+
+		try {
+
+			$tradeResult = $bittrex->sellLimit($pair, $tradeAmount, $rate);
+      			 
+			echo 'Result: <pre>';print_r($tradeResult); echo '</pre>';
+		} 
+		catch(Exception $e){
+			echo 'Error occurred : '.$e->getMessage(); 
+		}
+
+
 	}
 }
 

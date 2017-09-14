@@ -126,7 +126,9 @@ include('scripts.html');
 	
 	<a href="cronSendAlerts.php?debug=1" target="_BLANK"><input type="button" value="cronSendAlerts"></a>
 	
-	<a href="buy_sell_all.php?accessKey=<?=$accessKey?>" target="_BLANK"><input type="button" value="Buy & Sell"></a>
+	<a href="buy_sell_all.php?accessKey=<?=$accessKey?>" target="_BLANK"><input type="button" value="Trade Polo"></a>
+	
+	<a href="buy_sell_bittrex.php?accessKey=<?=$accessKey?>" target="_BLANK"><input type="button" value="Trade Bittrex"></a>
 	
 	<br /><br />
 	
