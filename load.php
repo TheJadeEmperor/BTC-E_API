@@ -2,6 +2,7 @@
 $dir = 'include/';
 include($dir.'api_database.php');
 include($dir.'api_poloniex.php');
+include($dir.'api_bittrex.php');
 include($dir.'config.php');
 include($dir.'ez_sql_core.php');
 include($dir.'ez_sql_mysql.php');
@@ -12,8 +13,10 @@ error_reporting(E_ALL & ~E_NOTICE & ~E_WARNING);
 //set timezone
 date_default_timezone_set('America/New_York');
 
-if($_GET['accessKey'] != 'KickInTheDick') exit;
-
+if($_GET['accessKey'] != 'KickInTheDick') {
+	echo "Wrong access key"; exit;
+}
+	
 
 global $db;
 $db = new ezSQL_mysql($dbUser, $dbPW, $dbName, $dbHost);
@@ -21,6 +24,9 @@ $db = new ezSQL_mysql($dbUser, $dbPW, $dbName, $dbHost);
 
 //requires the extension php_openssl to work
 $polo = new poloniex($polo_api_key, $polo_api_secret);
+$bittrex = new Client ($bittrex_api_key, $bittrex_api_secret);
+
+echo 'polo btrex';
 
 
 $tableData = new Database($db);
@@ -31,7 +37,7 @@ $tradesTable = $tableData->tradesTable();
 
 $optionsTable = $tableData->getSettingsFromDB();
 
-//print_r($condTable);
+echo 'table data';
 
 foreach($optionsTable as $option) {
 	if($option->opt == 'notes') 
@@ -587,7 +593,42 @@ else if($_GET['page'] == 'balanceTable'){
 	
 	echo '</tbody>
 	</table>';
+}
+else if($_GET['page'] == 'btrexBalance'){
 	
+	//echo $ticker = $bittrex->getTicker('USDT-BTC');
+	
+	try {
+		$balance = $bittrex->getBalances();
+	}
+	catch(Exception $e){
+		echo 'Error occurred : '.$e->getMessage(); 
+	}	
+	echo 'page';
+	
+	if(!empty($balance)) { 
 
+		echo '<table>';
+		foreach($balance as $x => $y) {
+			
+			$currency = $y->Currency;
+			$currencyPair = 'BTC-'.$currency;
+			
+			$ticker = $bittrex->getTicker($currencyPair);
+			echo $lastFormat = $ticker->Last;
+			echo ' ';
+			$btcValue = $y->Balance * $lastFormat;	
+			
+			echo '<tr><td>'.$y->Currency.'</td>
+			<td>'.$y->Balance.'</td>
+			<td>(Pending: '.$y->Pending.')</td>
+			<td>'.$btcValue.'</td>
+			</tr>
+			
+			<tr><td colspan="2"><hr/></td></tr>';
+		 }
+		echo '</table>';
+	}
+	//echo 'page';
 }
 ?>
