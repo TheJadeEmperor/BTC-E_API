@@ -26,8 +26,6 @@ $db = new ezSQL_mysql($dbUser, $dbPW, $dbName, $dbHost);
 $polo = new poloniex($polo_api_key, $polo_api_secret);
 $bittrex = new Client ($bittrex_api_key, $bittrex_api_secret);
 
-echo 'polo btrex';
-
 
 $tableData = new Database($db);
 
@@ -37,7 +35,7 @@ $tradesTable = $tableData->tradesTable();
 
 $optionsTable = $tableData->getSettingsFromDB();
 
-echo 'table data';
+
 
 foreach($optionsTable as $option) {
 	if($option->opt == 'notes') 
@@ -185,6 +183,18 @@ $tradeActionDropDown = '<select name="trade_action">'.$actionDropDown.'</option>
 	$dash_percent_display = $tableData->format_percent_display($dash_percent_raw);
 	$bch_percent_display = $tableData->format_percent_display($bch_percent_raw);
 	
+	/*
+	===================
+	Bittrex prices
+	===================
+	*/
+	
+	
+	/*
+	===================
+	Coinbase prices
+	===================
+	*/
 	$coinbase_btc_usd = $tableData->coinbasePrice('btc-usd');
 	$coinbase_eth_usd = $tableData->coinbasePrice('eth-usd');
 	$coinbase_ltc_usd = $tableData->coinbasePrice('ltc-usd');
@@ -570,6 +580,8 @@ else if($_GET['page'] == 'balanceTable'){
 				$formatting = 'style="font-weight: bold;"';
 			else
 				$formatting = 'style="font-weight: normal;"';
+	
+			if ($btcValueFormat > 0.01) {
 			
 			$balanceTable .= '<tr '.$formatting.'><td>'.$currency.'</td>
 			<td>'.$currencyBalance.'</td>
@@ -579,6 +591,7 @@ else if($_GET['page'] == 'balanceTable'){
 			<td>'.$usdtValueFormat.'</td>
 			<td><a href="https://www.tradingview.com/chart/'.$chartLink.'" target="_BLANK">View</a></td>
 			</tr>';
+			}
 			
 		}
 	}
@@ -596,7 +609,6 @@ else if($_GET['page'] == 'balanceTable'){
 }
 else if($_GET['page'] == 'btrexBalance'){
 	
-	//echo $ticker = $bittrex->getTicker('USDT-BTC');
 	
 	try {
 		$balance = $bittrex->getBalances();
@@ -604,31 +616,41 @@ else if($_GET['page'] == 'btrexBalance'){
 	catch(Exception $e){
 		echo 'Error occurred : '.$e->getMessage(); 
 	}	
-	echo 'page';
+	//echo 'page';
 	
 	if(!empty($balance)) { 
 
-		echo '<table>';
+		?>
+		<table class="table">
+		<tbody>
+			<tr><th colspan="8">Bittrex Balance</th></tr>
+			<tr>
+				<th>Currency</th><th>Balance</th><th>BTC Value</th><th>Chart</th>
+			</tr>
+		<?
 		foreach($balance as $x => $y) {
 			
 			$currency = $y->Currency;
-			$currencyPair = 'BTC-'.$currency;
+			echo $currencyPair = 'BTC-'.$currency;
+			$currencyBalance = $y->Balance;
+			//(Pending: '.$y->Pending.')
 			
 			$ticker = $bittrex->getTicker($currencyPair);
-			echo $lastFormat = $ticker->Last;
+			$lastFormat = $ticker->Last;
 			echo ' ';
-			$btcValue = $y->Balance * $lastFormat;	
 			
-			echo '<tr><td>'.$y->Currency.'</td>
-			<td>'.$y->Balance.'</td>
-			<td>(Pending: '.$y->Pending.')</td>
+			$btcValue = $currencyBalance * $lastFormat;	
+			
+			if($btcValue > 0.01) {
+			echo '<tr><td>'.$currency.'</td>
+			<td>'.$currencyBalance.'</td>
 			<td>'.$btcValue.'</td>
-			</tr>
-			
-			<tr><td colspan="2"><hr/></td></tr>';
+			<td></td>
+			</tr>';
+			}
 		 }
 		echo '</table>';
 	}
-	//echo 'page';
+	
 }
 ?>

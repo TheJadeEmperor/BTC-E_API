@@ -14,9 +14,11 @@ $deleteTrade = 'include/ajax.php?action=deleteTrade';
 //page load ajax calls
 $loadCronSendAlerts = 'load.php?page=cronSendAlerts&accessKey='.$accessKey;
 $loadbtcTrades = 'load.php?page=btcTrades&accessKey='.$accessKey;
-$loadBalanceTable = 'load.php?page=balanceTable&accessKey='.$accessKey;
 $loadPriceTable = 'load.php?page=priceTable&accessKey='.$accessKey;
 $loadCronAutoTrade = 'load.php?page=cronAutoTrade&accessKey='.$accessKey;
+$loadBalanceTable = 'load.php?page=balanceTable&accessKey='.$accessKey;
+$loadBtrexBalance = 'load.php?page=btrexBalance&accessKey='.$accessKey;
+
 
 $loadNotesAjax = 'include/ajax.php?action=updateNotes';
 $loadNotes = 'load.php?page=notes&accessKey='.$accessKey;
@@ -259,6 +261,10 @@ $loadNotes = 'load.php?page=notes&accessKey='.$accessKey;
 		$('#balanceTable').load('<?=$loadBalanceTable?>');		
 	}
 	
+	function reloadBtrexBalance(){
+		$('#btrexBalance').load('<?=$loadBtrexBalance?>');		
+	}
+	
 	function reloadPriceTable() {
 		$('#priceTable').load('<?=$loadPriceTable?>');		
 	}
@@ -367,6 +373,8 @@ $loadNotes = 'load.php?page=notes&accessKey='.$accessKey;
 		reloadPriceTable();
 		
 		reloadBalanceTable();
+		
+		reloadBtrexBalance();
 		
 		reloadAlertsTable();
 		
