@@ -24,6 +24,8 @@ $db = new ezSQL_mysql($dbUser, $dbPW, $dbName, $dbHost);
 
 //requires the extension php_openssl to work
 $polo = new poloniex($polo_api_key, $polo_api_secret);
+$polo2 = new poloniex($polo_api_key_2, $polo_api_secret_2);
+
 $bittrex = new Client ($bittrex_api_key, $bittrex_api_secret);
 
 
@@ -526,7 +528,7 @@ else if($_GET['page'] == 'balanceTable'){
 		</thead>
 		<tbody>
 			<tr>
-				<th>Currency</th><th>Balance</th><th>Price</th><th>Change</th><th>BTC Value</th><th>USDT</th><th>Chart</th>
+				<th>Currency</th><th>Balance</th><th>Price</th><th>Change</th><th>BTC Value</th><th>USDT</th>
 			</tr>
 	<?php
 	$balanceArray = $polo->get_balances();
@@ -583,13 +585,12 @@ else if($_GET['page'] == 'balanceTable'){
 	
 			if ($btcValueFormat > 0.01) {
 			
-			$balanceTable .= '<tr '.$formatting.'><td>'.$currency.'</td>
+			$balanceTable .= '<tr '.$formatting.'><td><a href="https://www.tradingview.com/chart/'.$chartLink.'" target="_BLANK">'.$currency.'</a></td>
 			<td>'.$currencyBalance.'</td>
 			<td>'.$lastFormat.'</td>
 			<td style="color: '.$color.'">'.$percentChangeFormat.'%</td>
 			<td>'.$btcValueFormat.'</td>
 			<td>'.$usdtValueFormat.'</td>
-			<td><a href="https://www.tradingview.com/chart/'.$chartLink.'" target="_BLANK">View</a></td>
 			</tr>';
 			}
 			
@@ -607,6 +608,98 @@ else if($_GET['page'] == 'balanceTable'){
 	echo '</tbody>
 	</table>';
 }
+else if($_GET['page'] == 'poloBalance2'){
+
+?>
+	<table class="table">
+		<thead class="thead-default">
+			<tr>
+				<th colspan="8">Polo Balance <img src="include/refresh.png" class="clickable" onclick="javascript:reloadPoloBalance2()" width="25px" /> </th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<th>Currency</th><th>Balance</th><th>Price</th><th>Change</th><th>BTC Value</th><th>USDT</th>
+			</tr>
+	<?php
+	$balanceArray = $polo2->get_balances();
+
+	$tickerArray = $polo2->get_ticker();
+			
+	foreach($balanceArray as $currency => $currencyBalance) {
+		if($currencyBalance > 0.01) {
+		
+			$btcPrice = $tickerArray['USDT_BTC']['last'];
+		
+			if($currency == 'BTC') {
+				$chartLink = 'BTCUSD';
+				$currencyPair = 'USDT_BTC';
+				$lastFormat = $tickerArray[$currencyPair]['last'];
+				
+				$lastFormat = '$'.number_format($lastFormat, 2);
+				$btcValue = $currencyBalance;		
+				$usdtValue = $btcValue * $btcPrice;	
+				
+			}
+			else if($currency == 'USDT') {
+				$chartLink = 'BTCUSD';
+				$currencyPair = 'USDT_BTC';
+				$lastFormat = $tickerArray[$currencyPair]['last'];
+				$btcValue = $currencyBalance / $lastFormat;	
+				$usdtValue = $lastFormat;
+			}
+			else { 
+				$chartLink = $currency.'BTC';
+				$currencyPair = 'BTC_'.$currency;
+				$lastFormat = $tickerArray[$currencyPair]['last'];
+				$lastFormat = number_format($lastFormat, 8);
+				$btcValue = $lastFormat * $currencyBalance;
+				$usdtValue = $btcValue * $btcPrice;
+			}
+						
+			$percentChange = $tickerArray[$currencyPair]['percentChange'];
+			$percentChangeFormat = $percentChange * 100;
+			$percentChangeFormat = number_format($percentChangeFormat, 2);
+			
+			$btcValueFormat = number_format($btcValue, 4);
+			$totalBTC += $btcValue;
+			$usdtValueFormat = number_format($usdtValue, 2);
+			
+			
+			if($percentChangeFormat > 0) $color = 'green';
+			else $color = 'red';
+			
+			if($currency == 'BTC' || $currency == 'ETH')
+				$formatting = 'style="font-weight: bold;"';
+			else
+				$formatting = 'style="font-weight: normal;"';
+	
+			if ($btcValueFormat > 0.01) {
+			
+			$balanceTable .= '<tr '.$formatting.'><td><a href="https://www.tradingview.com/chart/'.$chartLink.'" target="_BLANK">'.$currency.'</a></td>
+			<td>'.$currencyBalance.'</td>
+			<td>'.$lastFormat.'</td>
+			<td style="color: '.$color.'">'.$percentChangeFormat.'%</td>
+			<td>'.$btcValueFormat.'</td>
+			<td>'.$usdtValueFormat.'</td>
+			</tr>';
+			}
+			
+		}
+	}
+	echo $balanceTable;
+	
+	$totalBTCFormat = number_format($totalBTC, 8);
+	
+	$totalUSDT = $totalBTC * $btcPrice;
+	$totalUSDTFormat = number_format($totalUSDT, 2);
+	
+	echo '<tr><td colspan="10">Total BTC: '.$totalBTCFormat.' &nbsp;&nbsp; Total USDT: '.$totalUSDTFormat.'</td>';
+	
+	echo '</tbody>
+	</table>';
+}
+
 else if($_GET['page'] == 'btrexBalance'){
 	
 	

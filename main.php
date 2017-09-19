@@ -139,6 +139,8 @@ include('scripts.html');
 			<div id="priceTable"></div>
 	
 			<div id="cronSendAlerts"></div>
+	
+			<div id="btcTrades"></div>
 			
 			<br />
 		
@@ -194,7 +196,7 @@ include('scripts.html');
 			</div>
 			
 			<div id="poloniex_links">
-				<h3>Poloniex Links</h3>
+				<h3>Poloniex & Bittrex Links</h3>
 				<pre class="xdebug-var-dump">
 				<table>
 					<tr valign="top">
@@ -207,12 +209,11 @@ include('scripts.html');
 							
 							<br /><br />
 							
-							<a href="https://poloniex.com/balances" target="_blank">Polo Funds</a>
-							
+							<a href="https://bittrex.com/account/login" target="_blank">Bittrex Login</a>
+															
 							<br /><br />
 							
-							<a href="https://bittrex.com/account/login" target="_blank">Bittrex Exchange</a>
-											
+							<a href="https://bittrex.com/" target="_blank">Bittrex Exchange</a>								
 						</td>
 					   
 					</tr>
@@ -224,12 +225,13 @@ include('scripts.html');
 	</div>
 
 	<div class="row">
-		<div class="col-6">
-			<div id="btcTrades"></div>
-		</div>
 	
-		<div class="col-md-5">
+		<div class="col-md-6">
 			<div id="balanceTable"></div>
+		</div>
+
+		<div class="col-md-6">
+			<div id="poloBalance2"></div>
 		</div>
 
 		

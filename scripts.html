@@ -17,6 +17,7 @@ $loadbtcTrades = 'load.php?page=btcTrades&accessKey='.$accessKey;
 $loadPriceTable = 'load.php?page=priceTable&accessKey='.$accessKey;
 $loadCronAutoTrade = 'load.php?page=cronAutoTrade&accessKey='.$accessKey;
 $loadBalanceTable = 'load.php?page=balanceTable&accessKey='.$accessKey;
+$loadPoloBalance2 = 'load.php?page=poloBalance2&accessKey='.$accessKey;
 $loadBtrexBalance = 'load.php?page=btrexBalance&accessKey='.$accessKey;
 
 
@@ -261,6 +262,10 @@ $loadNotes = 'load.php?page=notes&accessKey='.$accessKey;
 		$('#balanceTable').load('<?=$loadBalanceTable?>');		
 	}
 	
+	function reloadPoloBalance2(){
+		$('#poloBalance2').load('<?=$loadPoloBalance2?>');		
+	}
+	
 	function reloadBtrexBalance(){
 		$('#btrexBalance').load('<?=$loadBtrexBalance?>');		
 	}
@@ -373,6 +378,8 @@ $loadNotes = 'load.php?page=notes&accessKey='.$accessKey;
 		reloadPriceTable();
 		
 		reloadBalanceTable();
+
+		reloadPoloBalance2();
 		
 		reloadBtrexBalance();
 		
