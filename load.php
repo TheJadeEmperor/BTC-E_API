@@ -190,6 +190,20 @@ $tradeActionDropDown = '<select name="trade_action">'.$actionDropDown.'</option>
 	Bittrex prices
 	===================
 	*/
+	//get currency format for Bittrex
+	$bittrex_btc_usd_raw = $bittrex->getTicker('USDT-BTC')->Last;
+	$bittrex_eth_usd_raw = $bittrex->getTicker('USDT-ETH')->Last;
+	$bittrex_ltc_usd_raw = $bittrex->getTicker('USDT-LTC')->Last;
+	$bittrex_dash_usd_raw = $bittrex->getTicker('USDT-DASH')->Last;
+	$bittrex_bcc_usd_raw = $bittrex->getTicker('USDT-BCC')->Last;
+	
+	
+	$bittrex_btc_usd = number_format($bittrex_btc_usd_raw, 2);
+	$bittrex_eth_usd = number_format($bittrex_eth_usd_raw, 2);
+	$bittrex_ltc_usd = number_format($bittrex_ltc_usd_raw, 2);
+	$bittrex_dash_usd = number_format($bittrex_dash_usd_raw, 2);
+	$bittrex_bcc_usd = number_format($bittrex_bcc_usd_raw, 2);
+	
 	
 	
 	/*
@@ -314,38 +328,38 @@ if($_GET['page'] == 'priceTable'){
 			<th>Currency Pair</th>
 			<th>% Change</th>
 			<th>Poloniex</th>
-			
+			<th>Bittrex</th>
 			<th>Coinbase</th>
 		</tr>
 		</thead>
 		<tr>
 			<td>BTC/USDT</td><td><?=$btc_percent_display?></td>
 			<td> $<?=$polo_btc_usd ?> </td>
-			
+			<td> $<?=$bittrex_btc_usd?> </td>
 			<td> $<?=$coinbase_btc_usd ?></td>
 		</tr>
 		</tr>
 			<td>ETH/USDT</td><td><?=$eth_percent_display?></td>
 			<td> $<?=$polo_eth_usd ?> </td>
-			
+			<td> $<?=$bittrex_eth_usd?> </td>
 			<td> $<?=$coinbase_eth_usd ?></td>
 		</tr>
 		<tr>
 			<td>LTC/USDT</td><td> <?=$ltc_percent_display?></td>
 			<td> $<?=$polo_ltc_usd ?> </td>
-			
+			<td> $<?=$bittrex_ltc_usd?> </td>
 			<td> $<?=$coinbase_ltc_usd ?></td>
 		</tr>				
 		<tr>
 			<td>DASH/USDT</td><td> <?=$dash_percent_display?></td>
 			<td> $<?=$polo_dash_usd ?> </td>
-			
+			<td> $<?=$bittrex_dash_usd?> </td>
 			<td> :*( </td>
 		</tr>
 		<tr>
 			<td>BCH/USDT</td><td> <?=$bch_percent_display?></td>
 			<td> $<?=$polo_bch_usd ?> </td>
-			
+			<td> $<?=$bittrex_bcc_usd?> </td>
 			<td> :*( </td>
 		</tr>
 	</table>
