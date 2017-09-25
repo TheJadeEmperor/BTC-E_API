@@ -75,6 +75,8 @@ foreach($actionTypes as $aType) {
 }
 $tradeActionDropDown = '<select name="trade_action">'.$actionDropDown.'</option>';
 
+
+$alertDeleteDiv = '<button id="deleteAlert" class="btn btn-danger">Delete</button>';
 ?>
 
 <head>
@@ -154,7 +156,7 @@ include('scripts.html');
 		
 			<div id="links_to_charts">
 				<h3>Links to Charts</h3>
-				<pre class="xdebug-var-dump">
+				
 				<table>
 					<tr valign="top">
 						<td>
@@ -169,16 +171,17 @@ include('scripts.html');
 							
 							<a href="http://bitcoinwisdom.com/markets/bitfinex/btcusd" target="_blank">Bitcoin Wisdom</a>
 							
+							<br /><br />
 						</td>
 						<td width="18px"></td>
 					</tr>
-					</table>
-				</pre>
+				</table>
+				
             </div>
 			
 			<div id="coinbase_links">
-				<h3>Coinbase Links</h3>
-				<pre class="xdebug-var-dump">
+				<h3>Exchange Links</h3>
+				
 				<table class="">
 					<tr valign="top">
 						<td>
@@ -188,37 +191,48 @@ include('scripts.html');
 							<br /><br />
 							
 							<a href="https://www.gdax.com/" target="_blank">GDAX Exchange</a>
-							
-						</td>
-					</tr>
-				</table>
-				</pre>
-			</div>
-			
-			<div id="poloniex_links">
-				<h3>Poloniex & Bittrex Links</h3>
-				<pre class="xdebug-var-dump">
-				<table>
-					<tr valign="top">
-						<td>
-							<a href="https://poloniex.com/login" target="_blank">Polo Login</a>
-							
+						
 							<br /><br />
 							
-							<a href="https://poloniex.com/exchange" target="_blank">Polo Exchange</a>
+							<a href="https://poloniex.com/login" target="_blank">Polo Login</a>
 							
 							<br /><br />
 							
 							<a href="https://bittrex.com/account/login" target="_blank">Bittrex Login</a>
 															
 							<br /><br />
-							
-							<a href="https://bittrex.com/" target="_blank">Bittrex Exchange</a>								
+													
 						</td>
 					   
 					</tr>
 				</table>
-				</pre>
+			</div>
+			
+			<div id="bot_links">
+				<h3>Links to Bots</h3>
+				<table>
+					<tr valign="top">
+						<td>
+							<a href="https://cryptotrader.org/live" target="_blank">Live Trading</a>
+							
+							<br /><br />
+							
+							<a href="https://cryptotrader.org/strategies/peKY35zY2Z2G56rLi" target="_blank">Trendatron 5000</a>  
+							
+							<br /><br />
+							
+							<a href="https://cryptotrader.org/strategies/Rdp9H4iRQA7hkvfMt" target="_blank">Trendatron P</a>
+															
+							<br /><br />
+							
+							<a href="https://bittrex.com/" target="_blank">Zebra Bot</a>
+							
+							<br /><br />
+						</td>
+					   
+					</tr>
+				</table>
+				
 			</div>
 			
 		</div>
@@ -291,8 +305,9 @@ include('scripts.html');
 			Already Sent? <span id="sentDiv"><?=$sentDropDown?></span> 
 		</td>
 		<td>
-			<button id="deleteAlert" class="btn btn-danger">Delete</button>
-
+			<div id="alertDeleteDiv">
+				<button id="deleteAlert" class="btn btn-danger">Delete</button>
+			</div>
 		</td>
 	</tr>
 	</table>	

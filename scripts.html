@@ -87,48 +87,66 @@ $loadNotes = 'load.php?page=notes&accessKey='.$accessKey;
 	
 	function fillFormTrade(id) {
 
-	$.getJSON("<?=$readTrade?>&trade_id="+id+"", function( data ) {
-		console.log('fillFormTrade: '+data);
-		$.each( data, function( key, val ) {
-			if(data.hasOwnProperty(key))
-				$('input[name='+key+']').val(val);
+		$.getJSON("<?=$readTrade?>&trade_id="+id+"", function( data ) {
+			console.log('fillFormTrade: '+data);
+			$.each( data, function( key, val ) {
+					if(data.hasOwnProperty(key))
+						$('input[name='+key+']').val(val);
 
-			if(key == 'id') {
-				$('input[name=trade_id]').val(val);
-			}
-			
-			//select the values for drop down menus
-			if(key == 'trade_currency' || key == 'trade_condition' || key == 'trade_exchange' || key == 'trade_action' || key == 'trade_unit') {
-				$('select[name="'+key+'"]').find('option:contains("'+val+'")').attr("selected",true);		
-			}
-            });
-        });
+					if(key == 'id') {
+						$('input[name=trade_id]').val(val);
+					}
+					
+					//select the values for drop down menus
+					if(key == 'trade_currency' || key == 'trade_condition' || key == 'trade_exchange' || key == 'trade_action' || key == 'trade_unit') {
+						$('select[name="'+key+'"]').find('option:contains("'+val+'")').attr("selected",true);		
+					}
+				});
+			});
 	}
     
     function deleteAlert(id) {
-        if (confirm("Are you sure you want to delete record "+id+"?")) {
-            $.ajax({
-                type: "GET",
-                url: "<?=$deleteAlert?>&id="+id,
-                success: function() {
-                    //alert('Deleted record '+id);
-                    $('#btcTrades').load('<?=$loadCronSendAlerts?>');
+	
+		var confirmDelete = confirm("Are you sure you wish to delete alert "+id+"?");
+		
+		if(confirmDelete == true) {
+			$.ajax({
+				type: "GET",
+				url: "<?=$deleteAlert?>&id="+id,
+				success: function() {
+					reloadAlertsTable();
+                    //$('#btcAlerts').load('<?=$loadCronSendAlerts?>');
                 }
-            })
-        }    
+			})
+			$("#conditionTable").dialog("close");
+			event.preventDefault(); 
+			return false;
+		}
+		else {
+			return false;
+		}
     }
-    
+	    
 	function deleteTrade(id) {
-		console.log(id);
-        if (confirm("Are you sure you want to delete record "+id+"?")) {
-            $.ajax({
+	
+		var confirmDelete = confirm("Are you sure you wish to delete trade "+id+"?");
+		
+		if(confirmDelete == true) {
+			 $.ajax({
                 type: "GET",
                 url: "<?=$deleteTrade?>&trade_id="+id,
                 success: function() {
-					$('#btcTrades').load('<?=$loadbtcTrades?>');						
+					reloadTradesTable();
+				
                 }
-            })
-        }    
+			})
+			$("#tradeTable").dialog("close");	
+			event.preventDefault(); 
+			return false;
+		}
+		else {
+			return false;
+		}
     }
 	
     function createAlert() {
@@ -171,11 +189,15 @@ $loadNotes = 'load.php?page=notes&accessKey='.$accessKey;
 
 		$('select[name=sent]').remove();
 		$('#sentDiv').html('<?=$sentDropDown?>');
+
+		$('button[id=deleteAlert]').remove();
+		$('#alertDeleteDiv').html('<?=$alertDeleteDiv?>');
+		
 			
 		fillFormAlert(id);
 	
 		$( "#deleteAlert" ).click(function() {
-			deleteAlert(id);
+			return deleteAlert(id);
 		});
 		
 		$("#conditionTable").dialog({
@@ -226,7 +248,7 @@ $loadNotes = 'load.php?page=notes&accessKey='.$accessKey;
 		fillFormTrade(id);
 	
 		$( "#deleteTrade" ).click(function() {
-			deleteTrade(id);
+			return deleteTrade(id);
 		});
 		
 		$("#tradeTable").dialog({

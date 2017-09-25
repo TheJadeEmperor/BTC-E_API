@@ -312,6 +312,26 @@ $exchange2['name'].' <br />
 	}
 	
 
+function showPoloBalanceTable($polo) {
+	
+	?>
+	<table class="table">
+		<thead class="thead-default">
+			<tr>
+				<th colspan="8">Polo Balance <img src="include/refresh.png" class="clickable" onclick="javascript:reloadBalanceTable()" width="25px" /> </th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<th>Currency</th><th>Balance</th><th>Price</th><th>Change</th><th>BTC Value</th><th>USDT</th>
+			</tr>
+	<?
+	$balanceArray = $polo->get_balances();
+
+	$tickerArray = $polo->get_ticker();
+}	
+	
+	
 	
 if($_GET['page'] == 'priceTable'){
 		
@@ -533,18 +553,11 @@ else if($_GET['page'] == 'cronAutoTrade'){
 }
 else if($_GET['page'] == 'balanceTable'){
 
-?>
-	<table class="table">
-		<thead class="thead-default">
-			<tr>
-				<th colspan="8">Polo Balance <img src="include/refresh.png" class="clickable" onclick="javascript:reloadBalanceTable()" width="25px" /> </th>
-			</tr>
-		</thead>
-		<tbody>
-			<tr>
-				<th>Currency</th><th>Balance</th><th>Price</th><th>Change</th><th>BTC Value</th><th>USDT</th>
-			</tr>
-	<?php
+	$polo1 = $polo;
+	
+	showPoloBalanceTable($polo1);
+
+
 	$balanceArray = $polo->get_balances();
 
 	$tickerArray = $polo->get_ticker();
@@ -604,7 +617,7 @@ else if($_GET['page'] == 'balanceTable'){
 			<td>'.$lastFormat.'</td>
 			<td style="color: '.$color.'">'.$percentChangeFormat.'%</td>
 			<td>'.$btcValueFormat.'</td>
-			<td>'.$usdtValueFormat.'</td>
+			<td style="color: white">'.$usdtValueFormat.'</td>
 			</tr>';
 			}
 			
@@ -617,25 +630,16 @@ else if($_GET['page'] == 'balanceTable'){
 	$totalUSDT = $totalBTC * $btcPrice;
 	$totalUSDTFormat = number_format($totalUSDT, 2);
 	
-	echo '<tr><td colspan="10">Total BTC: '.$totalBTCFormat.' &nbsp;&nbsp; Total USDT: '.$totalUSDTFormat.'</td>';
+	echo '<tr><td colspan="10">Total BTC: '.$totalBTCFormat.' &nbsp;&nbsp; 
+	<span style="color: white">Total USDT: '.$totalUSDTFormat.'</span></td>';
 	
 	echo '</tbody>
 	</table>';
 }
-else if($_GET['page'] == 'poloBalance2'){
+else if($_GET['page'] == 'poloBalance2') {
 
-?>
-	<table class="table">
-		<thead class="thead-default">
-			<tr>
-				<th colspan="8">Polo Balance <img src="include/refresh.png" class="clickable" onclick="javascript:reloadPoloBalance2()" width="25px" /> </th>
-			</tr>
-		</thead>
-		<tbody>
-			<tr>
-				<th>Currency</th><th>Balance</th><th>Price</th><th>Change</th><th>BTC Value</th><th>USDT</th>
-			</tr>
-	<?php
+	showPoloBalanceTable($polo2);
+
 	$balanceArray = $polo2->get_balances();
 
 	$tickerArray = $polo2->get_ticker();
@@ -695,7 +699,7 @@ else if($_GET['page'] == 'poloBalance2'){
 			<td>'.$lastFormat.'</td>
 			<td style="color: '.$color.'">'.$percentChangeFormat.'%</td>
 			<td>'.$btcValueFormat.'</td>
-			<td>'.$usdtValueFormat.'</td>
+			<td style="color: white">'.$usdtValueFormat.'</td>
 			</tr>';
 			}
 			
@@ -708,13 +712,14 @@ else if($_GET['page'] == 'poloBalance2'){
 	$totalUSDT = $totalBTC * $btcPrice;
 	$totalUSDTFormat = number_format($totalUSDT, 2);
 	
-	echo '<tr><td colspan="10">Total BTC: '.$totalBTCFormat.' &nbsp;&nbsp; Total USDT: '.$totalUSDTFormat.'</td>';
+	echo '<tr><td colspan="10">Total BTC: '.$totalBTCFormat.' &nbsp;&nbsp; 
+	<span style="color: white">Total USDT: '.$totalUSDTFormat.'</span></td>';
 	
 	echo '</tbody>
 	</table>';
 }
 
-else if($_GET['page'] == 'btrexBalance'){
+else if($_GET['page'] == 'btrexBalance') {
 	
 	
 	try {
