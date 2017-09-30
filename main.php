@@ -110,6 +110,10 @@ $alertDeleteDiv = '<button id="deleteAlert" class="btn btn-danger">Delete</butto
 	.red {
 		color: red;
 	}
+	
+	h3 {
+		margin-bottom: 20px;
+	}
 </style>
 
 <?
@@ -163,17 +167,14 @@ include('scripts.html');
 							<a href="http://coinmarketcap.com/currencies/views/all" target="_blank">Coin Market Cap</a>
 							<br /><br />
 							
-							<a href="https://www.tradingview.com/chart/BTCUSD" target="_blank">TradingView BTC/USD</a>
-							<br /><br />
-							
-							<a href="https://www.tradingview.com/chart/ETHUSD" target="_blank">TradingView ETH/USD</a>
-							<br /><br />
-							
-							<a href="http://bitcoinwisdom.com/markets/bitfinex/btcusd" target="_blank">Bitcoin Wisdom</a>
+							<a href="https://www.tradingview.com/chart/BTCUSD" target="_blank">TradingView </a> - <a href="https://www.tradingview.com/chart/BTCUSD" target="_blank">BTC/USD</a> - <a href="https://www.tradingview.com/chart/ETHUSD" target="_blank">ETH/USD</a>
 							
 							<br /><br />
-						</td>
-						<td width="18px"></td>
+							
+							<a href="http://bitcoinwisdom.com/markets/bitfinex/btcusd" target="_blank">Bitcoin Wisdom</a> - <a href="https://bitcoinwisdom.com/markets/bitstamp/btcusd" target="_blank">Bitstamp</a> - 
+							<a href="http://bitcoinwisdom.com/markets/bitfinex/btcusd" target="_blank">Bitfinex</a>
+						
+							<br /><br /><br />
 					</tr>
 				</table>
 				
@@ -182,10 +183,10 @@ include('scripts.html');
 			<div id="coinbase_links">
 				<h3>Exchange Links</h3>
 				
-				<table class="">
+				<table>
 					<tr valign="top">
 						<td>
-
+							
 							<a href="https://www.coinbase.com/accounts" target="_blank">Coinbase Funds</a>
 							
 							<br /><br />
@@ -201,9 +202,11 @@ include('scripts.html');
 							<a href="https://bittrex.com/account/login" target="_blank">Bittrex Login</a>
 															
 							<br /><br />
-													
-						</td>
-					   
+							
+							<a href="https://liqui.io/" target="_blank">Liqui.io</a>
+															
+							<br /><br /><br />					
+						</td>				   
 					</tr>
 				</table>
 			</div>
@@ -217,17 +220,17 @@ include('scripts.html');
 							
 							<br /><br />
 							
-							<a href="https://cryptotrader.org/strategies/peKY35zY2Z2G56rLi" target="_blank">Trendatron 5000</a>  
+							<a href="https://cryptotrader.org/strategies/peKY35zY2Z2G56rLi" target="_blank">Trendatron 5000</a> - <a href="https://cryptotrader.org/live/YH6KbFBf2HRjN8aYw" target="_blank">Live Instance</a>
 							
 							<br /><br />
 							
-							<a href="https://cryptotrader.org/strategies/Rdp9H4iRQA7hkvfMt" target="_blank">Trendatron P</a>
+							<a href="https://cryptotrader.org/strategies/Rdp9H4iRQA7hkvfMt" target="_blank">Trendatron P</a> - <a href="https://cryptotrader.org/live/nnj3PzDQA8SWJqgj9" target="_blank">Live Instance</a>
 															
 							<br /><br />
 							
-							<a href="https://bittrex.com/" target="_blank">Zebra Bot</a>
+							<a href="https://bittrex.com/" target="_blank">Zebra Bot</a> - <a href="https://cryptotrader.org/live/CxPyiDmB5JeF6h2Rf" target="_blank">Live Instance</a>
 							
-							<br /><br />
+							<br /><br /><br />
 						</td>
 					   
 					</tr>
@@ -248,10 +251,13 @@ include('scripts.html');
 			<div id="poloBalance2"></div>
 		</div>
 
+		<div class="col-md-1"></div>
 		
-		<div class="col-md-10">
+		<div class="col-md-9">
 			<div id="btrexBalance"></div>
 		</div>
+		
+		<div class="col-md-1"></div>
 
 		
 		<div class="col">
