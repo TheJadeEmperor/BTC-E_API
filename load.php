@@ -214,102 +214,6 @@ $tradeActionDropDown = '<select name="trade_action">'.$actionDropDown.'</option>
 	$coinbase_ltc_usd = $tableData->coinbasePrice('ltc-usd');
 
 	
-	if($_GET['page'] == 'arb') {
-		
-		
-		
-function transfer($bal) {
-	
-	global $exchange1, $exchange2;
-
-	$ex1_c1_amt = $bal / $exchange1['coin1_price'];
-	$ex1_c1_amt = $ex1_c1_amt - ($ex_c1_amt * $exchange1['fee']);
-	
-	echo $exchange1['name'].' USDT: '.$bal.' <br />'.
-	$exchange1['name'].' '.$exchange1['coin1_name'].': '.$ex1_c1_amt.'<br />';
-
-	
-	$ex2_usd_amt = $ex1_c1_amt * $exchange2['coin1_price'];
-	$ex2_usd_amt = $ex2_usd_amt - ($ex2_usd_amt * $exchange2['fee']);
-	
-	$ex2_c2_amt = $ex2_usd_amt / $exchange2['coin2_price'];
-	$ex2_c2_amt = $ex2_c2_amt - ($ex2_c2_amt * $exchange2['fee']);
-	
-	echo '<br />Transfer to '.$exchange2['name'].'...<br />';
-	
-	echo $exchange2['name'].' '.$exchange2['coin1_name'].' '.$ex1_c1_amt.'<br />';
-	echo $exchange2['name'].' USDT: '.$ex2_usd_amt.'<br />';
-	echo $exchange2['name'].' '.$exchange2['coin2_name'].' '.$ex2_c2_amt.'<br />';
-	
-	
-	$ex1_usd_amt = $ex2_c2_amt * $exchange2['coin2_price'];
-	$ex1_usd_amt = $ex1_usd_amt - ($ex1_usd_amt * $exchange2['fee']);
-	
-	echo '<br />Transfer to '.$exchange1['name'].'...<br />';
-	
-	echo $exchange1['name'].' '.$exchange1['coin2_name'].': '.$ex2_c2_amt.'<br />
-	'.$exchange1['name'].' USDT: '.$ex1_usd_amt.' <br />';
-
-	
-	return $ex1_usd_amt;
-}
-
-
-global $exchange1, $exchange2;
-
-$exchange1 = array(
-	'name' => 'Polo',
-	'fee' => 0.0025,
-	'coin1_name' => 'BTC',
-	'coin1_price' => $polo_btc_usd_raw,
-	'coin2_name' => 'ETH',
-	'coin2_price' => $polo_eth_usd_raw,
-);
-
-$exchange2 = array (
-	'name' => 'Coinbase',
-	'fee' => 0.001,
-	'coin1_name' => 'BTC',
-	'coin1_price' => $coinbase_btc_usd,
-	'coin2_name' => 'ETH',
-	'coin2_price' => $coinbase_eth_usd
-);
-	
-
-if($_POST['balance']) {
-	
-	$bal = $_POST['balance'];
-	
-	echo 'Start balance: '.$bal.' USD<br /><br />';
-	
-	echo 'Round 1<br />';
-	
-	$bal = transfer($bal);
-	
-	echo '<br /><br />Round 2<br />';
-	
-	transfer($bal);
-}
-
-
-?>
-<br />
-<form method="POST">
-	<input type="text" name="balance" value="<?=$_POST['balance']?>">Starting USD
-	<input type=submit>
-</form>
-<?
-echo $exchange1['name'].' <br />
-'.$exchange1['coin1_name'].' '.$exchange1['coin1_price'].'<br />
-'.$exchange1['coin2_name'].' '.$exchange1['coin2_price'].'<br />
-<br /><br />'.
-
-$exchange2['name'].' <br />
-'.$exchange2['coin1_name'].' '.$exchange2['coin1_price'].'<br />
-'.$exchange2['coin2_name'].' '.$exchange2['coin2_price'].'<br />';
-	}
-	
-
 function showPoloBalanceTable($polo, $tableTitle) {
 	?>
 	<table class="table">
@@ -625,14 +529,14 @@ else if($_GET['page'] == 'cronAutoTrade'){
 }
 else if($_GET['page'] == 'balanceTable'){
 	
-	$tableTitle = 'Polo Balance - Trendatron P';
+	$tableTitle = 'Polo Balance - Zebra Bot';
 	
 	showPoloBalanceTable($polo1, $tableTitle);
 
 }
 else if($_GET['page'] == 'poloBalance2') {
 
-	$tableTitle = 'Polo Balance - Zebra Bot';
+	$tableTitle = 'Polo Balance - Trendatron P';
 	
 	showPoloBalanceTable($polo2, $tableTitle);
 
@@ -651,33 +555,61 @@ else if($_GET['page'] == 'btrexBalance') {
 
 		?>
 		<table class="table">
-		<tbody>
-			<tr><th colspan="8">Bittrex Balance</th></tr>
+			<thead class="thead-default">
 			<tr>
-				<th>Currency</th><th>Balance</th><th>BTC Value</th><th>Chart</th>
+				<th colspan="8">Bittrex Balance <img src="include/refresh.png" class="clickable" onclick="javascript:reloadBtrexBalance()" width="25px" /> </th>
+			</tr>
+			<tr>
+				<th>Currency</th><th>Balance</th><th>Price</th><th>BTC Value</th><th>USDT</th><th>Chart</th>
 			</tr>
 		<?
-		foreach($balance as $x => $y) {
+		foreach($balance as $x => $val) {
 			
-			$currency = $y->Currency;
-			echo $currencyPair = 'BTC-'.$currency;
-			$currencyBalance = $y->Balance;
-			//(Pending: '.$y->Pending.')
+			$currency = $val->Currency;
+			$currencyBalance = $val->Balance;
 			
-			$ticker = $bittrex->getTicker($currencyPair);
-			$lastFormat = $ticker->Last;
-			echo ' ';
+			if($currency == 'TRK') continue; //invalid market
+			if($currency == 'BTC' || $currency == 'USDT') {
+				$currencyPair = 'USDT-BTC';
+				$lastFormat = $bittrex_btc_usd_raw;
+				$btcValue = $currencyBalance;
+				$chartLink = 'https://www.tradingview.com/chart/BTCUSD';
+			}
+			else {
+				$currencyPair = 'BTC-'.$currency;
+				
+				//echo $currencyPair.' ';
+				$ticker = $bittrex->getTicker($currencyPair);
+				$lastFormat = $ticker->Last;
+				$btcValue = $currencyBalance * $lastFormat;	
+				$chartLink = 'https://www.tradingview.com/chart/'.$currency.'BTC';
+			}
 			
-			$btcValue = $currencyBalance * $lastFormat;	
+			$usdtValue = $btcValue * $bittrex_btc_usd_raw;
 			
-			if($btcValue > 0.01) {
+			$btcValueFormat = number_format($btcValue, 4);
+			$usdtValueFormat = number_format($usdtValue, 2);
+			$totalBTC += $btcValue;
+			$totalUSD += $usdtValue;
+			
+			
+			if($btcValue > 0.01 && $usdtValue > 1) {
 			echo '<tr><td>'.$currency.'</td>
 			<td>'.$currencyBalance.'</td>
-			<td>'.$btcValue.'</td>
-			<td></td>
+			<td>'.$lastFormat.'</td>
+			<td>'.$btcValueFormat.'</td>
+			<td><span style="color: white">'.$usdtValueFormat.'</span></td>
+			<td><a href="'.$chartLink.'" target="_BLANK">View</a></td>
 			</tr>';
 			}
 		 }
+		 
+		$totalBTCFormat	= number_format($totalBTC, 4);
+		$totalUSDTFormat	= number_format($totalUSD, 2);
+		 
+		echo '<tr><td colspan="10">Total BTC: '.$totalBTCFormat.' &nbsp;&nbsp; 
+		<span style="color: white">Total USDT: $'.$totalUSDTFormat.'</span></td>';
+	
 		echo '</table>';
 	}
 	
