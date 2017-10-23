@@ -562,6 +562,11 @@ else if($_GET['page'] == 'btrexBalance') {
 				$lastFormat = $bittrex_btc_usd_raw;
 				$btcValue = $currencyBalance;
 				$chartLink = 'https://www.tradingview.com/chart/BTCUSD';
+				
+				if($currency == 'USDT') {
+					$lastFormat = $currencyBalance;
+					$btcValue = 0;
+				}
 			}
 			else {
 				$currencyPair = 'BTC-'.$currency;
