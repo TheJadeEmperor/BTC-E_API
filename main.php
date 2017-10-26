@@ -228,7 +228,7 @@ include('scripts.html');
 															
 							<br /><br />
 							
-							<a href="https://bittrex.com/" target="_blank">Zebra Bot</a> - <a href="https://cryptotrader.org/live/CxPyiDmB5JeF6h2Rf" target="_blank">Live Instance</a>
+							<a href="https://cryptotrader.org/strategies/9z5odbyweFLYeL9gc" target="_blank">Zebra Bot</a> - <a href="https://cryptotrader.org/live/CxPyiDmB5JeF6h2Rf" target="_blank">Live Instance</a>
 							
 							<br /><br /><br />
 						</td>

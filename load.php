@@ -517,14 +517,14 @@ else if($_GET['page'] == 'cronAutoTrade'){
 }
 else if($_GET['page'] == 'balanceTable'){
 	
-	$tableTitle = 'Polo 1 Balance - Trendatron P - BTC/USD';
+	$tableTitle = 'Polo 1 Balance - ZEBRA - ETH/USD - 30m';
 	
 	showPoloBalanceTable($polo1, $tableTitle);
 
 }
 else if($_GET['page'] == 'poloBalance2') {
 
-	$tableTitle = 'Polo 2 Balance - Zebra Bot - ETH/BTC';
+	$tableTitle = 'Polo 2 Balance - ZEBRA - ETH/USD - 1 hr';
 	
 	showPoloBalanceTable($polo2, $tableTitle);
 
