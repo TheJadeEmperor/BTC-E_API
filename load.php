@@ -147,6 +147,7 @@ $tradeActionDropDown = '<select name="trade_action">'.$actionDropDown.'</option>
 
 	$polo_dash_usd_ticker = $polo1->get_ticker('USDT_DASH');
 	
+	$polo_bch_usd_ticker = $polo1->get_ticker('USDT_BCH');
 	
 	//Raw prices	
 	$polo_btc_usd_raw = $polo_btc_usd_ticker['last'];
@@ -157,6 +158,7 @@ $tradeActionDropDown = '<select name="trade_action">'.$actionDropDown.'</option>
 
 	$polo_dash_usd_raw = $polo_dash_usd_ticker['last'];
 	
+	$polo_bch_usd_raw = $polo_bch_usd_ticker['last'];
 
 	//format polo currencies
 
@@ -168,18 +170,20 @@ $tradeActionDropDown = '<select name="trade_action">'.$actionDropDown.'</option>
 
 	$polo_dash_usd = number_format($polo_dash_usd_raw, 2);
 
+	$polo_bch_usd = number_format($polo_bch_usd_raw, 2);
 	
 	//format polo percentChanges
 	$btc_percent_raw = $polo_btc_usd_ticker['percentChange'] * 100;
 	$eth_percent_raw = $polo_eth_usd_ticker['percentChange'] * 100;
 	$ltc_percent_raw = $polo_ltc_usd_ticker['percentChange'] * 100;
 	$dash_percent_raw = $polo_dash_usd_ticker['percentChange'] * 100;
-
+	$bch_percent_raw = $polo_bch_usd_ticker['percentChange'] * 100;
 
 	$btc_percent_display = $tableData->format_percent_display($btc_percent_raw);
 	$eth_percent_display = $tableData->format_percent_display($eth_percent_raw);
 	$ltc_percent_display = $tableData->format_percent_display($ltc_percent_raw);
 	$dash_percent_display = $tableData->format_percent_display($dash_percent_raw);
+	$bch_percent_display = $tableData->format_percent_display($bch_percent_raw);
 	
 	/*
 	===================
@@ -191,12 +195,14 @@ $tradeActionDropDown = '<select name="trade_action">'.$actionDropDown.'</option>
 	$bittrex_eth_usd_raw = $bittrex->getTicker('USDT-ETH')->Last;
 	$bittrex_ltc_usd_raw = $bittrex->getTicker('USDT-LTC')->Last;
 	$bittrex_dash_usd_raw = $bittrex->getTicker('USDT-DASH')->Last;
+	$bittrex_bcc_usd_raw = $bittrex->getTicker('USDT-BCC')->Last;
+	
 	
 	$bittrex_btc_usd = number_format($bittrex_btc_usd_raw, 2);
 	$bittrex_eth_usd = number_format($bittrex_eth_usd_raw, 2);
 	$bittrex_ltc_usd = number_format($bittrex_ltc_usd_raw, 2);
 	$bittrex_dash_usd = number_format($bittrex_dash_usd_raw, 2);
-	
+	$bittrex_bcc_usd = number_format($bittrex_bcc_usd_raw, 2);
 		
 	/*
 	===================
@@ -344,6 +350,12 @@ if($_GET['page'] == 'priceTable'){
 			<td>DASH/USDT</td><td> <?=$dash_percent_display?></td>
 			<td> $<?=$polo_dash_usd ?> </td>
 			<td> $<?=$bittrex_dash_usd?> </td>
+			<td> :*( </td>
+		</tr>
+		<tr>
+			<td>BCH/USDT</td><td> <?=$bch_percent_display?></td>
+			<td> $<?=$polo_bch_usd ?> </td>
+			<td> $<?=$bittrex_bcc_usd?> </td>
 			<td> :*( </td>
 		</tr>
 	</table>
