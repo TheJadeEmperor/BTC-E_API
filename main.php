@@ -204,10 +204,7 @@ include('scripts.html');
 							<a href="https://bittrex.com/account/login" target="_blank">Bittrex Login</a>
 															
 							<br /><br />
-							
-							<a href="https://liqui.io/" target="_blank">Liqui.io</a>
-															
-							<br /><br /><br />					
+														
 						</td>				   
 					</tr>
 				</table>
@@ -226,11 +223,11 @@ include('scripts.html');
 							
 							<br /><br />
 							
-							<a href="https://cryptotrader.org/strategies/Rdp9H4iRQA7hkvfMt" target="_blank">Trendatron P</a> - <a href="https://cryptotrader.org/live/nnj3PzDQA8SWJqgj9" target="_blank">Live Instance</a>
+							<a href="https://cryptotrader.org/strategies/Rdp9H4iRQA7hkvfMt" target="_blank">Trendatron P</a>
 															
 							<br /><br />
 							
-							<a href="https://cryptotrader.org/strategies/9z5odbyweFLYeL9gc" target="_blank">Zebra Bot</a> - <a href="https://cryptotrader.org/live/CxPyiDmB5JeF6h2Rf" target="_blank">Live Instance</a>
+							<a href="https://cryptotrader.org/strategies/9z5odbyweFLYeL9gc" target="_blank">Zebra Bot</a>
 							
 							<br /><br /><br />
 						</td>
