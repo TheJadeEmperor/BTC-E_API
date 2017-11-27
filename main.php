@@ -93,6 +93,8 @@ $alertDeleteDiv = '<button id="deleteAlert" class="btn btn-danger">Delete</butto
 	<script src="http://code.jquery.com/jquery-latest.min.js" type='text/javascript' /></script>
 
 	<script src="include/jquery-ui/ui/jquery-ui.js"></script>
+	
+	<link rel="shortcut icon" type="image/png" href="include/dollar_sign.png">
 
 <style>
     body {
