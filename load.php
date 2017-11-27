@@ -244,9 +244,10 @@ function showPoloBalanceTable($polo, $tableTitle) {
 			else if($currency == 'USDT') {
 				$chartLink = 'BTCUSD';
 				$currencyPair = 'USDT_BTC';
-				$lastFormat = $tickerArray[$currencyPair]['last'];
+				$lastFormat = $tickerArray[$currencyPair]['last'];;
 				$btcValue = $currencyBalance / $lastFormat;	
-				$usdtValue = $lastFormat;
+				$usdtValue = $currencyBalance;
+				$lastFormat = 1;
 			}
 			else { 
 				$chartLink = $currency.'BTC';
@@ -274,15 +275,14 @@ function showPoloBalanceTable($polo, $tableTitle) {
 			else
 				$formatting = 'style="font-weight: normal;"';
 	
-			if ($btcValueFormat > 0.01) {
-			
-			$balanceTable .= '<tr '.$formatting.'><td><a href="https://www.tradingview.com/chart/'.$chartLink.'" target="_BLANK">'.$currency.'</a></td>
-			<td>'.$currencyBalance.'</td>
-			<td>'.$lastFormat.'</td>
-			<td style="color: '.$color.'">'.$percentChangeFormat.'%</td>
-			<td>'.$btcValueFormat.'</td>
-			<td style="color: white">'.$usdtValueFormat.'</td>
-			</tr>';
+			if ($btcValueFormat > 0.01) {			
+				$balanceTable .= '<tr '.$formatting.'><td><a href="https://www.tradingview.com/chart/'.$chartLink.'" target="_BLANK">'.$currency.'</a></td>
+				<td>'.$currencyBalance.'</td>
+				<td>'.$lastFormat.'</td>
+				<td style="color: '.$color.'">'.$percentChangeFormat.'%</td>
+				<td>'.$btcValueFormat.'</td>
+				<td style="color: white">'.$usdtValueFormat.'</td>
+				</tr>';
 			}
 			
 		}
@@ -524,7 +524,7 @@ else if($_GET['page'] == 'balanceTable'){
 }
 else if($_GET['page'] == 'poloBalance2') {
 
-	$tableTitle = 'Polo 2 Balance - ZEBRA - ETH/USD - 1 hr';
+	$tableTitle = 'Polo 2 Balance - Trendatron P - DASH/USD - 1 hr';
 	
 	showPoloBalanceTable($polo2, $tableTitle);
 
