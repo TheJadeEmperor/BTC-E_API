@@ -246,6 +246,11 @@ include('scripts.html');
 		<div class="col">
 			<div id="cronAutoTrade"></div>
 		</div>
+		
+		<br />
+		<div class="col-md-9">
+			<div id="coinValue"></div>
+		</div>
 
 	</div>
 </div><!--container-->
@@ -369,36 +374,7 @@ include('scripts.html');
 	</table>
 </form>
 
-<form id="coinValue" title="Check Coin Values">
 
-	<table>
-	<tr>
-		<td>BTC</td><td>
-		<input type="text" id="amtBTC" />
-		<input type="text" name="valBTC" /></td>
-	</tr>
-	<tr>
-		<td>ETH</td><td>
-		<input type="text" id="amtETH" />
-		<input type="text" name="valETH" /></td>
-	</tr>
-	<tr>
-		<td>LTC</td><td>
-		<input type="text" id="amtLTC" />
-		<input type="text" name="valLTC" /></td>
-	</tr>
-	<tr>
-		<td>BCH</td><td>
-		<input type="text" id="amtETH" />
-		<input type="text" name="valETH" /></td>
-	</tr>
-	<tr>
-		<td>DASH</td><td>
-		<input type="text" id="amtETH" />
-		<input type="text" name="valETH" /></td>
-	</tr>
-	</table>
-</form>
 
 
 </body>

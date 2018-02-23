@@ -19,7 +19,7 @@ $loadCronAutoTrade = 'load.php?page=cronAutoTrade&accessKey='.$accessKey;
 $loadBalanceTable = 'load.php?page=balanceTable&accessKey='.$accessKey;
 $loadPoloBalance2 = 'load.php?page=poloBalance2&accessKey='.$accessKey;
 $loadBtrexBalance = 'load.php?page=btrexBalance&accessKey='.$accessKey;
-
+$loadCoinValue = 'load.php?page=coinValue&accessKey='.$accessKey;
 
 $loadNotesAjax = 'include/ajax.php?action=updateNotes';
 $loadNotes = 'load.php?page=notes&accessKey='.$accessKey;
@@ -350,6 +350,10 @@ $loadNotes = 'load.php?page=notes&accessKey='.$accessKey;
 		$('#cronAutoTrade').load('<?=$loadCronAutoTrade?>');		
 	}
 	
+	function reloadCoinValue() {
+		$('#coinValue').load('<?=$loadCoinValue?>');		
+	}
+	
 
     $(document).ready(function () {
 		
@@ -457,10 +461,8 @@ $loadNotes = 'load.php?page=notes&accessKey='.$accessKey;
 	
 		
 		reloadNotes(); 
-	
 		
 		reloadPriceTable();
-		
 		
 		reloadBalanceTable();
 
@@ -471,6 +473,8 @@ $loadNotes = 'load.php?page=notes&accessKey='.$accessKey;
 		reloadAlertsTable();
 		
 		reloadTradesTable();
+		
+		reloadCoinValue();
 
 		cronAutoTrade();	
 

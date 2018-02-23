@@ -621,4 +621,95 @@ else if($_GET['page'] == 'btrexBalance') {
 	}
 	
 }
+else if($_GET['page'] == 'coinValue') {
+	?>
+	
+<script>
+	
+	function calculateCoinValue(){
+		
+	}
+	
+	$(document).ready(function () {
+		
+		
+		var priceBTC = $('#priceBTC').val();
+		var priceETH = $('#priceETH').val();
+		var priceLTC = $('#priceLTC').val();
+		var priceBCH = $('#priceBCH').val();
+		var priceDASH = $('#priceDASH').val();
+			
+		
+		$('.amtField').keyup(function() {
+			
+			var getID = $('.amtField').filter(function() {
+				return this.value.length !== 0;
+			}).attr('id');
+			
+			
+			
+			var totalBalance = $('#'+getID).val() * priceBTC;
+			
+			$('#debug').val(totalBalance);
+			
+			var valBTC = totalBalance / priceBTC;
+			var valETH = totalBalance / priceETH;
+			var valLTC = totalBalance / priceLTC;
+			var valBCH = totalBalance / priceBCH;
+			var valDASH = totalBalance / priceDASH;
+			
+			$('#valBTC').val(valBTC);
+			$('#valETH').val(valETH);
+			$('#valLTC').val(valLTC);
+			$('#valBCH').val(valBCH);
+			$('#valDASH').val(valDASH);
+			 
+		});
+		
+		
+	});
+	
+</script>
+	
+<form id="coinValue" title="Check Coin Values">
+
+
+<input type="text" id="debug" />
+	<input type="hidden" id="priceBTC" value="<?=$polo_btc_usd_raw?>">
+	<input type="hidden" id="priceETH" value="<?=$polo_eth_usd_raw?>">
+	<input type="hidden" id="priceLTC" value="<?=$polo_ltc_usd_raw?>">
+	<input type="hidden" id="priceBCH" value="<?=$polo_bch_usd_raw?>">
+	<input type="hidden" id="priceDASH" value="<?=$polo_dash_usd_raw?>">
+	
+	
+	<table>
+	<tr>
+		<td>BTC</td><td>
+		<input type="text" id="amtBTC" class="amtField" />
+		<input type="text" id="valBTC" /></td>
+	</tr>
+	<tr>
+		<td>ETH</td><td>
+		<input type="text" id="amtETH" class="amtField" />
+		<input type="text" id="valETH" /></td>
+	</tr>
+	<tr>
+		<td>LTC</td><td>
+		<input type="text" id="amtLTC" class="amtField" />
+		<input type="text" id="valLTC" /></td>
+	</tr>
+	<tr>
+		<td>BCH</td><td>
+		<input type="text" id="amtBCH" class="amtField" />
+		<input type="text" id="valBCH" /></td>
+	</tr>
+	<tr>
+		<td>DASH</td><td>
+		<input type="text" id="amtDASH" class="amtField" />
+		<input type="text" id="valDASH" /></td>
+	</tr>
+	</table>
+</form>
+<?
+}
 ?>
