@@ -292,12 +292,54 @@ $loadNotes = 'load.php?page=notes&accessKey='.$accessKey;
 		$('#btrexBalance').load('<?=$loadBtrexBalance?>');		
 	}
 	
+	
+	function reloadTable (divName) {
+		if(divName == '#priceTable') {
+			loadPage = '<?=$loadPriceTable?>';
+			
+		}
+		else if(divName == '#balanceTable') {
+			loadPage = '<?=$loadBalanceTable?>';
+		}
+		
+		console.log(divName);
+	
+		$(divName).load(loadPage);		
+		
+		//$(divName).hide(); 
+		$(divName).html('<img src="include/images/load.gif" id="loading" />')
+
+		$(window).bind('load', function() {
+            $(divName+' #loading').hide();
+            $(divName).load(loadPage);		
+            $(divName).fadeIn('slow');
+        });
+	}
+	
 	function reloadPriceTable() {
 		$('#priceTable').load('<?=$loadPriceTable?>');		
+		
+		//$('#priceTable').hide(); 
+		$('#priceTable').html('<img src="include/images/load.gif" id="loading" />')
+
+		$(window).bind('load', function() {
+            $('#priceTable #loading').hide();
+            $('#priceTable').load('<?=$loadPriceTable?>');		
+            $('#priceTable').fadeIn('slow');
+        });
 	}
 		
 	function reloadAlertsTable() {
 		$('#cronSendAlerts').load('<?=$loadCronSendAlerts?>');		
+		
+		//$('#cronSendAlerts').hide(); 
+		$('#cronSendAlerts').html('<img src="include/images/load.gif" id="loading" />')
+
+		$(window).bind('load', function() {
+            $('#cronSendAlerts #loading').hide();
+            $('#cronSendAlerts').load('<?=$loadCronSendAlerts?>');		
+            $('#cronSendAlerts').fadeIn('slow');
+        });
 	}
 	
 	function reloadTradesTable() {
@@ -370,8 +412,8 @@ $loadNotes = 'load.php?page=notes&accessKey='.$accessKey;
 			})
 		});	
 		
-		$(".balanceButton").click(function() {
-			$("#accountBalance").dialog({
+		$(".coinValue").click(function() {
+			$("#coinValue").dialog({
 				modal: true,
 				width: 790,
 				position: 'top',
@@ -395,9 +437,30 @@ $loadNotes = 'load.php?page=notes&accessKey='.$accessKey;
 			})
 		});
 		
+		$.fn.counter = function (num) {
+			var i = 1;
+			self = $(this).html(i);	//console.log(self);
+			
+			var interval = setInterval(function () {
+			
+				self.html(++i);
+				if (i >= num) {
+							
+					//clearInterval(interval);
+					i = 0;
+					reloadTable('#priceTable');
+				} 
+			}, 1000);
+		};
+
+		$('#counter').counter(60);
+	
+		
 		reloadNotes(); 
 	
+		
 		reloadPriceTable();
+		
 		
 		reloadBalanceTable();
 
@@ -410,5 +473,6 @@ $loadNotes = 'load.php?page=notes&accessKey='.$accessKey;
 		reloadTradesTable();
 
 		cronAutoTrade();	
+
     });
 </script>

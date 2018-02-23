@@ -116,6 +116,12 @@ $alertDeleteDiv = '<button id="deleteAlert" class="btn btn-danger">Delete</butto
 	h3 {
 		margin-bottom: 20px;
 	}
+	
+	div {
+		display: block /*for the img inside your div */  
+		margin-left: auto ;
+		margin-right: auto ;
+	}
 </style>
 
 <?
@@ -130,6 +136,8 @@ include('scripts.html');
 	
 	<button class = "tradeButton btn btn-success">Add Trade</button>
 	
+	<button class = "coinValue btn btn-success">CoinValue</button>
+	
 	<a href="cronSendTrades.php?debug=1" target="_BLANK"><input type="button" value="cronSendTrades"></a>
 	
 	<a href="cronSendAlerts.php?debug=1" target="_BLANK"><input type="button" value="cronSendAlerts"></a>
@@ -140,10 +148,10 @@ include('scripts.html');
 	
 	<br /><br />
 	
-	
 	<div class="row">
 		<div class="col-6">
-		 
+			<div id="counter"></div>
+			
 			<div id="priceTable"></div>
 	
 			<div id="cronSendAlerts"></div>
@@ -189,52 +197,28 @@ include('scripts.html');
 					<tr valign="top">
 						<td>
 							
-							<a href="https://www.coinbase.com/accounts" target="_blank">Coinbase Funds</a>
+							<a href="https://www.coinbase.com/accounts" target="_blank">Coinbase Funds</a> - <a href="https://www.gdax.com/" target="_blank">GDAX Exchange</a>
 							
 							<br /><br />
 							
-							<a href="https://www.gdax.com/" target="_blank">GDAX Exchange</a>
-						
-							<br /><br />
-							
-							<a href="https://poloniex.com/login" target="_blank">Polo Login</a>
+							<a href="https://poloniex.com/login" target="_blank">Polo Login</a> - <a href="https://bittrex.com/account/login" target="_blank">Bittrex Login</a>
 							
 							<br /><br />
 							
-							<a href="https://bittrex.com/account/login" target="_blank">Bittrex Login</a>
-															
+							<a href="https://cex.io/trade/buysell" target="_blank">Cex.io Login</a> - 
+							<a href="https://bittrex.com/account/login" target="_blank">Bitstamp Login</a> -
+							<a href="https://www.binance.com/login.html" target="_blank">Binance Login</a> 
+							
 							<br /><br />
-														
+							
+							<a href="https://cryptotrader.org/live" target="_blank">Live Trading</a> - 
+							<a href="https://cryptotrader.org/strategies/Rdp9H4iRQA7hkvfMt" target="_blank">Trendatron Premium</a> - 
+							<a href="https://cryptotrader.org/strategies/9z5odbyweFLYeL9gc" target="_blank">Zebra ETH</a>
+							
+							<p>&nbsp;</p>						
 						</td>				   
 					</tr>
 				</table>
-			</div>
-			
-			<div id="bot_links">
-				<h3>Links to Bots</h3>
-				<table>
-					<tr valign="top">
-						<td>
-							<a href="https://cryptotrader.org/live" target="_blank">Live Trading</a>
-							
-							<br /><br />
-							
-							<a href="https://cryptotrader.org/strategies/peKY35zY2Z2G56rLi" target="_blank">Trendatron 5000</a> - <a href="https://cryptotrader.org/live/YH6KbFBf2HRjN8aYw" target="_blank">Live Instance</a>
-							
-							<br /><br />
-							
-							<a href="https://cryptotrader.org/strategies/Rdp9H4iRQA7hkvfMt" target="_blank">Trendatron P</a>
-															
-							<br /><br />
-							
-							<a href="https://cryptotrader.org/strategies/9z5odbyweFLYeL9gc" target="_blank">Zebra Bot</a>
-							
-							<br /><br /><br />
-						</td>
-					   
-					</tr>
-				</table>
-				
 			</div>
 			
 		</div>
@@ -267,6 +251,7 @@ include('scripts.html');
 </div><!--container-->
   
 <p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p>
+
 
 <form id="conditionTable" title="Price Alerts">
     
@@ -380,6 +365,37 @@ include('scripts.html');
 			</div>
 			
 		</td>
+	</tr>
+	</table>
+</form>
+
+<form id="coinValue" title="Check Coin Values">
+
+	<table>
+	<tr>
+		<td>BTC</td><td>
+		<input type="text" id="amtBTC" />
+		<input type="text" name="valBTC" /></td>
+	</tr>
+	<tr>
+		<td>ETH</td><td>
+		<input type="text" id="amtETH" />
+		<input type="text" name="valETH" /></td>
+	</tr>
+	<tr>
+		<td>LTC</td><td>
+		<input type="text" id="amtLTC" />
+		<input type="text" name="valLTC" /></td>
+	</tr>
+	<tr>
+		<td>BCH</td><td>
+		<input type="text" id="amtETH" />
+		<input type="text" name="valETH" /></td>
+	</tr>
+	<tr>
+		<td>DASH</td><td>
+		<input type="text" id="amtETH" />
+		<input type="text" name="valETH" /></td>
 	</tr>
 	</table>
 </form>

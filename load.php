@@ -212,7 +212,7 @@ $tradeActionDropDown = '<select name="trade_action">'.$actionDropDown.'</option>
 	$coinbase_btc_usd = $tableData->coinbasePrice('btc-usd');
 	$coinbase_eth_usd = $tableData->coinbasePrice('eth-usd');
 	$coinbase_ltc_usd = $tableData->coinbasePrice('ltc-usd');
-
+	$coinbase_bch_usd = $tableData->coinbasePrice('bch-usd');
 	
 function showPoloBalanceTable($polo, $tableTitle) {
 	?>
@@ -312,9 +312,10 @@ function showPoloBalanceTable($polo, $tableTitle) {
 if($_GET['page'] == 'priceTable'){
 		
 	$bittrexURL = 'http://bestpayingsites.com/admin/btcTradingAPI/bittrex/';
-	
-	?>
 
+	?>
+	
+	
 	<table class="table">
 		<thead class="thead-default">
 		<tr>
@@ -329,35 +330,36 @@ if($_GET['page'] == 'priceTable'){
 		</tr>
 		</thead>
 		<tr>
-			<td>BTC/USDT</td><td><?=$btc_percent_display?></td>
-			<td> $<?=$polo_btc_usd ?> </td>
+			<td><a href="https://www.tradingview.com/chart/BTCUSD">BTC/USDT</a></td><td><?=$btc_percent_display?></td>
+			<td>$<?=$polo_btc_usd ?></td>
 			<td> $<?=$bittrex_btc_usd?> </td>
 			<td> $<?=$coinbase_btc_usd ?></td>
 		</tr>
 		</tr>
-			<td>ETH/USDT</td><td><?=$eth_percent_display?></td>
+			<td><a href="https://www.tradingview.com/chart/ETHUSD">ETH/USDT</a></td><td><?=$eth_percent_display?></td>
 			<td> $<?=$polo_eth_usd ?> </td>
 			<td> $<?=$bittrex_eth_usd?> </td>
 			<td> $<?=$coinbase_eth_usd ?></td>
 		</tr>
 		<tr>
-			<td>LTC/USDT</td><td> <?=$ltc_percent_display?></td>
+			<td><a href="https://www.tradingview.com/chart/LTCUSD">LTC/USDT</a></td><td> <?=$ltc_percent_display?></td>
 			<td> $<?=$polo_ltc_usd ?> </td>
 			<td> $<?=$bittrex_ltc_usd?> </td>
 			<td> $<?=$coinbase_ltc_usd ?></td>
-		</tr>				
+		</tr>		
 		<tr>
-			<td>DASH/USDT</td><td> <?=$dash_percent_display?></td>
+			<td><a href="https://www.tradingview.com/chart/BCHUSD">BCH/USDT</a></td><td> <?=$bch_percent_display?></td>
+			<td> $<?=$polo_bch_usd ?> </td>
+			<td> $<?=$bittrex_bcc_usd?> </td>
+			<td> $<?=$coinbase_bch_usd?> </td>
+		</tr>		
+		<tr>
+			<td><a href="https://www.tradingview.com/chart/DASHUSD">DASH/USDT</a></td><td> <?=$dash_percent_display?></td>
 			<td> $<?=$polo_dash_usd ?> </td>
 			<td> $<?=$bittrex_dash_usd?> </td>
 			<td> :*( </td>
 		</tr>
-		<tr>
-			<td>BCH/USDT</td><td> <?=$bch_percent_display?></td>
-			<td> $<?=$polo_bch_usd ?> </td>
-			<td> $<?=$bittrex_bcc_usd?> </td>
-			<td> :*( </td>
-		</tr>
+		
 	</table>
 	<?
 }
