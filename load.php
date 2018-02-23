@@ -638,7 +638,7 @@ else if($_GET['page'] == 'coinValue') {
 		var priceLTC = $('#priceLTC').val();
 		var priceBCH = $('#priceBCH').val();
 		var priceDASH = $('#priceDASH').val();
-			
+		var coinPrice;
 		
 		$('.amtField').keyup(function() {
 			
@@ -648,9 +648,26 @@ else if($_GET['page'] == 'coinValue') {
 			
 			
 			
-			var totalBalance = $('#'+getID).val() * priceBTC;
+			switch(getID) {
+				case 'amtBTC':
+					coinPrice = priceBTC;
+					break;
+				case 'amtETH':
+					coinPrice = priceETH;
+					break;
+				case 'amtLTC':
+					coinPrice = priceLTC;
+					break;
+				case 'amtBCH':
+					coinPrice = priceBCH;
+					break;
+				case 'amtDASH':
+					coinPrice = priceDASH;
+			}
 			
-			$('#debug').val(totalBalance);
+			var totalBalance = $('#'+getID).val() * coinPrice;
+			
+			$('#totalBalance').val(totalBalance);
 			
 			var valBTC = totalBalance / priceBTC;
 			var valETH = totalBalance / priceETH;
@@ -674,7 +691,7 @@ else if($_GET['page'] == 'coinValue') {
 <form id="coinValue" title="Check Coin Values">
 
 
-<input type="text" id="debug" />
+
 	<input type="hidden" id="priceBTC" value="<?=$polo_btc_usd_raw?>">
 	<input type="hidden" id="priceETH" value="<?=$polo_eth_usd_raw?>">
 	<input type="hidden" id="priceLTC" value="<?=$polo_ltc_usd_raw?>">
@@ -683,6 +700,10 @@ else if($_GET['page'] == 'coinValue') {
 	
 	
 	<table>
+	<tr>
+		<td>BTC</td><td>
+		<input type="text" id="totalBalance" /></td>
+	</tr>
 	<tr>
 		<td>BTC</td><td>
 		<input type="text" id="amtBTC" class="amtField" />
