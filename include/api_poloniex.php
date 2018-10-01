@@ -146,16 +146,38 @@
 			);
 		}
 		
-		public function withdraw($currency, $amount, $address) {
+		//pair = BTC_XXX
+		public function margin_buy($pair, $order_number) {
 			return $this->query( 
 				array(
-					'command' => 'withdraw',	
-					'currency' => strtoupper($currency),				
-					'amount' => $amount,
-					'address' => $address
+					'command' => 'marginBuy',	
+					'currencyPair' => strtoupper($pair),
+					'orderNumber' => $order_number
 				)
 			);
 		}
+		
+		public function margin_sell($pair, $order_number) {
+			return $this->query( 
+				array(
+					'command' => 'marginSell',	
+					'currencyPair' => strtoupper($pair),
+					'orderNumber' => $order_number
+				)
+			);
+		}
+		
+		public function close_margin_position($pair, $order_number) {
+			return $this->query( 
+				array(
+					'command' => 'closeMarginPosition',	
+					'currencyPair' => strtoupper($pair),
+					'orderNumber' => $order_number
+				)
+			);
+		}
+		
+		
 		
 		public function get_trade_history($pair) {
 			$trades = $this->retrieveJSON($this->public_url.'?command=returnTradeHistory&currencyPair='.strtoupper($pair));
