@@ -19,10 +19,19 @@ $rate = '0.0348';
 //$rrr = $polo->buy($currencyPair, '0.0569', $amt, 1);
 
 
-$rrr = $polo->margin_sell($currencyPair, $rate, $amt, 1);
-print_r($rrr);
+//$rrr = $polo->margin_sell($currencyPair, $rate, $amt, 1);
+//print_r($rrr);
 
+//gmail API 
 
+//if criteria is met
+
+//check for open pos & close it
+
+//open margin pos - long or short
+
+//amount is 0.01 
+//
 
 
 ?>
