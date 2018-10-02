@@ -59,14 +59,15 @@ if($criteria_is_met) {
 		
 
 	//after upgrading tradingview
-	//open margin pos - long 
-	//$shortPos = $polo->margin_buy($currencyPair, $rate, $amt, 1);
+	//	$shortPos = $polo->margin_sell($currencyPair, $rate, $amt, 1);
+	
 
 	if($debug == 0) {
-		//open margin pos - short 
-		$shortPos = $polo->margin_sell($currencyPair, $rate, $amt, 1);
-
-		print_r($shortPos);
+		//open margin pos - long
+		$longPos = $polo->margin_buy($currencyPair, $rate, $amt, 1);
+		print_r($longPos);
+		
+		//future - bittrex go long
 	}
 
 	//send text message
