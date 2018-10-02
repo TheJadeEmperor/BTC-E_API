@@ -104,7 +104,7 @@
 		}
 		
 		public function buy($pair, $rate, $amount, $orderType) {
-			
+			echo $rate.' '.$amount;
 			//orderType = openOrder, fillOrKill, immediateOrCancel
 			$tradeArray = array(
 					'command' => 'buy',	
@@ -147,22 +147,24 @@
 		}
 		
 		//pair = BTC_XXX
-		public function margin_buy($pair, $order_number) {
+		public function margin_buy($pair, $rate, $amount) {
 			return $this->query( 
 				array(
 					'command' => 'marginBuy',	
 					'currencyPair' => strtoupper($pair),
-					'orderNumber' => $order_number
+					'rate' => $rate,
+					'amount' => $amount,
 				)
 			);
 		}
 		
-		public function margin_sell($pair, $order_number) {
+		public function margin_sell($pair, $rate, $amount) {
 			return $this->query( 
 				array(
 					'command' => 'marginSell',	
 					'currencyPair' => strtoupper($pair),
-					'orderNumber' => $order_number
+					'rate' => $rate,
+					'amount' => $amount,
 				)
 			);
 		}
