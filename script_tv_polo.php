@@ -17,15 +17,14 @@ $newDB = new Database($db);
 
 $debug = 1;
 
+$currencyPair = 'BTC_XRP'; 
+$amount = '10';
 
 //gmail API here
-//if criteria is met
 //From: noreply@tradingview.com 
 //Subject: TradingView Alert: Short Signal 
 //Subject: TradingView Alert: Long Signal 
 
-$currencyPair = 'BTC_XRP'; 
-$amount = '10';
 $criteria_is_met = true;
 $short_signal = false;
 $long_signal = false;
