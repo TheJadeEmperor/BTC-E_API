@@ -18,66 +18,83 @@ $newDB = new Database($db);
 $debug = 1;
 
 
-
-echo $currencyPair = 'BTC_XRP';
-$amt = '250';
-
-
-
-//$rrr = $polo->close_margin_position($currencyPair, $order_number);
-//print_r($rrr);
-
-
-//$rrr = $polo->margin_sell($currencyPair, $rate, $amt, 1);
-//print_r($rrr);
-
-
 //gmail API here
 //if criteria is met
 //From: noreply@tradingview.com 
 //Subject: TradingView Alert: Short Signal 
+//Subject: TradingView Alert: Long Signal 
+
+$currencyPair = 'BTC_XRP'; 
+$amount = '10';
+$criteria_is_met = true;
+$short_signal = false;
+$long_signal = false;
+$debug = 0;
+
 
 if($criteria_is_met) {
-			
-	$currencyPair = 'BTC_ETH'; 
-	$amount = '0.01';
 
 	//get current price of pair
+	$currentRate = $polo->get_ticker($currencyPair);
 
+	$rate = $currentRate['last'];
+	$output .= 'currencyPair: '. $currencyPair.' | amount: '.$amount.' | rate: '.$rate.' ';
+
+	//check for open pos 
+	$getMarginPos = $polo->get_margin_position($currencyPair);
+	echo 'getMarginPos ';
+	var_dump($getMarginPos); 
 	
-	$rate = 'current rate';  
-	$output .= $currencyPair.' '.$amount.' '.$rate.' ';		
-	
-	
-	//check for open pos & close it
-	if($debug == 0) {
-		$closePos = $polo->close_margin_position($currencyPair, $order_number);
-			
-		print_r($closePos); 
-		
+	if($getMarginPos['type'] == 'none') //no positions open
+		$adjustedAmount = $amount;
+	else {
+		$adjustedAmount = $amount * 2;
 	}
-		
-
-	//after upgrading tradingview
-	//	$shortPos = $polo->margin_sell($currencyPair, $rate, $amt, 1);
 	
-
+	//check for open margin order & replace it
 	if($debug == 0) {
-		//open margin pos - long
-		$longPos = $polo->margin_buy($currencyPair, $rate, $amt, 1);
-		print_r($longPos);
+		$openOrders = $polo->return_open_orders($currencyPair);
+			 
+		echo 'openOrders '; 
+		var_dump($openOrders);
+		if($openOrders[0]['margin'] == 1) 
+			$orderNumber = $openOrders[0]['orderNumber'];
 		
-		//future - bittrex go long
+		if(isset($orderNumber)) {
+			$moveOrder = $polo->move_order($orderNumber, $rate);
+			echo 'moveOrder ';
+			var_dump($moveOrder);
+		}
 	}
-
+	
+	
+	
+	//future: break order into smaller parts
+	if($short_signal) {
+		if($debug == 0) {
+			$shortPos = $polo->margin_sell($currencyPair, $rate, $adjustedAmount, 1);
+			echo 'shortPos'; 
+			var_dump($shortPos); 
+		}
+	}
+	else if ($long_signal) { //open margin pos - long
+		if($debug == 0) {
+			$longPos = $polo->margin_buy($currencyPair, $rate, $adjustedAmount, 1);
+			echo 'longPos';
+			var_dump($longPos);
+		}
+	}
+	
+	
 	//send text message
-	$sendMailBody = 'Opened Short Pos on '.$currencyPair.' | Amount: '.$amount.'';
+	$sendMailBody = 'Opened Margin Pos on '.$currencyPair.' | Amount: '.$amount.'';
 	$output .= $sendMailBody;		
+	
 	if($debug == 0) {
 		$newDB->sendMail($sendEmailBody); 
-	}
+	} 
 
-	echo $output;
+	echo '<br />'.$output;
 }
 
 

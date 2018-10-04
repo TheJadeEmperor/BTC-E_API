@@ -169,20 +169,51 @@
 			);
 		}
 		
-		public function close_margin_position($pair, $order_number) {
+		
+		
+		public function get_margin_position($currencyPair) {
+			return $this->query(
+				array(
+					'command' => 'getMarginPosition',	
+					'currencyPair' => strtoupper($currencyPair)
+				)
+			);
+		}
+		
+		public function close_margin_position($currencyPair, $order_number) {
 			return $this->query( 
 				array(
 					'command' => 'closeMarginPosition',	
-					'currencyPair' => strtoupper($pair),
+					'currencyPair' => strtoupper($currencyPair),
 					'orderNumber' => $order_number
 				)
 			);
 		}
 		
+		public function move_order($orderNumber, $rate) {
+			return $this->query( 
+				array(
+					'command' => 'moveOrder',	
+					'rate' => $rate,
+					'orderNumber' => $orderNumber
+				)
+			);
+		}
 		
 		
-		public function get_trade_history($pair) {
-			$trades = $this->retrieveJSON($this->public_url.'?command=returnTradeHistory&currencyPair='.strtoupper($pair));
+		public function return_open_orders($currencyPair) {
+			return $this->query( 
+				array(
+					'command' => 'returnOpenOrders',	
+					'currencyPair' => $currencyPair,
+				) 
+			);
+		}
+		
+		
+		
+		public function get_trade_history($currencyPair) {
+			$trades = $this->retrieveJSON($this->public_url.'?command=returnTradeHistory&currencyPair='.strtoupper($currencyPair));
 			return $trades;
 		}
 		
