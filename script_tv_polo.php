@@ -40,7 +40,7 @@ if($criteria_is_met) {
 	$rate = $currentRate['last'];
 	$output .= 'currencyPair: '. $currencyPair.' | amount: '.$amount.' | rate: '.$rate.' ';
 
-	//check for open pos 
+	//check for open pos - poloniex
 	$getMarginPos = $polo->get_margin_position($currencyPair);
 	echo 'getMarginPos ';
 	var_dump($getMarginPos); 
@@ -50,6 +50,7 @@ if($criteria_is_met) {
 	else {
 		$adjustedAmount = $amount * 2;
 	}
+	
 	
 	//check for open margin order & replace it
 	if($debug == 0) {
@@ -67,27 +68,24 @@ if($criteria_is_met) {
 		}
 	}
 	
-	
-	
-	//future: break order into smaller parts
-	if($short_signal) {
+	if($short_signal) { //open margin pos - short
 		if($debug == 0) {
 			$shortPos = $polo->margin_sell($currencyPair, $rate, $adjustedAmount, 1);
-			echo 'shortPos'; 
+			echo $typePos = 'shortPos'; 
 			var_dump($shortPos); 
 		}
 	}
 	else if ($long_signal) { //open margin pos - long
 		if($debug == 0) {
 			$longPos = $polo->margin_buy($currencyPair, $rate, $adjustedAmount, 1);
-			echo 'longPos';
+			echo $typePos = 'longPos';
 			var_dump($longPos);
 		}
 	}
 	
 	
 	//send text message
-	$sendMailBody = 'Opened Margin Pos on '.$currencyPair.' | Amount: '.$amount.'';
+	$sendMailBody = 'Opened '.$typePos.' on Poloniex for '.$currencyPair.' | Amount: '.$amount.'';
 	$output .= $sendMailBody;		
 	
 	if($debug == 0) {
