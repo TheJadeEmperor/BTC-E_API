@@ -5,6 +5,8 @@ include($dir.'api_poloniex.php');
 include($dir.'config.php');
 include($dir.'ez_sql_core.php');
 include($dir.'ez_sql_mysql.php'); 
+include($dir.'api_imap_class.php');
+
 
 //requires the extension php_openssl to work
 $polo = new poloniex($polo_api_key, $polo_api_secret);
@@ -15,20 +17,37 @@ $db = new ezSQL_mysql($dbUser, $dbPW, $dbName, $dbHost);
 //connect to the BTC Database
 $newDB = new Database($db);
 
-$debug = 1;
+
+$debug = 0;
 
 $currencyPair = 'BTC_XRP'; 
 $amount = '10';
 
-//gmail API here
-//From: noreply@tradingview.com 
-//Subject: TradingView Alert: Short Signal 
-//Subject: TradingView Alert: Long Signal 
+//connect to imap service
+$mails = new EmailImporter( '{imap.gmail.com:993/imap/ssl}INBOX', $gmail_username, $gmail_password);
 
-$criteria_is_met = true;
-$short_signal = false;
-$long_signal = false;
-$debug = 0;
+ 
+
+$subjectSignalLong = "TradingView Alert: Long Signal";
+$subjectSignalShort = "TradingView Alert: Short Signal";
+
+$matchedMailsLong = $mails->getMailsBySubject($subjectSignalLong);
+$matchedMailsShort = $mails->getMailsBySubject($subjectSignalShort);
+
+print_r($mails->getMailsBySubject($matchedMailsLong));
+
+
+
+if($matchedMailsLong[0]['subject'] == $subjectSignalLong) { 
+	echo 'long '; 
+	$criteria_is_met = true;
+	$long_signal = true;
+}
+else if($matchedMailsShort[0]['subject'] == $subjectSignalShort) { 
+	echo 'short'; 
+	$criteria_is_met = true;
+	$short_signal = true;
+}
 
 
 if($criteria_is_met) {
@@ -69,14 +88,14 @@ if($criteria_is_met) {
 	
 	if($short_signal) { //open margin pos - short
 		if($debug == 0) {
-			$shortPos = $polo->margin_sell($currencyPair, $rate, $adjustedAmount, 1);
+			//$shortPos = $polo->margin_sell($currencyPair, $rate, $adjustedAmount, 1);
 			echo $typePos = 'shortPos'; 
 			var_dump($shortPos); 
 		}
 	}
 	else if ($long_signal) { //open margin pos - long
 		if($debug == 0) {
-			$longPos = $polo->margin_buy($currencyPair, $rate, $adjustedAmount, 1);
+			//$longPos = $polo->margin_buy($currencyPair, $rate, $adjustedAmount, 1);
 			echo $typePos = 'longPos';
 			var_dump($longPos);
 		}
