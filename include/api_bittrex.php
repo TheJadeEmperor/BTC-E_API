@@ -1,13 +1,11 @@
 <?php
-class Client
-{
+class Client {
 	private $baseUrl;
 	private $apiVersion = 'v1.1';
 	private $apiKey;
 	private $apiSecret;
 
-	public function __construct ($apiKey, $apiSecret)
-	{
+	public function __construct ($apiKey, $apiSecret) {
 		$this->apiKey    = $apiKey;
 		$this->apiSecret = $apiSecret;
 		$this->baseUrl   = 'https://bittrex.com/api/'.$this->apiVersion.'/';
@@ -20,8 +18,7 @@ class Client
 	 * @param bool $apiKey  use apikey or not
 	 * @return object
 	 */
-	private function call ($method, $params = array(), $apiKey = false)
-	{
+	private function call ($method, $params = array(), $apiKey = false) {
 		$uri  = $this->baseUrl.$method;
 
 		if ($apiKey == true) {
@@ -54,8 +51,7 @@ class Client
 	 * Get the open and available trading markets at Bittrex along with other meta data.
 	 * @return array
 	 */
-	public function getMarkets ()
-	{
+	public function getMarkets () {
 		return $this->call ('public/getmarkets');
 	}
 
@@ -63,8 +59,7 @@ class Client
 	 * Get all supported currencies at Bittrex along with other meta data.
 	 * @return array
 	 */
-	public function getCurrencies ()
-	{
+	public function getCurrencies () {
 		return $this->call ('public/getcurrencies');
 	}
 
@@ -73,8 +68,7 @@ class Client
 	 * @param string $market	literal for the market (ex: BTC-LTC)
 	 * @return array
 	 */
-	public function getTicker ($market)
-	{
+	public function getTicker ($market) {
 		return $this->call ('public/getticker', array('market' => $market));
 	}
 
@@ -82,8 +76,7 @@ class Client
 	 * Get the last 24 hour summary of all active exchanges
 	 * @return array
 	 */
-	public function getMarketSummaries ()
-	{
+	public function getMarketSummaries () {
 		return $this->call ('public/getmarketsummaries');
 	}
 
@@ -92,8 +85,7 @@ class Client
 	 * @param string $market literal for the market (ex: BTC-LTC)
 	 * @return array
 	 */
-	public function getMarketSummary ($market)
-	{
+	public function getMarketSummary ($market) {
 		return $this->call ('public/getmarketsummary', array('market' => $market));
 	}
 
@@ -104,8 +96,7 @@ class Client
 	 * @param integer $depth  how deep of an order book to retrieve. Max is 50.
 	 * @return array
 	 */
-	public function getOrderBook ($market, $type, $depth = 20)
-	{
+	public function getOrderBook ($market, $type, $depth = 20) {
 		$params = array (
 			'market' => $market,
 			'type'   => $type,
@@ -120,8 +111,7 @@ class Client
 	 * @param integer $count  number of entries to return. Max is 50.
 	 * @return array
 	 */
-	public function getMarketHistory ($market, $count = 20)
-	{
+	public function getMarketHistory ($market, $count = 20) {
 		$params = array (
 			'market' => $market,
 			'count'  => $count
@@ -137,8 +127,7 @@ class Client
 	 * @param float $rate     the rate at which to place the order
 	 * @return array
 	 */
-	public function buyLimit ($market, $quantity, $rate)
-	{
+	public function buyLimit ($market, $quantity, $rate) {
 		$params = array (
 			'market'   => $market,
 			'quantity' => $quantity,
@@ -154,8 +143,7 @@ class Client
 	 * @param float $quantity the amount to purchase
 	 * @return array
 	 */
-	public function buyMarket ($market, $quantity)
-	{
+	public function buyMarket ($market, $quantity) {
 		$params = array (
 			'market'   => $market,
 			'quantity' => $quantity
@@ -171,8 +159,7 @@ class Client
 	 * @param float $rate     the rate at which to place the order
 	 * @return array
 	 */
-	public function sellLimit ($market, $quantity, $rate)
-	{
+	public function sellLimit ($market, $quantity, $rate) {
 		$params = array (
 			'market'   => $market,
 			'quantity' => $quantity,
@@ -188,8 +175,7 @@ class Client
 	 * @param float $quantity the amount to sell
 	 * @return array
 	 */
-	public function sellMarket ($market, $quantity)
-	{
+	public function sellMarket ($market, $quantity) {
 		$params = array (
 			'market'   => $market,
 			'quantity' => $quantity
@@ -202,8 +188,7 @@ class Client
 	 * @param string $uuid id of sell or buy order
 	 * @return array
 	 */
-	public function cancel ($uuid)
-	{
+	public function cancel ($uuid) {
 		$params = array ('uuid' => $uuid);
 		return $this->call ('market/cancel', $params, true);
 	}
@@ -213,8 +198,7 @@ class Client
 	 * @param string $market  literal for the market (ex: BTC-LTC)
 	 * @return array
 	 */
-	public function getOpenOrders ($market = null)
-	{
+	public function getOpenOrders ($market = null) {
 		$params = array ('market' => $market);
 		return $this->call ('market/getopenorders', $params, true);
 	}
@@ -223,8 +207,7 @@ class Client
 	 * Retrieve all balances from your account
 	 * @return array
 	 */
-	public function getBalances ()
-	{
+	public function getBalances () {
 		return $this->call ('account/getbalances', array(), true);
 	}
 
@@ -246,42 +229,18 @@ class Client
 	 * @param string $currency literal for the currency (ex: LTC)
 	 * @return array
 	 */
-	public function getDepositAddress ($currency)
-	{
+	public function getDepositAddress ($currency) {
 		$params = array ('currency' => $currency);
 		return $this->call ('account/getdepositaddress', $params, true);
 	}
 
-	/**
-	 * Withdraw funds from your account. note: please account for txfee.
-	 * @param string $currency  literal for the currency (ex: LTC)
-	 * @param float $quantity   the quantity of coins to withdraw
-	 * @param float $address    the address where to send the funds
-	 * @param float $paymentid  (optional) used for CryptoNotes/BitShareX/Nxt optional field (memo/paymentid)
-	 * @return array
-	 */
-	public function withdraw ($currency, $quantity, $address, $paymentid = null)
-	{
-		$params = array (
-			'currency' => $currency,
-			'quantity' => $quantity,
-			'address'  => $address,
-		);
-		
-		if ($paymentid) {
-			$params['paymentid'] = $paymentid;
-		}
-		
-		return $this->call ('account/withdraw', $params, true);
-	}
 
 	/**
 	 * Retrieve a single order by uuid
 	 * @param string $uuid 	the uuid of the buy or sell order
 	 * @return array
 	 */
-	public function getOrder ($uuid)
-	{
+	public function getOrder ($uuid) {
 		$params = array ('uuid' => $uuid);
 		return $this->call ('account/getorder', $params, true);
 	}
@@ -292,8 +251,7 @@ class Client
 	 * @param integer $count  (optional) the number of records to return
 	 * @return array
 	 */
-	public function getOrderHistory ($market = null, $count = null)
-	{
+	public function getOrderHistory ($market = null, $count = null) {
 		$params = array ();
 
 		if ($market) {
@@ -313,8 +271,7 @@ class Client
 	 * @param integer $count    (optional) the number of records to return
 	 * @return array
 	 */
-	public function getWithdrawalHistory ($currency = null, $count = null)
-	{
+	public function getWithdrawalHistory ($currency = null, $count = null) {
 		$params = array ();
 
 		if ($currency) {
@@ -334,8 +291,7 @@ class Client
 	 * @param integer $count    (optional) the number of records to return
 	 * @return array
 	 */
-	public function getDepositHistory ($currency = null, $count = null)
-	{
+	public function getDepositHistory ($currency = null, $count = null) {
 		$params = array ();
 
 		if ($currency) {
