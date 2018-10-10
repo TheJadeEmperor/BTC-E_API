@@ -3,28 +3,30 @@ $dir = 'include/';
 include($dir.'api_database.php');
 include($dir.'api_poloniex.php');
 include($dir.'config.php');
-include($dir.'ez_sql_core.php');
-include($dir.'ez_sql_mysql.php'); 
+//include($dir.'ez_sql_core.php');
+//include($dir.'ez_sql_mysql.php'); 
 include($dir.'api_imap_class.php');
 
 
 //requires the extension php_openssl to work
 $polo = new poloniex($polo_api_key, $polo_api_secret);
 
-//database connection
-$db = new ezSQL_mysql($dbUser, $dbPW, $dbName, $dbHost);
-
 //connect to the BTC Database
 $newDB = new Database($db);
 
+$newDB->database($dbHost, $dbUser, $dbPW, $dbName);
 
-$debug = 0;
+//$newDB->showMail();
 
-$currencyPair = 'BTC_XRP'; 
+
+$debug = 0; 
+
+echo $currencyPair = 'BTC_XRP'; 
 $amount = '10';
 
+
 //connect to imap service
-$mails = new EmailImporter( '{imap.gmail.com:993/imap/ssl}INBOX', $gmail_username, $gmail_password);
+$mails = new EmailImporter( '{imap.googlemail.com:993/imap/ssl}INBOX', $gmail_username, $gmail_password);
 
  
 
@@ -43,7 +45,8 @@ if($matchedMailsLong[0]['subject'] == $subjectSignalLong) {
 	$criteria_is_met = true;
 	$long_signal = true;
 }
-else if($matchedMailsShort[0]['subject'] == $subjectSignalShort) { 
+
+if($matchedMailsShort[0]['subject'] == $subjectSignalShort) { 
 	echo 'short'; 
 	$criteria_is_met = true;
 	$short_signal = true;

@@ -114,8 +114,7 @@ class EmailImporter
                 } else {
                     $output['html_msg_body'] = imap_fetchbody($this->connection, $email_number, 2);
                 }
-				echo 'set flag ';
-                echo imap_setflag_full($this->connection, $email_number, '\\Seen', ST_UID);
+                imap_setflag_full($this->connection,imap_uid($this->connection,$email_number), '\\Seen',ST_UID);
                 $this->result[$key] = $output;
             }
             return $this->result;

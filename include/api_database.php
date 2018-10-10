@@ -16,17 +16,19 @@ class Database {
 	
 	// connect to database, returns resource 
 	public function database($host, $user, $pw, $dbName) {
-		global $conn; 
-
-		if(is_int(strpos(__FILE__, 'C:\\'))) {	//connect to database remotely (local server)
+		global $conn;
+		
+		if(is_int(strpos(__FILE__, 'C:\\'))) {	//connect to database remotely (local server) 
 		 
-			$conn = mysql_connect($host, $user, $pw) or die(mysql_error().' ('.__LINE__.')');
+			$conn = mysqli_connect($host, $user, $pw) or die(mysqli_error().' ('.__LINE__.')');
 		}
 		else { //connect to database directly (live server)
-			$conn = mysql_connect('localhost', $user, $pw) or die(mysql_error().' ('.__LINE__.')');
+			$conn = mysqli_connect('localhost', $user, $pw) or die(mysqli_error().' ('.__LINE__.')');
 		}
+	
+		mysqli_select_db($dbName);
 
-		mysql_select_db($dbName) or die(mysql_error());
+		$this->db = $conn;
 
 		return $conn;
 	}
