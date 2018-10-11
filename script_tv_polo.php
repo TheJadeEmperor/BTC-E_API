@@ -21,12 +21,13 @@ $newDB->database($dbHost, $dbUser, $dbPW, $dbName);
 
 $debug = 0; 
 
-echo $currencyPair = 'BTC_XRP'; 
+$currencyPair = 'BTC_XRP'; 
 $amount = '10';
 
+echo 'currencyPair: '. $currencyPair.' | amount: '.$amount.''; 
 
 //connect to imap service
-$mails = new EmailImporter( '{imap.googlemail.com:993/imap/ssl}INBOX', $gmail_username, $gmail_password);
+$mails = new EmailImporter( '{host187.hostmonster.com:993/imap/ssl}INBOX', $gmail_username, $gmail_password);
 
  
 
@@ -36,8 +37,8 @@ $subjectSignalShort = "TradingView Alert: Short Signal";
 $matchedMailsLong = $mails->getMailsBySubject($subjectSignalLong);
 $matchedMailsShort = $mails->getMailsBySubject($subjectSignalShort);
 
-print_r($mails->getMailsBySubject($matchedMailsLong));
-
+print_r($matchedMailsLong[0]['subject']);
+print_r($matchedMailsShort[0]['subject']);
 
 
 if($matchedMailsLong[0]['subject'] == $subjectSignalLong) { 
@@ -59,7 +60,7 @@ if($criteria_is_met) {
 	$currentRate = $polo->get_ticker($currencyPair);
 
 	$rate = $currentRate['last'];
-	$output .= 'currencyPair: '. $currencyPair.' | amount: '.$amount.' | rate: '.$rate.' ';
+	echo ' | rate: '.$rate.' '; 
 
 	//check for open pos - poloniex
 	$getMarginPos = $polo->get_margin_position($currencyPair);
@@ -110,7 +111,7 @@ if($criteria_is_met) {
 	$output .= $sendMailBody;		
 	
 	if($debug == 0) {
-		$newDB->sendMail($sendEmailBody); 
+		$newDB->sendMail($sendMailBody); 
 	} 
 
 	echo '<br />'.$output;

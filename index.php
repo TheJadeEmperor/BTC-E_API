@@ -1,12 +1,12 @@
 <?php
 session_start();
 
-
+$err = '';
 if($_POST['login']) {
     if($_POST['username'] == 'SetoKaiba' && $_POST['password'] == 'password') {
         $_SESSION['admin'] = $_POST['username'];
         header('Location: main.php');
-}
+	}
     else {
         $err = '<p><font color="red"><b>Wrong credentials</b></font></p>';
     }
