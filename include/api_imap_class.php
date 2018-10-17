@@ -19,8 +19,8 @@ class EmailImporter
         $this->hostname = $hostname;
         $this->hostname = $username;
         $this->hostname = $password;
-        $this->connection = imap_open($hostname, $username, $password) or die('Cannot connect to Email: ' . imap_last_error());
-		echo 'Connected to Email '.$username;
+        $this->connection = imap_open($hostname, $username, $password) or die('Cannot connect to Email: ' . imap_last_error()).'<br />';
+		echo 'Connected to Email '.$username.'<br />';
     }
 
     /**
