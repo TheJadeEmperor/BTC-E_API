@@ -15,26 +15,26 @@ $newDB = new Database($db);
 $newDB->database($dbHost, $dbUser, $dbPW, $dbName);
 
 
-
 $debug = 0; 
 
-$currencyPair = 'BTC_XRP'; 
-$amount = '100';
+$currencyPair = 'BTC_DASH'; 
+$amount = '0.4';
 //get current price of pair
 $currentRate = $polo->get_ticker($currencyPair);
+$sellRate = $currentRate['highestBid'];
+$buyRate = $currentRate['lowestAsk'];
 
 $rate = $currentRate['last'];
 
-echo 'currencyPair: '. $currencyPair.' | amount: '.$amount.' | rate: '.$rate.' <br />'; 
-
+echo 'currencyPair: '. $currencyPair.' | amount: '.$amount.' | buyRate: '.$buyRate.' | sellRate: '.$sellRate.'<br />'; 
 
 //connect to imap service
 $mails = new EmailImporter( '{host187.hostmonster.com:993/imap/ssl}INBOX', $gmail_username, $gmail_password);
 
 
 //search for these subject lines
-$subjectSignalLong = "TradingView Alert: Long Signal";
-$subjectSignalShort = "TradingView Alert: Short Signal";
+$subjectSignalLong = "TradingView Alert: DASHBTC Long Signal";
+$subjectSignalShort = "TradingView Alert: DASHBTC Short Signal";
 
 $matchedMailsLong = $mails->getMailsBySubject($subjectSignalLong);
 $matchedMailsShort = $mails->getMailsBySubject($subjectSignalShort);
@@ -64,7 +64,7 @@ if($debug == 0) {
 		$orderNumber = $openOrders[0]['orderNumber'];
 	
 	if(isset($orderNumber)) {
-		$moveOrder = $polo->move_order($orderNumber, $rate);
+		$moveOrder = $polo->move_order($orderNumber, $sellRate);
 		echo 'moveOrder ';
 		var_dump($moveOrder);
 	}
@@ -95,22 +95,24 @@ if($criteria_is_met) {
 
 	if($short_signal) { //open margin pos - short
 		if($debug == 0) {
-			$shortPos = $polo->margin_sell($currencyPair, $rate, $amount, 1);
-			echo $typePos = 'shortPos'; 
+			$shortPos = $polo->margin_sell($currencyPair, $sellRate, $amount, 1);	
 			var_dump($shortPos); 
 		}
+		echo $typePos = 'shortPos'; 
+		$rate = $sellRate;
 	}
 	
 	if ($long_signal) { //open margin pos - long
-		if($debug == 0) {
-			$longPos = $polo->margin_buy($currencyPair, $rate, $amount, 1);
-			echo $typePos = 'longPos';
+		if($debug == 0) { 
+			$longPos = $polo->margin_buy($currencyPair, $buyRate, $amount, 1);
 			var_dump($longPos);
 		}
+		echo $typePos = 'longPos';
+		$rate = $buyRate;
 	}
 		
 	//send text message
-	$sendMailBody = 'Opened '.$typePos.' on Poloniex for '.$currencyPair.' | Amount: '.$amount.'';
+	$sendMailBody = 'Opened '.$typePos.' for '.$amount.' '.$currencyPair.' on Poloniex for '.$rate;
 
 	
 	if($debug == 0) {

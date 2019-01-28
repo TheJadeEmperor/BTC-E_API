@@ -15,18 +15,20 @@ $newDB = new Database($db);
 $newDB->database($dbHost, $dbUser, $dbPW, $dbName);
 
 
-$debug = 0; 
+$debug = 1; 
 
 $currencyPair = 'USDT_BTC'; 
-$amount = '0.01';
+$amount = '0.009';
 $orderType = 'openOrder';
 
 //get current price of pair
 $currentRate = $polo->get_ticker($currencyPair);
 
-$rate = $currentRate['last'];
+$sellRate = $currentRate['highestBid'];
+$buyRate = $currentRate['lowestAsk'];
 
-echo 'currencyPair: '. $currencyPair.' | amount: '.$amount.' | rate: '.$rate.' <br />'; 
+
+echo 'currencyPair: '. $currencyPair.' | amount: '.$amount.' | buyRate: '.$buyRate.' | sellRate: '.$sellRate.'<br />'; 
 
 
 //connect to imap service
@@ -68,12 +70,11 @@ if($debug == 0) {
 		$orderType = $order['orderType'];
 		
 		if($orderType == 'sell' || $orderType == 'buy') {
-			$moveOrder = $polo->move_order($orderNumber, $rate);
+			$moveOrder = $polo->move_order($orderNumber, $buyRate);
 			echo 'moveOrder ';
 			var_dump($moveOrder);
 		}
-	}
-	 
+	}	 
 }
 
 
@@ -81,27 +82,31 @@ if($criteria_is_met) {
 
 	if($short_signal) { //open pos - short
 		if($debug == 0) {
-			$shortPos = $polo->sell($currencyPair, $rate, $amount, $orderType);
-			echo $typePos = 'Sell '; 
+			$shortPos = $polo->sell($currencyPair, $sellRate, $amount, $orderType);
+			
 			var_dump($shortPos); 
 		}
+		echo $typePos = 'Sell '; 
+		$rate = $sellRate;
 	}
 	
 	if ($long_signal) { //open pos - long
 		if($debug == 0) {
-			$longPos = $polo->buy($currencyPair, $rate, $amount, $orderType);
-			echo $typePos = 'Buy ';
+			$longPos = $polo->buy($currencyPair, $buyRate, $amount, $orderType);
+			
 			var_dump($longPos);
 		}
+		echo $typePos = 'Buy ';
+		$rate = $buyRate;
 	}
 		
 	//send text message
-	$sendMailBody = 'Action: '.$typePos.' '.$currencyPair.' on Poloniex for Amount: '.$amount.' ';
+	$sendMailBody = 'Action: '.$typePos.' '.$amount.' of '.$currencyPair.' on Poloniex for '.$rate;
 
 	
 	if($debug == 0) {
 		$newDB->sendMail($sendMailBody); 
-	} 
+	}  
 
 	echo '<br />'.$sendMailBody;
 }
