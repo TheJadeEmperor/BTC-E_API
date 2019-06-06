@@ -174,16 +174,49 @@ include('scripts.html');
 				<table>
 					<tr valign="top">
 						<td>
-							<a href="http://coinmarketcap.com/currencies/views/all" target="_blank">Coin Market Cap</a>
+							<a href="https://coinmarketcap.com/" target="_blank">Coin Market Cap</a> - 
+							
+							
+							<a href="https://coinmarketcap.com/" target="_blank">7 day price</a> - 
+							
+							<a href="http://coinmarketcap.com/currencies/views/all" target="_blank">1h 24h 7d</a>
+							
 							<br /><br />
 							
-							<a href="https://www.tradingview.com/chart/BTCUSD" target="_blank">TradingView </a> - <a href="https://www.tradingview.com/chart/BTCUSD" target="_blank">BTC/USD</a> - <a href="https://www.tradingview.com/chart/ETHUSD" target="_blank">ETH/USD</a>
+							<a href="https://coinfarm.online/index.asp" target="_blank">Coinfarm Margin Trading</a>
 							
-							<br /><br />
-							
-							<a href="http://bitcoinwisdom.com/markets/bitfinex/btcusd" target="_blank">Bitcoin Wisdom</a> - <a href="https://bitcoinwisdom.com/markets/bitstamp/btcusd" target="_blank">Bitstamp</a> - 
-							<a href="http://bitcoinwisdom.com/markets/bitfinex/btcusd" target="_blank">Bitfinex</a>
 						
+							<br /><br /><br />
+							
+							<h3>Links to TV</h3>
+							
+							<a href="https://www.tradingview.com/chart/KUndzcja/" target="_blank">XBTUSD</a> -
+							<a href="https://www.tradingview.com/chart/TfA11XY2/" target="_blank">ETHUSD</a> - 
+							<a href="https://www.tradingview.com/chart/gghdcAkO/" target="_blank">XRP M19</a> - 
+							
+							<a href="https://www.tradingview.com/chart/HRbO8WTw/" target="_blank">LTC M19</a> - 
+						 
+							<a href="https://www.tradingview.com/chart/cva6RNPy/" target="_blank">XXX BTC</a>
+
+							<br /><br />
+							
+							<a href="https://www.tradingview.com/chart/BTCUSD" target="_blank">TradingView Analysis</a> - 
+							
+							<a href="https://www.tradingview.com/chart/BTCUSD" target="_blank">BTC/USD</a> - 
+							
+							<a href="https://www.tradingview.com/chart/ETHUSD" target="_blank">ETH/USD</a>
+							
+							
+							<br /><br />
+							
+							
+							<a href="https://www.tradingview.com/chart/pcgYAYg9/" target="_blank">Gold</a> - 
+							
+							<a href="https://www.tradingview.com/chart/F1C8WVYs/" target="_blank">Platinum</a> - 
+							
+							<a href="https://www.tradingview.com/chart/vqNVwtnT/" target="_blank">Palladium</a>
+							
+							
 							<br /><br /><br />
 					</tr>
 				</table>
@@ -201,20 +234,16 @@ include('scripts.html');
 							
 							<br /><br />
 							
-							<a href="https://poloniex.com/login" target="_blank">Polo Login</a> - <a href="https://bittrex.com/account/login" target="_blank">Bittrex Login</a>
+							<a href="https://poloniex.com/login" target="_blank">Polo Login</a> - 
 							
-							<br /><br />
+							<a href="https://bittrex.com/account/login" target="_blank">Bittrex Login</a> - 
 							
-							<a href="https://cex.io/trade/buysell" target="_blank">Cex.io Login</a> - 
-							<a href="https://bittrex.com/account/login" target="_blank">Bitstamp Login</a> -
+							
 							<a href="https://www.binance.com/login.html" target="_blank">Binance Login</a> 
 							
 							<br /><br />
 							
-							<a href="https://cryptotrader.org/live" target="_blank">Live Trading</a> - 
-							<a href="https://cryptotrader.org/strategies/Rdp9H4iRQA7hkvfMt" target="_blank">Trendatron Premium</a> - 
-							<a href="https://cryptotrader.org/strategies/9z5odbyweFLYeL9gc" target="_blank">Zebra ETH</a>
-							
+							 
 							<p>&nbsp;</p>						
 						</td>				   
 					</tr>
@@ -226,19 +255,22 @@ include('scripts.html');
 
 	<div class="row">
 	
-		<div class="col-md-6">
+		<div class="col-md-12">
+		<center>
+		<img src="https://alternative.me/crypto/fear-and-greed-index.png" alt="Latest Crypto Fear & Greed Index" width="500px" /></center>
+		</div>
+	
+	
+		<div class="col-md-12">
 			<div id="balanceTable"></div>
 		</div>
 
-		<div class="col-md-6">
-			<div id="poloBalance2"></div>
-		</div>
-
+		 
 		<div class="col-md-1"></div>
 		
-		<div class="col-md-9">
-			<div id="btrexBalance"></div>
+		<div class="col-md-9"> 
 		</div>
+		
 		
 		<div class="col-md-1"></div>
 
@@ -248,9 +280,7 @@ include('scripts.html');
 		</div>
 		
 		<br />
-		<div class="col-md-9">
-			<div id="coinValue"></div>
-		</div>
+		 
 
 	</div>
 </div><!--container-->
