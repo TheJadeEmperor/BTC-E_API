@@ -140,28 +140,23 @@ $tradeActionDropDown = '<select name="trade_action">'.$actionDropDown.'</option>
 	===================
 	*/
 	$polo_btc_usd_ticker = $polo1->get_ticker('USDT_BTC');
-
 	$polo_eth_usd_ticker = $polo1->get_ticker('USDT_ETH');
-
 	$polo_ltc_usd_ticker = $polo1->get_ticker('USDT_LTC');
 
 	$polo_dash_usd_ticker = $polo1->get_ticker('USDT_DASH');
 	
-	$polo_bch_usd_ticker = $polo1->get_ticker('USDT_BCH');
+	$polo_bchabc_usd_ticker = $polo1->get_ticker('BTC_BCHABC');
 	
 	//Raw prices	
 	$polo_btc_usd_raw = $polo_btc_usd_ticker['last'];
-	
 	$polo_eth_usd_raw = $polo_eth_usd_ticker['last'];
-	
 	$polo_ltc_usd_raw = $polo_ltc_usd_ticker['last'];
 
 	$polo_dash_usd_raw = $polo_dash_usd_ticker['last'];
-	
-	$polo_bch_usd_raw = $polo_bch_usd_ticker['last'];
+
+	$polo_bchabc_usd_raw = $polo_bchabc_usd_ticker['last'];
 
 	//format polo currencies
-
 	$polo_btc_usd = number_format($polo_btc_usd_raw, 0);
 
 	$polo_eth_usd = number_format($polo_eth_usd_raw, 2);
@@ -169,21 +164,22 @@ $tradeActionDropDown = '<select name="trade_action">'.$actionDropDown.'</option>
 	$polo_ltc_usd = number_format($polo_ltc_usd_raw, 2);
 
 	$polo_dash_usd = number_format($polo_dash_usd_raw, 2);
+	
+	$polo_bchabc_usd = $polo_bchabc_usd_raw; //number_format($polo_bsv_usd_raw, 2);
 
-	$polo_bch_usd = number_format($polo_bch_usd_raw, 2);
 	
 	//format polo percentChanges
 	$btc_percent_raw = $polo_btc_usd_ticker['percentChange'] * 100;
 	$eth_percent_raw = $polo_eth_usd_ticker['percentChange'] * 100;
 	$ltc_percent_raw = $polo_ltc_usd_ticker['percentChange'] * 100;
 	$dash_percent_raw = $polo_dash_usd_ticker['percentChange'] * 100;
-	$bch_percent_raw = $polo_bch_usd_ticker['percentChange'] * 100;
-
+	$bchabc_percent_raw = $polo_bchabc_usd_ticker['percentChange'] * 100;
+	
 	$btc_percent_display = $tableData->format_percent_display($btc_percent_raw);
 	$eth_percent_display = $tableData->format_percent_display($eth_percent_raw);
 	$ltc_percent_display = $tableData->format_percent_display($ltc_percent_raw);
 	$dash_percent_display = $tableData->format_percent_display($dash_percent_raw);
-	$bch_percent_display = $tableData->format_percent_display($bch_percent_raw);
+	$bchabc_percent_display = $tableData->format_percent_display($bchabc_percent_raw);
 	
 	/*
 	===================
@@ -195,15 +191,17 @@ $tradeActionDropDown = '<select name="trade_action">'.$actionDropDown.'</option>
 	$bittrex_eth_usd_raw = $bittrex->getTicker('USDT-ETH')->Last;
 	$bittrex_ltc_usd_raw = $bittrex->getTicker('USDT-LTC')->Last;
 	$bittrex_dash_usd_raw = $bittrex->getTicker('USDT-DASH')->Last;
-	$bittrex_bcc_usd_raw = $bittrex->getTicker('USDT-BCC')->Last;
+	$bittrex_bchabc_usd_raw = $bittrex->getTicker('USDT-BCH')->Last;
+	
 	
 	
 	$bittrex_btc_usd = number_format($bittrex_btc_usd_raw, 2);
 	$bittrex_eth_usd = number_format($bittrex_eth_usd_raw, 2);
 	$bittrex_ltc_usd = number_format($bittrex_ltc_usd_raw, 2);
 	$bittrex_dash_usd = number_format($bittrex_dash_usd_raw, 2);
-	$bittrex_bcc_usd = number_format($bittrex_bcc_usd_raw, 2);
-		
+	$bittrex_bchabc_usd = number_format($bittrex_bchabc_usd_raw, 2);
+	
+	
 	/*
 	===================
 	Coinbase prices
@@ -331,7 +329,7 @@ if($_GET['page'] == 'priceTable'){
 		</thead>
 		<tr>
 			<td><a href="https://www.tradingview.com/chart/BTCUSD">BTC/USDT</a></td><td><?=$btc_percent_display?></td>
-			<td>$<?=$polo_btc_usd ?></td>
+			<td> $<?=$polo_btc_usd ?></td>
 			<td> $<?=$bittrex_btc_usd?> </td>
 			<td> $<?=$coinbase_btc_usd ?></td>
 		</tr>
@@ -348,9 +346,9 @@ if($_GET['page'] == 'priceTable'){
 			<td> $<?=$coinbase_ltc_usd ?></td>
 		</tr>		
 		<tr>
-			<td><a href="https://www.tradingview.com/chart/BCHUSD">BCH/USDT</a></td><td> <?=$bch_percent_display?></td>
-			<td> $<?=$polo_bch_usd ?> </td>
-			<td> $<?=$bittrex_bcc_usd?> </td>
+			<td><a href="https://www.tradingview.com/chart/BCHUSD">BCH/USDT</a></td><td> <?=$bchabc_percent_display?></td>
+			<td> <?=$polo_bchabc_usd ?> </td>
+			<td> $<?=$bittrex_bchabc_usd?> </td>
 			<td> $<?=$coinbase_bch_usd?> </td>
 		</tr>		
 		<tr>
@@ -531,16 +529,9 @@ else if($_GET['page'] == 'cronAutoTrade'){
 }
 else if($_GET['page'] == 'balanceTable') {
 	
-	$tableTitle = 'Polo 1 Balance - ZEBRA - ETH/USD - 1 hr';
+	$tableTitle = 'Polo Balance';
 	
 	showPoloBalanceTable($polo1, $tableTitle);
-
-}
-else if($_GET['page'] == 'poloBalance2') {
-
-	$tableTitle = 'Polo 2 Balance - Trendatron P - DASH/USD - 1 hr';
-
-	showPoloBalanceTable($polo2, $tableTitle);
 
 }
 else if($_GET['page'] == 'btrexBalance') {
@@ -689,8 +680,6 @@ else if($_GET['page'] == 'coinValue') {
 </script>
 	
 <form id="coinValue" title="Check Coin Values">
-
-
 
 	<input type="hidden" id="priceBTC" value="<?=$polo_btc_usd_raw?>">
 	<input type="hidden" id="priceETH" value="<?=$polo_eth_usd_raw?>">
