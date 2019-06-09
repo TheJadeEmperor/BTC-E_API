@@ -143,16 +143,16 @@ $tradeActionDropDown = '<select name="trade_action">'.$actionDropDown.'</option>
 	$polo_eth_usd_ticker = $polo1->get_ticker('USDT_ETH');
 	$polo_ltc_usd_ticker = $polo1->get_ticker('USDT_LTC');
 
-	$polo_dash_usd_ticker = $polo1->get_ticker('USDT_DASH');
+	$polo_xrp_usd_ticker = $polo1->get_ticker('USDT_XRP');
 	
 	$polo_bchabc_usd_ticker = $polo1->get_ticker('BTC_BCHABC');
 	
-	//Raw prices	
+	//Raw prices
 	$polo_btc_usd_raw = $polo_btc_usd_ticker['last'];
 	$polo_eth_usd_raw = $polo_eth_usd_ticker['last'];
 	$polo_ltc_usd_raw = $polo_ltc_usd_ticker['last'];
 
-	$polo_dash_usd_raw = $polo_dash_usd_ticker['last'];
+	$polo_xrp_usd_raw = $polo_xrp_usd_ticker['last'];
 
 	$polo_bchabc_usd_raw = $polo_bchabc_usd_ticker['last'];
 
@@ -163,7 +163,7 @@ $tradeActionDropDown = '<select name="trade_action">'.$actionDropDown.'</option>
 
 	$polo_ltc_usd = number_format($polo_ltc_usd_raw, 2);
 
-	$polo_dash_usd = number_format($polo_dash_usd_raw, 2);
+	$polo_xrp_usd = number_format($polo_xrp_usd_raw, 2);
 	
 	$polo_bchabc_usd = $polo_bchabc_usd_raw; //number_format($polo_bsv_usd_raw, 2);
 
@@ -172,13 +172,13 @@ $tradeActionDropDown = '<select name="trade_action">'.$actionDropDown.'</option>
 	$btc_percent_raw = $polo_btc_usd_ticker['percentChange'] * 100;
 	$eth_percent_raw = $polo_eth_usd_ticker['percentChange'] * 100;
 	$ltc_percent_raw = $polo_ltc_usd_ticker['percentChange'] * 100;
-	$dash_percent_raw = $polo_dash_usd_ticker['percentChange'] * 100;
+	$xrp_percent_raw = $polo_xrp_usd_ticker['percentChange'] * 100;
 	$bchabc_percent_raw = $polo_bchabc_usd_ticker['percentChange'] * 100;
 	
 	$btc_percent_display = $tableData->format_percent_display($btc_percent_raw);
 	$eth_percent_display = $tableData->format_percent_display($eth_percent_raw);
 	$ltc_percent_display = $tableData->format_percent_display($ltc_percent_raw);
-	$dash_percent_display = $tableData->format_percent_display($dash_percent_raw);
+	$xrp_percent_display = $tableData->format_percent_display($xrp_percent_raw);
 	$bchabc_percent_display = $tableData->format_percent_display($bchabc_percent_raw);
 	
 	/*
@@ -190,7 +190,7 @@ $tradeActionDropDown = '<select name="trade_action">'.$actionDropDown.'</option>
 	$bittrex_btc_usd_raw = $bittrex->getTicker('USDT-BTC')->Last;
 	$bittrex_eth_usd_raw = $bittrex->getTicker('USDT-ETH')->Last;
 	$bittrex_ltc_usd_raw = $bittrex->getTicker('USDT-LTC')->Last;
-	$bittrex_dash_usd_raw = $bittrex->getTicker('USDT-DASH')->Last;
+	$bittrex_xrp_usd_raw = $bittrex->getTicker('USDT-XRP')->Last;
 	$bittrex_bchabc_usd_raw = $bittrex->getTicker('USDT-BCH')->Last;
 	
 	
@@ -198,7 +198,7 @@ $tradeActionDropDown = '<select name="trade_action">'.$actionDropDown.'</option>
 	$bittrex_btc_usd = number_format($bittrex_btc_usd_raw, 2);
 	$bittrex_eth_usd = number_format($bittrex_eth_usd_raw, 2);
 	$bittrex_ltc_usd = number_format($bittrex_ltc_usd_raw, 2);
-	$bittrex_dash_usd = number_format($bittrex_dash_usd_raw, 2);
+	$bittrex_xrp_usd = number_format($bittrex_xrp_usd_raw, 2);
 	$bittrex_bchabc_usd = number_format($bittrex_bchabc_usd_raw, 2);
 	
 	
@@ -211,6 +211,7 @@ $tradeActionDropDown = '<select name="trade_action">'.$actionDropDown.'</option>
 	$coinbase_eth_usd = $tableData->coinbasePrice('eth-usd');
 	$coinbase_ltc_usd = $tableData->coinbasePrice('ltc-usd');
 	$coinbase_bch_usd = $tableData->coinbasePrice('bch-usd');
+	$coinbase_xrp_usd = $tableData->coinbasePrice('xrp-usd');
 	
 function showPoloBalanceTable($polo, $tableTitle) {
 	?>
@@ -350,12 +351,12 @@ if($_GET['page'] == 'priceTable'){
 			<td> <?=$polo_bchabc_usd ?> </td>
 			<td> $<?=$bittrex_bchabc_usd?> </td>
 			<td> $<?=$coinbase_bch_usd?> </td>
-		</tr>		
+		</tr>
 		<tr>
-			<td><a href="https://www.tradingview.com/chart/DASHUSD">DASH/USDT</a></td><td> <?=$dash_percent_display?></td>
-			<td> $<?=$polo_dash_usd ?> </td>
-			<td> $<?=$bittrex_dash_usd?> </td>
-			<td> :*( </td>
+			<td><a href="https://www.tradingview.com/chart/DASHUSD">DASH/USDT</a></td><td> <?=$xrp_percent_display?></td>
+			<td> $<?=$polo_xrp_usd ?> </td>
+			<td> $<?=$bittrex_xrp_usd?> </td>
+			<td> $<?=$coinbase_xrp_usd?> </td>
 		</tr>
 		
 	</table>
