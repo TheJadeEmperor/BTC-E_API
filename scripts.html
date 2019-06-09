@@ -281,13 +281,24 @@ $loadNotes = 'load.php?page=notes&accessKey='.$accessKey;
 	}
  
 	function reloadBalanceTable(){
+	
 		$('#balanceTable').load('<?=$loadBalanceTable?>');		
+		
+		$('#balanceTable').html('<img src="include/images/load.gif" id="loading" />')
+
+		$(window).bind('load', function() {
+            $('#balanceTable #loading').hide();
+            $('#balanceTable').load('<?=$loadBalanceTable?>');		
+            $('#balanceTable').fadeIn('slow');
+        });
+	
+		//$('#balanceTable').load('<?=$loadBalanceTable?>');		
 	}
 	
-	function reloadPoloBalance2(){
+/*	function reloadPoloBalance2(){
 		$('#poloBalance2').load('<?=$loadPoloBalance2?>');		
 	}
-	
+*/	
 	function reloadBtrexBalance(){
 		$('#btrexBalance').load('<?=$loadBtrexBalance?>');		
 	}
@@ -343,11 +354,31 @@ $loadNotes = 'load.php?page=notes&accessKey='.$accessKey;
 	}
 	
 	function reloadTradesTable() {
-		$('#btcTrades').load('<?=$loadbtcTrades?>');	
+		$('#btcTrades').load('<?=$loadbtcTrades?>');
+		
+		$('#btcTrades').html('<img src="include/images/load.gif" id="loading" />')
+		
+		$(window).bind('load', function() {
+			$('#btcTrades #loading').hide();
+			$('#btcTrades').load('<?=$loadbtcTrades?>');		
+			$('#btcTrades').fadeIn('slow');
+		});
 	}
 		
 	function cronAutoTrade() {
-		$('#cronAutoTrade').load('<?=$loadCronAutoTrade?>');		
+	
+		$('#cronAutoTrade').load('<?=$loadCronAutoTrade?>');
+		
+		$('#cronAutoTrade').html('<img src="include/images/load.gif" id="loading" />')
+		
+		$(window).bind('load', function() {
+			$('#cronAutoTrade #loading').hide();
+			$('#cronAutoTrade').load('<?=$loadCronAutoTrade?>');		
+			$('#cronAutoTrade').fadeIn('slow');
+		});
+	
+	
+		//$('#cronAutoTrade').load('<?=$loadCronAutoTrade?>');		
 	}
 	
 	function reloadCoinValue() {
@@ -464,19 +495,19 @@ $loadNotes = 'load.php?page=notes&accessKey='.$accessKey;
 		
 		reloadPriceTable();
 		
-		reloadBalanceTable();
-
-		reloadPoloBalance2();
-		
-		reloadBtrexBalance();
-		
 		reloadAlertsTable();
 		
 		reloadTradesTable();
+
+		//reloadPoloBalance2();
+		reloadBalanceTable();
+		
+		reloadBtrexBalance();
+		
+		cronAutoTrade();	
 		
 		reloadCoinValue();
 
-		cronAutoTrade();	
 
     });
 </script>

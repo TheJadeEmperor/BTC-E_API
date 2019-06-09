@@ -90,7 +90,7 @@ $alertDeleteDiv = '<button id="deleteAlert" class="btn btn-danger">Delete</butto
 	<!-- JQueryUI -->
 	<link rel="stylesheet" href="//code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css" />
 
-	<script src="http://code.jquery.com/jquery-latest.min.js" type='text/javascript' /></script>
+	<script src="//code.jquery.com/jquery-latest.min.js" type='text/javascript' /></script>
 
 	<script src="include/jquery-ui/ui/jquery-ui.js"></script>
 	
