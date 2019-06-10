@@ -347,13 +347,13 @@ if($_GET['page'] == 'priceTable'){
 			<td> $<?=$coinbase_ltc_usd ?></td>
 		</tr>		
 		<tr>
-			<td><a href="https://www.tradingview.com/chart/BCHUSD">BCH/USDT</a></td><td> <?=$bchabc_percent_display?></td>
+			<td><a href="https://www.tradingview.com/chart/BCHUSD">BCH/BTC or BCH/USDT</a></td><td> <?=$bchabc_percent_display?></td>
 			<td> <?=$polo_bchabc_usd ?> </td>
 			<td> $<?=$bittrex_bchabc_usd?> </td>
 			<td> $<?=$coinbase_bch_usd?> </td>
 		</tr>
 		<tr>
-			<td><a href="https://www.tradingview.com/chart/DASHUSD">DASH/USDT</a></td><td> <?=$xrp_percent_display?></td>
+			<td><a href="https://www.tradingview.com/chart/DASHUSD">XRP/USDT</a></td><td> <?=$xrp_percent_display?></td>
 			<td> $<?=$polo_xrp_usd ?> </td>
 			<td> $<?=$bittrex_xrp_usd?> </td>
 			<td> $<?=$coinbase_xrp_usd?> </td>
