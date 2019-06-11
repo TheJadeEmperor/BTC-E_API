@@ -138,9 +138,9 @@ include('scripts.html');
 	
 	<button class = "coinValue btn btn-success">CoinValue</button>
 	
-	<a href="cronSendTrades.php?debug=1" target="_BLANK"><input type="button" value="cronSendTrades"></a>
+	<a href="script_send_trades.php?debug=1" target="_BLANK"><input type="button" value="cronSendTrades"></a>
 	
-	<a href="cronSendAlerts.php?debug=1" target="_BLANK"><input type="button" value="cronSendAlerts"></a>
+	<a href="script_send_alerts.php?debug=1" target="_BLANK"><input type="button" value="cronSendAlerts"></a>
 	
 	<a href="buy_sell_polo.php?accessKey=<?=$accessKey?>" target="_BLANK"><input type="button" value="Trade Polo"></a>
 	
