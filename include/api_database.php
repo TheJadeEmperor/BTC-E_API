@@ -76,11 +76,31 @@ class Database {
 		return $resultT;
 	}
 	
+	//future: delete this function
 	public function alertsTable() {
 		
 		$queryA = 'SELECT * FROM '.$this->context['alertsTable'].' ORDER BY currency, on_condition';
         
 		$resultA = $this->db->get_results($queryA);
+		
+		return $resultA;
+	}
+	
+	
+	public function getAlerts ($debug) {
+		
+		$queryA = 'SELECT * FROM '.$this->context['alertsTable'].' ORDER BY currency, on_condition';
+        
+		$this->db->query($queryA);
+		
+		$resultA = $this->db->get();
+
+		if($debug == 1) {
+			echo '<br />'.$queryA.'<br />'; 
+			print "<pre>";
+			print_r($resultA);
+			print "</pre>";
+		}
 		
 		return $resultA;
 	}
