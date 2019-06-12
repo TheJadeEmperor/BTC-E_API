@@ -2,46 +2,37 @@
 $dir = 'include/';
 include($dir.'api_database.php');
 include($dir.'api_poloniex.php');
+include($dir.'api_bittrex.php');
 include($dir.'config.php');
 include($dir.'mysqli.php');
 
 global $db, $currencyDB, $currencyPolo;
 
-echo '1.';
 $debug = $_GET['debug'];
 
-
-
-echo '2.';
-
-$config = array();
-$config['host'] = $dbHost;
-$config['user'] = $dbUser;
-$config['pass'] = $dbPW;
-$config['table'] = $dbName;
+$config = array(
+	'host' => $dbHost,
+	'user' => $dbUser,
+	'pass' => $dbPW,
+	'table' => $dbName,
+);
 
 
 //mysqli database
 $db = new DB($config);
 
-echo '3.';
+
 //connect to the BTC Database
 $tableData = new Database($db);
 
-
+//get rows from alerts table
 $condTable = $tableData->getAlerts($debug);
  
 //requires the extension php_openssl to work
-$polo = new poloniex(); 
-
-// Run a Query:
-//$db->query('SELECT * FROM btc_alerts');
-// Get an array of items:
-//$condTable = $db->get();
+$polo = new poloniex($polo_api_key, $polo_api_secret);
 
 foreach($condTable as $arr => $cond) {
-	 
-	
+	 	
 	$id = $cond['id'];
 	$currencyDB = $cond['currency'];
 	$onCondition = $cond['on_condition'];
@@ -51,7 +42,6 @@ foreach($condTable as $arr => $cond) {
 	
 	//format the currency for polo
 	$pieces =  explode('/', $currencyDB);
-	
 	$currencyPolo = $pieces[1].'_'.$pieces[0];
 	
 	//get the live price from Polo
