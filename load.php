@@ -24,7 +24,7 @@ $db = new ezSQL_mysql($dbUser, $dbPW, $dbName, $dbHost);
 
 //requires the extension php_openssl to work
 $polo1 = $polo = new poloniex($polo_api_key, $polo_api_secret);
-$polo2 = new poloniex($polo_api_key_2, $polo_api_secret_2);
+//$polo2 = new poloniex($polo_api_key_2, $polo_api_secret_2);
 
 $bittrex = new Client ($bittrex_api_key, $bittrex_api_secret);
 
@@ -213,6 +213,7 @@ $tradeActionDropDown = '<select name="trade_action">'.$actionDropDown.'</option>
 	$coinbase_bch_usd = $tableData->coinbasePrice('bch-usd');
 	$coinbase_xrp_usd = $tableData->coinbasePrice('xrp-usd');
 	
+	
 function showPoloBalanceTable($polo, $tableTitle) {
 	?>
 	<table class="table">
@@ -262,7 +263,7 @@ function showPoloBalanceTable($polo, $tableTitle) {
 				$btcValue = $lastFormat * $currencyBalance;
 				$usdtValue = $btcValue * $btcPrice;
 			}
-						
+			
 			$percentChange = $tickerArray[$currencyPair]['percentChange'];
 			$percentChangeFormat = $percentChange * 100;
 			$percentChangeFormat = number_format($percentChangeFormat, 2);
@@ -289,7 +290,6 @@ function showPoloBalanceTable($polo, $tableTitle) {
 				<td style="color: white">'.$usdtValueFormat.'</td>
 				</tr>';
 			}
-			
 		}
 	}
 	echo $balanceTable;
@@ -304,6 +304,7 @@ function showPoloBalanceTable($polo, $tableTitle) {
 	
 	echo '</tbody>
 	</table>';
+
 }	
 	
 	

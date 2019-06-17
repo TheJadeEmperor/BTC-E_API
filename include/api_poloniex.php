@@ -146,50 +146,6 @@
 			);
 		}
 		
-		//pair = BTC_XXX
-		public function margin_buy($pair, $rate, $amount) {
-			return $this->query( 
-				array(
-					'command' => 'marginBuy',	
-					'currencyPair' => strtoupper($pair),
-					'rate' => $rate,
-					'amount' => $amount,
-				)
-			);
-		}
-		
-		public function margin_sell($pair, $rate, $amount) {
-			return $this->query( 
-				array(
-					'command' => 'marginSell',	
-					'currencyPair' => strtoupper($pair),
-					'rate' => $rate,
-					'amount' => $amount,
-				)
-			);
-		}
-		
-		
-		
-		public function get_margin_position($currencyPair) {
-			return $this->query(
-				array(
-					'command' => 'getMarginPosition',	
-					'currencyPair' => strtoupper($currencyPair)
-				)
-			);
-		}
-		
-		public function close_margin_position($currencyPair, $order_number) {
-			return $this->query( 
-				array(
-					'command' => 'closeMarginPosition',	
-					'currencyPair' => strtoupper($currencyPair),
-					'orderNumber' => $order_number
-				)
-			);
-		}
-		
 		public function move_order($orderNumber, $rate) {
 			return $this->query( 
 				array(

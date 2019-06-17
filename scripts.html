@@ -295,10 +295,7 @@ $loadNotes = 'load.php?page=notes&accessKey='.$accessKey;
 		//$('#balanceTable').load('<?=$loadBalanceTable?>');		
 	}
 	
-/*	function reloadPoloBalance2(){
-		$('#poloBalance2').load('<?=$loadPoloBalance2?>');		
-	}
-*/	
+	
 	function reloadBtrexBalance(){
 		$('#btrexBalance').load('<?=$loadBtrexBalance?>');		
 	}
@@ -376,9 +373,6 @@ $loadNotes = 'load.php?page=notes&accessKey='.$accessKey;
 			$('#cronAutoTrade').load('<?=$loadCronAutoTrade?>');		
 			$('#cronAutoTrade').fadeIn('slow');
 		});
-	
-	
-		//$('#cronAutoTrade').load('<?=$loadCronAutoTrade?>');		
 	}
 	
 	function reloadCoinValue() {
@@ -472,6 +466,7 @@ $loadNotes = 'load.php?page=notes&accessKey='.$accessKey;
 			})
 		});
 		
+		
 		$.fn.counter = function (num) {
 			var i = 1;
 			self = $(this).html(i);	//console.log(self);
@@ -484,6 +479,7 @@ $loadNotes = 'load.php?page=notes&accessKey='.$accessKey;
 					//clearInterval(interval);
 					i = 0;
 					reloadTable('#priceTable');
+					cronAutoTrade();
 				} 
 			}, 1000);
 		};

@@ -260,23 +260,22 @@ include('scripts.html');
 		<img src="https://alternative.me/crypto/fear-and-greed-index.png" alt="Latest Crypto Fear & Greed Index" width="500px" /></center>
 		</div>
 	
-	
+		<br />
+		<div class="col">
+			<div id="cronAutoTrade"></div>
+		</div>
+		
 		<div class="col-md-12">
 			<div id="balanceTable"></div>
 		</div>
 
-		 
+		
+		<br />
 		<div class="col-md-12">
 			<div id="btrexBalance"> </div>
 		</div>
 		
 		
-		<div class="col">
-			<div id="cronAutoTrade"></div>
-		</div>
-		
-		<br />
-		 
 
 	</div>
 </div><!--container-->
