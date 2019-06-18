@@ -13,6 +13,24 @@ date_default_timezone_set('America/New_York');
 
 
 
+include('include/api_bitmex.php');
+
+/*
+echo 'bitmex';
+	$bitmex = new bitmex($bitmex_api_key, $bitmex_api_secret);
+	
+	print_r($bitmex);
+	
+	$r = $bitmex->getOpenPositions();
+	
+	print_r($r);
+	
+	$s = $bitmex->getPositions();
+	
+	print_r($s);
+
+*/
+
 $conditionDropDown = '<select name="on_condition"><option value=">"> > </option><option value="<"> < </option></select>';
 
 $tradeConditionDropDown = '<select name="trade_condition"><option value=">"> > </option><option value="<"> < </option></select>';
@@ -274,7 +292,11 @@ include('scripts.html');
 		</div>
 		
 		
-
+		<br />
+		<div class="col-md-12">
+			<div id="bitmexPositions"> </div>
+		</div>
+		
 	</div>
 </div><!--container-->
   
