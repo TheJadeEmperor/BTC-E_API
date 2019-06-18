@@ -3,6 +3,8 @@ $dir = 'include/';
 include($dir.'api_database.php');
 include($dir.'api_poloniex.php');
 include($dir.'config.php');
+include($dir.'mysqli.php');
+
 include($dir.'ez_sql_core.php');
 include($dir.'ez_sql_mysql.php');
 
@@ -15,19 +17,36 @@ $currentTime = date('Y-m-d H:i:s', time());
 $debug = $_GET['debug'];
 
 //database connection
-$db = new ezSQL_mysql($dbUser, $dbPW, $dbName, $dbHost);
+//$db = new ezSQL_mysql($dbUser, $dbPW, $dbName, $dbHost);
+
+
+
+$debug = $_GET['debug'];
+
+$config = array(
+	'host' => $dbHost,
+	'user' => $dbUser,
+	'pass' => $dbPW,
+	'table' => $dbName,
+);
+
+
+//mysqli database
+$db = new DB($config);
+
 
 //connect to the BTC Database
 $tableData = new Database($db);
 
 //get all records from the alerts table
-$tradesTable = $tableData->tradesTable();
+$tradesTable = $tableData->getTrades();
 
+//print_r($tradesTable);
 
 //connect to Poloniex
 $polo = new poloniex($polo_api_key, $polo_api_secret);
 
- //account balances
+//account balances
 $balanceArray = $polo->get_balances();
 
 
@@ -42,18 +61,20 @@ else {
 $output = 'Current Time: '.$currentTime.' ('.time().')'.$newline.$newline;	
 
 
-foreach($tradesTable as $trade) {
+foreach($tradesTable as $num => $trade) {
+	
+	//print_r($trade); 
 		
-	$trade_id = $trade->id;
-	$trade_exchange = $trade->trade_exchange;
-	$trade_currency = $trade->trade_currency;
-	$trade_condition = $trade->trade_condition;
-	$trade_price = $trade->trade_price;
-	$trade_action = $trade->trade_action;
-	$trade_amount = $trade->trade_amount;
-	$trade_result = $trade->result;
-	$trade_unit = $trade->trade_unit;
-	$trade_until = $trade->until_date.' '.$trade->until_time;
+	$trade_id = $trade['id'];
+	$trade_exchange = $trade['trade_exchange'];
+	$trade_currency = $trade['trade_currency'];
+	$trade_condition = $trade['trade_condition'];
+	$trade_price = $trade['trade_price'];
+	$trade_action = $trade['trade_action'];
+	$trade_amount = $trade['trade_amount'];
+	$trade_result = $trade['result'];
+	$trade_unit = $trade['trade_unit'];
+	$trade_until = $trade['until_date'].' '.$trade['until_time'];
 	
 	if($trade_exchange == 'Poloniex') { //set the currency in poloniex
 		
@@ -63,10 +84,9 @@ foreach($tradesTable as $trade) {
 	
 	$output .= $coin.' | '.$balanceArray[$coin].' | ';
 	
-	if(!isset($balanceArray[$coin])) {//cannot read balance
-		$output .= "Can't connect to Poloniex"; 
+	if(!isset($balanceArray[$coin])) { //cannot read balance
+		$output .= $newline."No balance to trade".$newline; 
 		echo $output; 
-	//	exit;
 	}
  
 	if($balanceArray[$coin] > 0.1) {
