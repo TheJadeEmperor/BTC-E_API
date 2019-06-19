@@ -134,6 +134,108 @@ foreach($actionTypes as $aType) {
 $tradeActionDropDown = '<select name="trade_action">'.$actionDropDown.'</option>';
 
 
+
+	
+function showPoloBalanceTable($polo, $tableTitle) {
+	?>
+	
+	
+	<table class="table">
+		<thead class="thead-default">
+			<tr>
+				<th colspan="8"><?=$tableTitle?> <img src="include/refresh.png" class="clickable" onclick="javascript:reloadBalanceTable()" width="25px" /> </th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<th>Currency</th><th>Balance</th><th>Price</th><th>Change</th><th>BTC Value</th><th>USDT</th>
+			</tr>
+	<?php
+	
+	$balanceArray = $polo->get_balances();
+
+	$tickerArray = $polo->get_ticker();
+	
+//	echo '<pre>'; print_r($balanceArray); echo '</pre>';
+	
+	foreach($balanceArray as $currency => $currencyBalance) {
+		if($currencyBalance > 0.01) {
+		
+			$btcPrice = $tickerArray['USDT_BTC']['last'];
+			
+			if($currency == 'BTC') {
+				$chartLink = 'BTCUSD';
+				$currencyPair = 'USDT_BTC';
+				$lastFormat = $tickerArray[$currencyPair]['last'];
+				
+				$lastFormat = '$'.number_format($lastFormat, 2);
+				$btcValue = $currencyBalance;		
+				$usdtValue = $btcValue * $btcPrice;	
+				
+			}
+			else if($currency == 'USDT') {
+				$chartLink = 'BTCUSD';
+				$currencyPair = 'USDT_BTC';
+				$lastFormat = $tickerArray[$currencyPair]['last'];;
+				$btcValue = $currencyBalance / $lastFormat;	
+				$usdtValue = $currencyBalance;
+				$lastFormat = 1;
+			}
+			else { 
+				$chartLink = $currency.'BTC';
+				$currencyPair = 'BTC_'.$currency;
+				$lastFormat = $tickerArray[$currencyPair]['last'];
+				$lastFormat = number_format($lastFormat, 8);
+				$btcValue = $lastFormat * $currencyBalance;
+				$usdtValue = $btcValue * $btcPrice;
+			}
+			
+			$percentChange = $tickerArray[$currencyPair]['percentChange'];
+			$percentChangeFormat = $percentChange * 100;
+			$percentChangeFormat = number_format($percentChangeFormat, 2);
+			
+			$btcValueFormat = number_format($btcValue, 4);
+			$totalBTC += $btcValue;
+			$usdtValueFormat = number_format($usdtValue, 2);
+			
+			
+			if($percentChangeFormat > 0) $color = 'green';
+			else $color = 'red';
+			
+			if($currency == 'BTC' || $currency == 'ETH')
+				$formatting = 'style="font-weight: bold;"';
+			else
+				$formatting = 'style="font-weight: normal;"';
+	
+			if ($btcValueFormat > 0.01) {			
+				$balanceTable .= '<tr '.$formatting.'><td><a href="https://www.tradingview.com/chart/'.$chartLink.'" target="_BLANK">'.$currency.'</a></td>
+				<td>'.$currencyBalance.'</td>
+				<td>'.$lastFormat.'</td>
+				<td style="color: '.$color.'">'.$percentChangeFormat.'%</td>
+				<td>'.$btcValueFormat.'</td>
+				<td style="color: white">'.$usdtValueFormat.'</td>
+				</tr>';
+			}
+		}
+	}
+	echo $balanceTable;
+	
+	$totalBTCFormat = number_format($totalBTC, 8);
+	
+	$totalUSDT = $totalBTC * $btcPrice;
+	$totalUSDTFormat = number_format($totalUSDT, 2);
+	
+	echo '<tr><td colspan="10">Total BTC: '.$totalBTCFormat.' &nbsp;&nbsp; 
+	<span style="color: white">Total USDT: '.$totalUSDTFormat.'</span></td>';
+	
+	echo '</tbody>
+	</table>';
+
+}
+
+
+
+
 	/*
 	===================
 	Poloniex prices
@@ -212,100 +314,6 @@ $tradeActionDropDown = '<select name="trade_action">'.$actionDropDown.'</option>
 	$coinbase_ltc_usd = $tableData->coinbasePrice('ltc-usd');
 	$coinbase_bch_usd = $tableData->coinbasePrice('bch-usd');
 	$coinbase_xrp_usd = $tableData->coinbasePrice('xrp-usd');
-	
-	
-function showPoloBalanceTable($polo, $tableTitle) {
-	?>
-	<table class="table">
-		<thead class="thead-default">
-			<tr>
-				<th colspan="8"><?=$tableTitle?> <img src="include/refresh.png" class="clickable" onclick="javascript:reloadBalanceTable()" width="25px" /> </th>
-			</tr>
-		</thead>
-		<tbody>
-			<tr>
-				<th>Currency</th><th>Balance</th><th>Price</th><th>Change</th><th>BTC Value</th><th>USDT</th>
-			</tr>
-	<?
-	$balanceArray = $polo->get_balances();
-
-	$tickerArray = $polo->get_ticker();
-	
-			
-	foreach($balanceArray as $currency => $currencyBalance) {
-		if($currencyBalance > 0.01) {
-		
-			$btcPrice = $tickerArray['USDT_BTC']['last'];
-		
-			if($currency == 'BTC') {
-				$chartLink = 'BTCUSD';
-				$currencyPair = 'USDT_BTC';
-				$lastFormat = $tickerArray[$currencyPair]['last'];
-				
-				$lastFormat = '$'.number_format($lastFormat, 2);
-				$btcValue = $currencyBalance;		
-				$usdtValue = $btcValue * $btcPrice;	
-				
-			}
-			else if($currency == 'USDT') {
-				$chartLink = 'BTCUSD';
-				$currencyPair = 'USDT_BTC';
-				$lastFormat = $tickerArray[$currencyPair]['last'];;
-				$btcValue = $currencyBalance / $lastFormat;	
-				$usdtValue = $currencyBalance;
-				$lastFormat = 1;
-			}
-			else { 
-				$chartLink = $currency.'BTC';
-				$currencyPair = 'BTC_'.$currency;
-				$lastFormat = $tickerArray[$currencyPair]['last'];
-				$lastFormat = number_format($lastFormat, 8);
-				$btcValue = $lastFormat * $currencyBalance;
-				$usdtValue = $btcValue * $btcPrice;
-			}
-			
-			$percentChange = $tickerArray[$currencyPair]['percentChange'];
-			$percentChangeFormat = $percentChange * 100;
-			$percentChangeFormat = number_format($percentChangeFormat, 2);
-			
-			$btcValueFormat = number_format($btcValue, 4);
-			$totalBTC += $btcValue;
-			$usdtValueFormat = number_format($usdtValue, 2);
-			
-			
-			if($percentChangeFormat > 0) $color = 'green';
-			else $color = 'red';
-			
-			if($currency == 'BTC' || $currency == 'ETH')
-				$formatting = 'style="font-weight: bold;"';
-			else
-				$formatting = 'style="font-weight: normal;"';
-	
-			if ($btcValueFormat > 0.01) {			
-				$balanceTable .= '<tr '.$formatting.'><td><a href="https://www.tradingview.com/chart/'.$chartLink.'" target="_BLANK">'.$currency.'</a></td>
-				<td>'.$currencyBalance.'</td>
-				<td>'.$lastFormat.'</td>
-				<td style="color: '.$color.'">'.$percentChangeFormat.'%</td>
-				<td>'.$btcValueFormat.'</td>
-				<td style="color: white">'.$usdtValueFormat.'</td>
-				</tr>';
-			}
-		}
-	}
-	echo $balanceTable;
-	
-	$totalBTCFormat = number_format($totalBTC, 8);
-	
-	$totalUSDT = $totalBTC * $btcPrice;
-	$totalUSDTFormat = number_format($totalUSDT, 2);
-	
-	echo '<tr><td colspan="10">Total BTC: '.$totalBTCFormat.' &nbsp;&nbsp; 
-	<span style="color: white">Total USDT: '.$totalUSDTFormat.'</span></td>';
-	
-	echo '</tbody>
-	</table>';
-
-}	
 	
 	
 	
@@ -533,7 +541,7 @@ else if($_GET['page'] == 'balanceTable') {
 	
 	$tableTitle = 'Polo Balance';
 	
-	showPoloBalanceTable($polo1, $tableTitle);
+	showPoloBalanceTable($polo, $tableTitle);
 
 }
 else if($_GET['page'] == 'btrexBalance') {
@@ -544,9 +552,8 @@ else if($_GET['page'] == 'btrexBalance') {
 	catch(Exception $e){
 		echo 'Error occurred : '.$e->getMessage(); 
 	}	
-	//echo 'page';
+	echo 'bittrex balance';
 	
-	if(!empty($balance)) { 
 
 		?>
 		<table class="table">
@@ -558,6 +565,8 @@ else if($_GET['page'] == 'btrexBalance') {
 				<th>Currency</th><th>Balance</th><th>Price</th><th>BTC Value</th><th>USDT</th><th>Chart</th>
 			</tr>
 		<?
+		
+	if(!empty($balance)) { 
 		foreach($balance as $x => $val) {
 			
 			$currency = $val->Currency;
