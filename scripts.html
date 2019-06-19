@@ -17,9 +17,10 @@ $loadbtcTrades = 'load.php?page=btcTrades&accessKey='.$accessKey;
 $loadPriceTable = 'load.php?page=priceTable&accessKey='.$accessKey;
 $loadCronAutoTrade = 'load.php?page=cronAutoTrade&accessKey='.$accessKey;
 $loadBalanceTable = 'load.php?page=balanceTable&accessKey='.$accessKey;
-$loadPoloBalance2 = 'load.php?page=poloBalance2&accessKey='.$accessKey;
+//$loadPoloBalance2 = 'load.php?page=poloBalance2&accessKey='.$accessKey;
 $loadBtrexBalance = 'load.php?page=btrexBalance&accessKey='.$accessKey;
-$loadCoinValue = 'load.php?page=coinValue&accessKey='.$accessKey;
+
+$loadBitmexPositions = 'load.php?page=bitmexPositions&accessKey='.$accessKey;
 
 $loadNotesAjax = 'include/ajax.php?action=updateNotes';
 $loadNotes = 'load.php?page=notes&accessKey='.$accessKey;
@@ -304,10 +305,12 @@ $loadNotes = 'load.php?page=notes&accessKey='.$accessKey;
 	function reloadTable (divName) {
 		if(divName == '#priceTable') {
 			loadPage = '<?=$loadPriceTable?>';
-			
 		}
 		else if(divName == '#balanceTable') {
 			loadPage = '<?=$loadBalanceTable?>';
+		}
+		else if(divName == '#bitmexPositions'){
+			loadPage = '<?=$loadBitmexPositions?>';
 		}
 		
 		console.log(divName);
@@ -375,10 +378,6 @@ $loadNotes = 'load.php?page=notes&accessKey='.$accessKey;
 		});
 	}
 	
-	function reloadCoinValue() {
-		$('#coinValue').load('<?=$loadCoinValue?>');		
-	}
-	
 
     $(document).ready(function () {
 		
@@ -440,32 +439,8 @@ $loadNotes = 'load.php?page=notes&accessKey='.$accessKey;
 				}
 			})
 		});	
-		
-		$(".coinValue").click(function() {
-			$("#coinValue").dialog({
-				modal: true,
-				width: 790,
-				position: 'top',
-				show: {
-					effect: "explode",
-					duration: 500
-				},
-				hide: {
-					effect: "explode",
-					duration: 500
-				},
-				buttons: {
-					Save: function() {
-						createTrade();
-						$(this).dialog("close");
-					},
-					Cancel: function() {
-						$(this).dialog("close");
-					}
-				}
-			})
-		});
-		
+	
+	
 		
 		$.fn.counter = function (num) {
 			var i = 1;
@@ -495,15 +470,15 @@ $loadNotes = 'load.php?page=notes&accessKey='.$accessKey;
 		
 		reloadTradesTable();
 
-		//reloadPoloBalance2();
 		reloadBalanceTable();
 		
 		reloadBtrexBalance();
 		
-		cronAutoTrade();	
+		cronAutoTrade();
 		
-		reloadCoinValue();
-
+		reloadTable('#bitmexPositions');
+			
+		
 
     });
 </script>

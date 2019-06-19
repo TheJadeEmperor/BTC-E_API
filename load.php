@@ -3,9 +3,11 @@ $dir = 'include/';
 include($dir.'api_database.php');
 include($dir.'api_poloniex.php');
 include($dir.'api_bittrex.php');
+include($dir.'api_bitmex.php');
 include($dir.'config.php');
 include($dir.'ez_sql_core.php');
 include($dir.'ez_sql_mysql.php');
+
 
 
 error_reporting(E_ALL & ~E_NOTICE & ~E_WARNING);
@@ -24,7 +26,7 @@ $db = new ezSQL_mysql($dbUser, $dbPW, $dbName, $dbHost);
 
 //requires the extension php_openssl to work
 $polo1 = $polo = new poloniex($polo_api_key, $polo_api_secret);
-//$polo2 = new poloniex($polo_api_key_2, $polo_api_secret_2);
+
 
 $bittrex = new Client ($bittrex_api_key, $bittrex_api_secret);
 
@@ -338,31 +340,31 @@ if($_GET['page'] == 'priceTable'){
 		</tr>
 		</thead>
 		<tr>
-			<td><a href="https://www.tradingview.com/chart/BTCUSD">BTC/USDT</a></td><td><?=$btc_percent_display?></td>
+			<td><a href="https://www.tradingview.com/chart/BTCUSD" target="_BLANK">BTC/USDT</a></td><td><?=$btc_percent_display?></td>
 			<td> $<?=$polo_btc_usd ?></td>
 			<td> $<?=$bittrex_btc_usd?> </td>
 			<td> $<?=$coinbase_btc_usd ?></td>
 		</tr>
 		</tr>
-			<td><a href="https://www.tradingview.com/chart/ETHUSD">ETH/USDT</a></td><td><?=$eth_percent_display?></td>
+			<td><a href="https://www.tradingview.com/chart/ETHUSD" target="_BLANK">ETH/USDT</a></td><td><?=$eth_percent_display?></td>
 			<td> $<?=$polo_eth_usd ?> </td>
 			<td> $<?=$bittrex_eth_usd?> </td>
 			<td> $<?=$coinbase_eth_usd ?></td>
 		</tr>
 		<tr>
-			<td><a href="https://www.tradingview.com/chart/LTCUSD">LTC/USDT</a></td><td> <?=$ltc_percent_display?></td>
+			<td><a href="https://www.tradingview.com/chart/LTCUSD" target="_BLANK">LTC/USDT</a></td><td> <?=$ltc_percent_display?></td>
 			<td> $<?=$polo_ltc_usd ?> </td>
 			<td> $<?=$bittrex_ltc_usd?> </td>
 			<td> $<?=$coinbase_ltc_usd ?></td>
 		</tr>		
 		<tr>
-			<td><a href="https://www.tradingview.com/chart/BCHUSD">BCH/BTC or BCH/USDT</a></td><td> <?=$bchabc_percent_display?></td>
+			<td><a href="https://www.tradingview.com/chart/BCHUSD" target="_BLANK">BCH/BTC or BCH/USDT</a></td><td> <?=$bchabc_percent_display?></td>
 			<td> <?=$polo_bchabc_usd ?> </td>
 			<td> $<?=$bittrex_bchabc_usd?> </td>
 			<td> $<?=$coinbase_bch_usd?> </td>
 		</tr>
 		<tr>
-			<td><a href="https://www.tradingview.com/chart/DASHUSD">XRP/USDT</a></td><td> <?=$xrp_percent_display?></td>
+			<td><a href="https://www.tradingview.com/chart/XRPUSD" target="_BLANK">XRP/USDT</a></td><td> <?=$xrp_percent_display?></td>
 			<td> $<?=$polo_xrp_usd ?> </td>
 			<td> $<?=$bittrex_xrp_usd?> </td>
 			<td> $<?=$coinbase_xrp_usd?> </td>
@@ -623,73 +625,40 @@ else if($_GET['page'] == 'btrexBalance') {
 	}
 	
 }
+else if($_GET['page'] == 'bitmexPositions') {
+	echo 'bitmex';
+	$bitmex = new bitmex($bitmex_api_key, $bitmex_api_secret);
+	
+	//print_r($bitmex);
+	
+	$bitmexPos = $bitmex->getOpenPositions();
+	
+	echo '<pre>';
+	print_r($bitmexPos);
+	echo '</pre>';
+	
+	echo ' ';
+	
+	
+	?>
+	<table class="table">
+		<thead class="thead-default">
+			<tr>
+				<th colspan="8">Bitmex Positions <img src="include/refresh.png" class="clickable" onclick="javascript:reloadTable('#bitmexPositions')" width="25px" /> </th>
+			</tr>
+			
+		</thead>
+	</table>
+	
+	<?
+}
 else if($_GET['page'] == 'coinValue') {
 	?>
 	
-<script>
 	
-	function calculateCoinValue(){
-		
-	}
-	
-	$(document).ready(function () {
-		
-		
-		var priceBTC = $('#priceBTC').val();
-		var priceETH = $('#priceETH').val();
-		var priceLTC = $('#priceLTC').val();
-		var priceBCH = $('#priceBCH').val();
-		var priceDASH = $('#priceDASH').val();
-		var coinPrice;
-		
-		$('.amtField').keyup(function() {
 			
-			var getID = $('.amtField').filter(function() {
-				return this.value.length !== 0;
-			}).attr('id');
-			
-			
-			
-			switch(getID) {
-				case 'amtBTC':
-					coinPrice = priceBTC;
-					break;
-				case 'amtETH':
-					coinPrice = priceETH;
-					break;
-				case 'amtLTC':
-					coinPrice = priceLTC;
-					break;
-				case 'amtBCH':
-					coinPrice = priceBCH;
-					break;
-				case 'amtDASH':
-					coinPrice = priceDASH;
-			}
-			
-			var totalBalance = $('#'+getID).val() * coinPrice;
-			
-			$('#totalBalance').val(totalBalance);
-			
-			var valBTC = totalBalance / priceBTC;
-			var valETH = totalBalance / priceETH;
-			var valLTC = totalBalance / priceLTC;
-			var valBCH = totalBalance / priceBCH;
-			var valDASH = totalBalance / priceDASH;
-			
-			$('#valBTC').val(valBTC);
-			$('#valETH').val(valETH);
-			$('#valLTC').val(valLTC);
-			$('#valBCH').val(valBCH);
-			$('#valDASH').val(valDASH);
-			 
-		});
-		
-		
-	});
-	
-</script>
-	
+		 
+	 
 <form id="coinValue" title="Check Coin Values">
 
 	<input type="hidden" id="priceBTC" value="<?=$polo_btc_usd_raw?>">
