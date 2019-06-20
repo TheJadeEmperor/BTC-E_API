@@ -317,6 +317,11 @@ function showPoloBalanceTable($polo, $tableTitle) {
 	$coinbase_bch_usd = $tableData->coinbasePrice('bch-usd');
 	$coinbase_xrp_usd = $tableData->coinbasePrice('xrp-usd');
 	
+	$coinbase_btc_usd = number_format($coinbase_btc_usd, 2);
+	$coinbase_eth_usd = number_format($coinbase_eth_usd, 2);
+	$coinbase_ltc_usd = number_format($coinbase_ltc_usd, 2);
+	$coinbase_bch_usd = number_format($coinbase_bch_usd, 2);
+	$coinbase_xrp_usd = number_format($coinbase_xrp_usd, 2);
 	
 	
 if($_GET['page'] == 'priceTable'){
@@ -626,19 +631,22 @@ else if($_GET['page'] == 'btrexBalance') {
 	
 }
 else if($_GET['page'] == 'bitmexPositions') {
-	echo 'bitmex';
+	
 	$bitmex = new bitmex($bitmex_api_key, $bitmex_api_secret);
 	
-	//print_r($bitmex);
-	
 	$bitmexPos = $bitmex->getOpenPositions();
-	
+	$getWallet = $bitmex->getWallet();
+	$totalSatoshiBalance = $totalSatoshiAvailable = $getWallet['amount'];
+
+/*
 	echo '<pre>';
-	print_r($bitmexPos);
+	print_r($bitmexPos[0]);
 	echo '</pre>';
 	
-	echo ' ';
-	
+	echo '<pre>';
+	print_r($getWallet);
+	echo '</pre>';
+	*/
 	
 	?>
 	<table class="table">
@@ -646,60 +654,43 @@ else if($_GET['page'] == 'bitmexPositions') {
 			<tr>
 				<th colspan="8">Bitmex Positions <img src="include/refresh.png" class="clickable" onclick="javascript:reloadTable('#bitmexPositions')" width="25px" /> </th>
 			</tr>
+			<tr>
+				<th>Symbol</th><th>openingQty</th><th>markPrice</th><th>avgEntryPrice</th><th>breakEvenPrice</th><th>unrealisedGrossPnl</th><th>liquidationPrice</th>
+			</tr>
 			
 		</thead>
+		<tbody>
+		
+		<?
+		//markPrice unrealisedGrossPnl
+		foreach($bitmexPos as $num => $pos) {
+			
+			$unrealizedPNL = $pos['unrealisedGrossPnl'];
+			$totalSatoshiAvailable += $unrealizedPNL;
+			
+			$openingQty = $tableData->format_percent_display($pos['openingQty']);
+			
+			echo '<tr><td>'.$pos['symbol'].'</td>
+			<td>'.$openingQty.'</td>
+			<td>'.$pos['markPrice'].'</td>
+			<td>'.$pos['avgEntryPrice'].'</td>
+			<td>'.$pos['breakEvenPrice'].'</td>
+			<td>'.($unrealizedPNL/100000000).'</td>
+			<td>'.$pos['liquidationPrice'].'</td>
+			</tr>';
+		}
+		?>
+		</tbody>
 	</table>
 	
 	<?
+	$totalXBTBalance = $totalSatoshiBalance/100000000; 
+	$totalXBTAvailable = $totalSatoshiAvailable/100000000;
+	
+	echo 'BTC '.$totalXBTBalance.'  
+	Available BTC '.$totalXBTAvailable;
 }
-else if($_GET['page'] == 'coinValue') {
-	?>
-	
-	
-			
-		 
-	 
-<form id="coinValue" title="Check Coin Values">
 
-	<input type="hidden" id="priceBTC" value="<?=$polo_btc_usd_raw?>">
-	<input type="hidden" id="priceETH" value="<?=$polo_eth_usd_raw?>">
-	<input type="hidden" id="priceLTC" value="<?=$polo_ltc_usd_raw?>">
-	<input type="hidden" id="priceBCH" value="<?=$polo_bch_usd_raw?>">
-	<input type="hidden" id="priceDASH" value="<?=$polo_dash_usd_raw?>">
-	
-	
-	<table>
-	<tr>
-		<td>BTC</td><td>
-		<input type="text" id="totalBalance" /></td>
-	</tr>
-	<tr>
-		<td>BTC</td><td>
-		<input type="text" id="amtBTC" class="amtField" />
-		<input type="text" id="valBTC" /></td>
-	</tr>
-	<tr>
-		<td>ETH</td><td>
-		<input type="text" id="amtETH" class="amtField" />
-		<input type="text" id="valETH" /></td>
-	</tr>
-	<tr>
-		<td>LTC</td><td>
-		<input type="text" id="amtLTC" class="amtField" />
-		<input type="text" id="valLTC" /></td>
-	</tr>
-	<tr>
-		<td>BCH</td><td>
-		<input type="text" id="amtBCH" class="amtField" />
-		<input type="text" id="valBCH" /></td>
-	</tr>
-	<tr>
-		<td>DASH</td><td>
-		<input type="text" id="amtDASH" class="amtField" />
-		<input type="text" id="valDASH" /></td>
-	</tr>
-	</table>
-</form>
-<?
-}
+
+
 ?>
