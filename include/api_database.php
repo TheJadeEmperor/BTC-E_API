@@ -47,6 +47,19 @@ class Database {
 		return $percent_number;
 	}
 
+	public function format_change_display ($number, $decimal) {
+		$number = number_format($number, $decimal);
+		
+		if($number > 0) {
+			$number = '<span class="green">+'.$number.'</span>';
+		} 
+		else{
+			$number = '<span class="red">'.$number.'</span>';		
+		}
+		
+		return $number;
+	}
+
 	 
 	function coinbasePrice ($currencyPair) {
 	

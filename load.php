@@ -666,16 +666,22 @@ else if($_GET['page'] == 'bitmexPositions') {
 		foreach($bitmexPos as $num => $pos) {
 			
 			$unrealizedPNL = $pos['unrealisedGrossPnl'];
+			
 			$totalSatoshiAvailable += $unrealizedPNL;
 			
-			$openingQty = $tableData->format_percent_display($pos['openingQty']);
+			$unrealizedPNL = $unrealizedPNL/100000000;
+			
+			$unrealizedPNLDisplay = $tableData->format_change_display($unrealizedPNL, 4);
+			
+			$openingQty = $tableData->format_change_display($pos['openingQty'], 2);
+			
 			
 			echo '<tr><td>'.$pos['symbol'].'</td>
 			<td>'.$openingQty.'</td>
 			<td>'.$pos['markPrice'].'</td>
 			<td>'.$pos['avgEntryPrice'].'</td>
 			<td>'.$pos['breakEvenPrice'].'</td>
-			<td>'.($unrealizedPNL/100000000).'</td>
+			<td>'.$unrealizedPNLDisplay.'</td>
 			<td>'.$pos['liquidationPrice'].'</td>
 			</tr>';
 		}
