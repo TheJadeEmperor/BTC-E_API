@@ -17,10 +17,10 @@ $loadbtcTrades = 'load.php?page=btcTrades&accessKey='.$accessKey;
 $loadPriceTable = 'load.php?page=priceTable&accessKey='.$accessKey;
 $loadCronAutoTrade = 'load.php?page=cronAutoTrade&accessKey='.$accessKey;
 $loadBalanceTable = 'load.php?page=balanceTable&accessKey='.$accessKey;
-//$loadPoloBalance2 = 'load.php?page=poloBalance2&accessKey='.$accessKey;
 $loadBtrexBalance = 'load.php?page=btrexBalance&accessKey='.$accessKey;
 
 $loadBitmexPositions = 'load.php?page=bitmexPositions&accessKey='.$accessKey;
+$loadBitmexPositions2 = 'load.php?page=bitmexPositions2&accessKey='.$accessKey;
 
 $loadNotesAjax = 'include/ajax.php?action=updateNotes';
 $loadNotes = 'load.php?page=notes&accessKey='.$accessKey;
@@ -281,6 +281,7 @@ $loadNotes = 'load.php?page=notes&accessKey='.$accessKey;
 		$('#notesDiv').load('<?=$loadNotes?>');		
 	}
  
+ 
 	function reloadBalanceTable(){
 	
 		$('#balanceTable').load('<?=$loadBalanceTable?>');		
@@ -291,9 +292,7 @@ $loadNotes = 'load.php?page=notes&accessKey='.$accessKey;
             $('#balanceTable #loading').hide();
             $('#balanceTable').load('<?=$loadBalanceTable?>');		
             $('#balanceTable').fadeIn('slow');
-        });
-	
-		//$('#balanceTable').load('<?=$loadBalanceTable?>');		
+        });	
 	}
 	
 	
@@ -302,35 +301,36 @@ $loadNotes = 'load.php?page=notes&accessKey='.$accessKey;
 	}
 	
 	
-	function reloadTable (divName) {
-		if(divName == '#priceTable') {
-			loadPage = '<?=$loadPriceTable?>';
-		}
-		else if(divName == '#balanceTable') {
-			loadPage = '<?=$loadBalanceTable?>';
-		}
-		else if(divName == '#bitmexPositions'){
-			loadPage = '<?=$loadBitmexPositions?>';
-		}
-		
-		console.log(divName);
+	function reloadBitmexPositions1() {
 	
-		$(divName).load(loadPage);		
+		$('#bitmexPositions').load('<?=$loadBitmexPositions?>');		
 		
-		//$(divName).hide(); 
-		$(divName).html('<img src="include/images/load.gif" id="loading" />')
+		$('#bitmexPositions').html('<img src="include/images/load.gif" id="loading" />')
 
 		$(window).bind('load', function() {
-            $(divName+' #loading').hide();
-            $(divName).load(loadPage);		
-            $(divName).fadeIn('slow');
-        });
+            $('#bitmexPositions #loading').hide();
+            $('#bitmexPositions').load('<?=$loadBitmexPositions?>');		
+            $('#bitmexPositions').fadeIn('slow');
+        });	
 	}
+	
+	function reloadBitmexPositions2() {
+	
+		$('#bitmexPositions2').load('<?=$loadBitmexPositions2?>');		
+		
+		$('#bitmexPositions2').html('<img src="include/images/load.gif" id="loading" />')
+
+		$(window).bind('load', function() {
+            $('#bitmexPositions2 #loading').hide();
+            $('#bitmexPositions2').load('<?=$loadBitmexPositions2?>');		
+            $('#bitmexPositions2').fadeIn('slow');
+        });	
+	}
+	
 	
 	function reloadPriceTable() {
 		$('#priceTable').load('<?=$loadPriceTable?>');		
 		
-		//$('#priceTable').hide(); 
 		$('#priceTable').html('<img src="include/images/load.gif" id="loading" />')
 
 		$(window).bind('load', function() {
@@ -343,7 +343,6 @@ $loadNotes = 'load.php?page=notes&accessKey='.$accessKey;
 	function reloadAlertsTable() {
 		$('#cronSendAlerts').load('<?=$loadCronSendAlerts?>');		
 		
-		//$('#cronSendAlerts').hide(); 
 		$('#cronSendAlerts').html('<img src="include/images/load.gif" id="loading" />')
 
 		$(window).bind('load', function() {
@@ -472,13 +471,13 @@ $loadNotes = 'load.php?page=notes&accessKey='.$accessKey;
 
 		reloadBalanceTable();
 		
-		reloadBtrexBalance();
-		
 		cronAutoTrade();
 		
-		reloadTable('#bitmexPositions');
+		reloadBitmexPositions1();
 			
+		reloadBitmexPositions2();
 		
-
+		//reloadBtrexBalance();
+		
     });
 </script>
