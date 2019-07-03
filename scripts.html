@@ -282,7 +282,6 @@ $loadNotes = 'load.php?page=notes&accessKey='.$accessKey;
 	}
  
  
-
 	function reloadBalanceTable(){
 	
 		$('#balanceTable').load('<?=$loadBalanceTable?>');		
@@ -297,29 +296,11 @@ $loadNotes = 'load.php?page=notes&accessKey='.$accessKey;
 	}
 	
 	
-	/*
 	function reloadBtrexBalance(){
 		$('#btrexBalance').load('<?=$loadBtrexBalance?>');		
 	}
-	*/
-
-	function reloadTable (divName) {
-		if(divName == '#priceTable') {
-			loadPage = '<?=$loadPriceTable?>';
-		}
-		else if(divName == '#balanceTable') {
-			loadPage = '<?=$loadBalanceTable?>';
-		}
-		else if(divName == '#bitmexPositions') {
-			loadPage = '<?=$loadBitmexPositions?>';
-		}
-		else if(divName == '#bitmexPositions2') {
-			loadPage = '<?=$loadBitmexPositions2?>';
-		}
-		else if(divName == '#btrexBalance') {
-			loadPage = '<?=$loadBalanceTable?>';
-		}
-
+	
+	
 	function reloadBitmexPositions1() {
 	
 		$('#bitmexPositions').load('<?=$loadBitmexPositions?>');		
@@ -488,19 +469,13 @@ $loadNotes = 'load.php?page=notes&accessKey='.$accessKey;
 		
 		reloadTradesTable();
 
-		reloadTable('#balanceTable');
-		
-		//reloadBalanceTable();
+		reloadBalanceTable();
 		
 		cronAutoTrade();
 		
 		reloadBitmexPositions1();
 			
-		reloadTable('#bitmexPositions2');
-		
-		
 		reloadBitmexPositions2();
-
 		
 		//reloadBtrexBalance();
 		
