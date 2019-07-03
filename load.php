@@ -637,22 +637,11 @@ else if($_GET['page'] == 'bitmexPositions') {
 	$bitmexPos = $bitmex->getOpenPositions();
 	$getWallet = $bitmex->getWallet();
 	$totalSatoshiBalance = $totalSatoshiAvailable = $getWallet['amount'];
-
-/*
-	echo '<pre>';
-	print_r($bitmexPos[0]);
-	echo '</pre>';
-	
-	echo '<pre>';
-	print_r($getWallet);
-	echo '</pre>';
-	*/
-	
 	?>
 	<table class="table">
 		<thead class="thead-default">
 			<tr>
-				<th colspan="8">Bitmex Positions <img src="include/refresh.png" class="clickable" onclick="javascript:reloadTable('#bitmexPositions')" width="25px" /> </th>
+				<th colspan="8">Bitmex Positions <img src="include/refresh.png" class="clickable" onclick="javascript:reloadBitmexPositions1()" width="25px" /> </th>
 			</tr>
 			<tr>
 				<th>Symbol</th><th>openingQty</th><th>markPrice</th><th>avgEntryPrice</th><th>breakEvenPrice</th><th>unrealisedGrossPnl</th><th>liquidationPrice</th>
@@ -685,16 +674,87 @@ else if($_GET['page'] == 'bitmexPositions') {
 			<td>'.$pos['liquidationPrice'].'</td>
 			</tr>';
 		}
-		?>
+		
+	$totalXBTBalance = $totalSatoshiBalance/100000000; 
+	$totalXBTAvailable = $totalSatoshiAvailable/100000000;
+	
+	echo '<tr><td colspan="3">BTC '.$totalXBTBalance.'  
+	Available BTC '.$totalXBTAvailable.'</td></tr>';
+	
+	?>
+		</tbody>
+	</table>
+	
+<?
+}
+else if($_GET['page'] == 'bitmexPositions2') {
+	
+	$bitmex = new bitmex($bitmex2_api_key, $bitmex2_api_secret);
+	
+	$bitmexPos = $bitmex->getOpenPositions();
+	$getWallet = $bitmex->getWallet();
+	$totalSatoshiBalance = $totalSatoshiAvailable = $getWallet['amount'];
+
+/*
+	echo '<pre>';
+	print_r($bitmexPos[0]);
+	echo '</pre>';
+	
+	echo '<pre>';
+	print_r($getWallet);
+	echo '</pre>';
+	*/
+	
+	?>
+	<table class="table">
+		<thead class="thead-default">
+			<tr>
+				<th colspan="8">Bitmex-2 Positions <img src="include/refresh.png" class="clickable" onclick="javascript:reloadBitmexPositions2()" width="25px" /> </th>
+			</tr>
+			<tr>
+				<th>Symbol</th><th>openingQty</th><th>markPrice</th><th>avgEntryPrice</th><th>breakEvenPrice</th><th>unrealisedGrossPnl</th><th>liquidationPrice</th>
+			</tr>
+			
+		</thead>
+		<tbody>
+		
+		<?
+		//markPrice unrealisedGrossPnl
+		foreach($bitmexPos as $num => $pos) {
+			
+			$unrealizedPNL = $pos['unrealisedGrossPnl'];
+			
+			$totalSatoshiAvailable += $unrealizedPNL;
+			
+			$unrealizedPNL = $unrealizedPNL/100000000;
+			
+			$unrealizedPNLDisplay = $tableData->format_change_display($unrealizedPNL, 4);
+			
+			$openingQty = $tableData->format_change_display($pos['openingQty'], 2);
+			
+			
+			echo '<tr><td>'.$pos['symbol'].'</td>
+			<td>'.$openingQty.'</td>
+			<td>'.$pos['markPrice'].'</td>
+			<td>'.$pos['avgEntryPrice'].'</td>
+			<td>'.$pos['breakEvenPrice'].'</td>
+			<td>'.$unrealizedPNLDisplay.'</td>
+			<td>'.$pos['liquidationPrice'].'</td>
+			</tr>';
+		}
+		
+	$totalXBTBalance = $totalSatoshiBalance/100000000; 
+	$totalXBTAvailable = $totalSatoshiAvailable/100000000;
+	
+	echo '<tr><td colspan="3">BTC '.$totalXBTBalance.'  
+	Available BTC '.$totalXBTAvailable.'</td></tr>';
+	
+	?>
 		</tbody>
 	</table>
 	
 	<?
-	$totalXBTBalance = $totalSatoshiBalance/100000000; 
-	$totalXBTAvailable = $totalSatoshiAvailable/100000000;
 	
-	echo 'BTC '.$totalXBTBalance.'  
-	Available BTC '.$totalXBTAvailable;
 }
 else if($_GET['page'] == 'bitmexPositions2') {
 	
