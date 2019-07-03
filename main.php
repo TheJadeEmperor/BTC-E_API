@@ -272,15 +272,21 @@ include('scripts.html');
 		</div>
 	
 		<br />
+		<div class="col-md-12">
+			<div id="bitmexPositions2"> </div>
+		</div>
+	
+		<br />
 		<div class="col">
 			<div id="cronAutoTrade"></div>
 		</div>
 
 		<br />
+		<!--
 		<div class="col-md-12">
 			<div id="btrexBalance"> </div>
 		</div>
-		
+		-->
 	</div>
 </div><!--container-->
   
