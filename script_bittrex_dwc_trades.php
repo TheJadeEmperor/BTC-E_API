@@ -67,14 +67,14 @@ foreach($getBalances as $index) { //go through each coin you have
 if($data['action'] == 'buy') {
     //buyLimit ($market, $quantity, $rate)
     //$buyLimit = $bittrex->buyLimit($pair, $buyQT, $ask);   
-    $ouput .= 'buy';
+    $output .= 'buy';
 }
 else if($data['action'] == 'sell') {
     //$sellLimit = $bittrex->sellLimit ($pair, $sellQT, $bid);
     $output .= 'sell';
 }
 
-$ouput .= $newline. 'bid: '.$bid.' | ask: '.$bid.' | buyQT: '.$buyQT.' sellQT: '.$sellQT. '<pre>';print_r($getBalances).'</pre>';
+$output .= $newline. 'bid: '.$bid.' | ask: '.$bid.' | buyQT: '.$buyQT.' sellQT: '.$sellQT. '<pre>';print_r($getBalances).'</pre>';
 
 echo $output; 
 
