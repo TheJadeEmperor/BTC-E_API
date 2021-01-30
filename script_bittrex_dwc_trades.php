@@ -40,7 +40,8 @@ echo $action;
 $myFile = "log.txt";
 $fh = fopen($myFile, 'a') or print("Can't open file $myFile");
 fwrite($fh, $action); 
- 
+
+
 
 //get ticker
 $pair = 'USDT-LTC';
@@ -75,14 +76,12 @@ foreach($getBalances as $index) { //go through each coin you have
  
 
 //$sellLimit = $bittrex->sellLimit ($pair, $sellQT, $bid);
-    
-if($cronjob == 0) {
-    echo $newline. 'bid: '.$bid.' | ask: '.$bid.' | buyQT: '.$buyQT.' sellQT: '.$sellQT;
-    echo '<pre>';print_r($getBalances);
-    echo '</pre>';
-}
-else {
-    fwrite($fh, $action); 
+$ouput = $newline. 'bid: '.$bid.' | ask: '.$bid.' | buyQT: '.$buyQT.' sellQT: '.$sellQT. '<pre>';print_r($getBalances).'</pre>';
+
+echo $output; 
+
+if($cronjob == 1) {
+    fwrite($fh, $output); 
     fclose($fh);    
 }
    

@@ -10,6 +10,8 @@ $output = curl_exec($curl);
 if($output === FALSE) {
     echo curl_error($curl);
 }
+else 
+    echo $output;
 
 curl_close($curl);
 ?>
