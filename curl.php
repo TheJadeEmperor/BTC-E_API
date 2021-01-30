@@ -15,7 +15,7 @@ else {
 
 $url = 'https://code.bestpayingsites.com/script_bittrex_dwc_trades.php';
 $json = array(
-    "alert" => "1", "action" => "sell", "ticker" => "USDT-LINK");
+    "alert" => "DWC", "action" => "sell", "ticker" => "USDT-LINK");
 $data = json_encode($json);
 
 //print_r($data_string);
@@ -26,10 +26,13 @@ curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
 curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
 curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "POST");
 curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
-curl_setopt($curl, CURLOPT_HTTPHEADER, array (                              
-    'Content-Type: application/json',                                                                                
-    'Content-Length: ' . strlen($data))                                                                       
+
+curl_setopt($curl, CURLOPT_HTTPHEADER, array ( 
+    'Content-Type: application/json', 
+    'Content-Length: ' . strlen($data)) 
 );
+
+
 
 $output = curl_exec($curl);
 

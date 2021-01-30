@@ -23,13 +23,11 @@ else { //cron job - newline is \n
 34.212.75.30
 54.218.53.128
 52.32.178.7
-
-
 */
 //get webhook data
 $json = file_get_contents('php://input');
 $data = json_decode($json, true);
-$output = 'post data: '.$data['alert'].' '.$data['action'].' '.$data['ticker'].' '.$newline;
+$output = 'post data: '.$data['alert'].' | '.$data['action'].' | '.$data['ticker'].' '.$newline;
 
 if($data['alert'] != 'DWC') {
     echo 'Invalid request';
@@ -77,9 +75,9 @@ else if($data['action'] == 'sell') {
     $output .= 'sell';
 }
 
-$output .= $newline. 'bid: '.$bid.' | ask: '.$bid.' | buyQT: '.$buyQT.' sellQT: '.$sellQT. '<pre>';print_r($getBalances).'</pre>';
+$output .= $newline. 'bid: '.$bid.' | ask: '.$bid.' | buyQT: '.$buyQT.' sellQT: '.$sellQT. $output1 = '<pre>';print_r($getBalances).'</pre>';
 
-echo $output; 
+echo $output.$output1;
 
 if($cronjob == 1) {
     //write to file
