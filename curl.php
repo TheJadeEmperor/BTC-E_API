@@ -15,7 +15,7 @@ else {
 
 $url = 'https://code.bestpayingsites.com/script_bittrex_dwc_trades.php';
 $json = array(
-    "alert" => "Hagrid", "action" => "36", "ticker" => "USDT-LINK");
+    "alert" => "Hagrid", "action" => "buy", "ticker" => "USDT-LINK");
 $data = json_encode($json);
 
 //print_r($data_string);

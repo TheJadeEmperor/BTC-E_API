@@ -18,9 +18,6 @@ else { //cron job - newline is \n
 	$cronjob = 1;
 }
 
-//connect to Bittrex
-$bittrex = new Client ($bittrex_api_key, $bittrex_api_secret);
-
 /** tradingview IPs
  * 52.89.214.238
 34.212.75.30
@@ -33,14 +30,12 @@ $bittrex = new Client ($bittrex_api_key, $bittrex_api_secret);
 //get webhook data
 $json = file_get_contents('php://input');
 $data = json_decode($json, true);
+$output = 'post data: '.$data['alert'].' '.$data['action'].' '.$data['ticker'].' '.$newline;
 
-print_r( $data['alert'] ); echo $newline;
 
-//write to file
-$myFile = "log.txt";
-$fh = fopen($myFile, 'a') or print("Can't open file $myFile");
-fwrite($fh, $action); 
 
+//connect to Bittrex
+$bittrex = new Client ($bittrex_api_key, $bittrex_api_secret);
 
 //get ticker
 $pair = 'USDT-LINK'; 
@@ -69,16 +64,24 @@ foreach($getBalances as $index) { //go through each coin you have
 
 }
 
-//buyLimit ($market, $quantity, $rate)
-$buyLimit = $bittrex->buyLimit($pair, $buyQT, $ask);   
- 
-//$sellLimit = $bittrex->sellLimit ($pair, $sellQT, $bid);
+if($data['action'] == 'buy') {
+    //buyLimit ($market, $quantity, $rate)
+    //$buyLimit = $bittrex->buyLimit($pair, $buyQT, $ask);   
+    $ouput .= 'buy';
+}
+else if($data['action'] == 'sell') {
+    //$sellLimit = $bittrex->sellLimit ($pair, $sellQT, $bid);
+    $output .= 'sell';
+}
 
-$ouput = $newline. 'bid: '.$bid.' | ask: '.$bid.' | buyQT: '.$buyQT.' sellQT: '.$sellQT. '<pre>';print_r($getBalances).'</pre>';
+$ouput .= $newline. 'bid: '.$bid.' | ask: '.$bid.' | buyQT: '.$buyQT.' sellQT: '.$sellQT. '<pre>';print_r($getBalances).'</pre>';
 
 echo $output; 
 
 if($cronjob == 1) {
+    //write to file
+    $myFile = "log.txt";
+    $fh = fopen($myFile, 'a') or print("Can't open file $myFile");
     fwrite($fh, $output); 
     fclose($fh);    
 }
