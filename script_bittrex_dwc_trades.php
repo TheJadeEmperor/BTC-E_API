@@ -32,9 +32,9 @@ $bittrex = new Client ($bittrex_api_key, $bittrex_api_secret);
 */
 //get webhook data
 $json = file_get_contents('php://input');
-$action = json_decode($json, true);
+$data = json_decode($json, true);
 
-echo $action; 
+print_r( $data['alert'] ); echo $newline;
 
 //write to file
 $myFile = "log.txt";
@@ -42,9 +42,9 @@ $fh = fopen($myFile, 'a') or print("Can't open file $myFile");
 fwrite($fh, $action); 
 
 
-
 //get ticker
-$pair = 'USDT-LTC';
+$pair = 'USDT-LINK'; 
+$percentBalance = 100; //% of your balance for buying
 $getTicker = $bittrex->getTicker ($pair);
 
 $bid = $getTicker->Bid;
@@ -54,8 +54,6 @@ $fee = 0.004;
 $getBalances =  $bittrex->getBalances();
 
 foreach($getBalances as $index) { //go through each coin you have
-//    if($cronjob == 0) {
-  //      echo ($index->Currency).' '; }
 
     $coin = explode('-', $pair); //get coin from USDT pair
 
@@ -72,10 +70,10 @@ foreach($getBalances as $index) { //go through each coin you have
 }
 
 //buyLimit ($market, $quantity, $rate)
-//$buyLimit = $bittrex->buyLimit($pair, $buyQT, $ask);   
+$buyLimit = $bittrex->buyLimit($pair, $buyQT, $ask);   
  
-
 //$sellLimit = $bittrex->sellLimit ($pair, $sellQT, $bid);
+
 $ouput = $newline. 'bid: '.$bid.' | ask: '.$bid.' | buyQT: '.$buyQT.' sellQT: '.$sellQT. '<pre>';print_r($getBalances).'</pre>';
 
 echo $output; 
