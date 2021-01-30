@@ -15,7 +15,7 @@ else {
 
 $url = 'https://code.bestpayingsites.com/script_bittrex_dwc_trades.php';
 $json = array(
-    "alert" => "DWC", "action" => "sell", "ticker" => "USDT-LINK");
+    "alert" => "1", "action" => "sell", "ticker" => "USDT-LINK");
 $data = json_encode($json);
 
 //print_r($data_string);

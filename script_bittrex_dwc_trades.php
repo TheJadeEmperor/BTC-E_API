@@ -24,7 +24,6 @@ else { //cron job - newline is \n
 54.218.53.128
 52.32.178.7
 
-{"alert":"DWC","action":"{{strategy.order.action}}","ticker":"{{ticker}}"}
 
 */
 //get webhook data
@@ -32,6 +31,10 @@ $json = file_get_contents('php://input');
 $data = json_decode($json, true);
 $output = 'post data: '.$data['alert'].' '.$data['action'].' '.$data['ticker'].' '.$newline;
 
+if($data['alert'] != 'DWC') {
+    echo 'Invalid request';
+    exit;
+}
 
 
 //connect to Bittrex
