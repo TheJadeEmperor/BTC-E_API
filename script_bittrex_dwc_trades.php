@@ -12,16 +12,19 @@ $newline = '<br />';   //debugging newline
 54.218.53.128
 52.32.178.7
 */
+
 //get webhook data
 $json = file_get_contents('php://input');
 $data = json_decode($json, true);
 
+$dataAlert = $data['alert'];
+$dataAction = $data['action'];
+
 //security measures
-if($data['alert'] != 'DWC') {
+if($dataAlert != 'DWC') { //must have DWC for alert 
     echo 'Invalid request';
     exit;
 }
-
 
 //connect to Bittrex
 $bittrex = new Client ($bittrex_api_key, $bittrex_api_secret);
@@ -35,7 +38,7 @@ $bid = $getTicker->Bid;
 $ask = $getTicker->Ask;
 $fee = 0.004;
 
-$getBalances =  $bittrex->getBalances();
+$getBalances = $bittrex->getBalances();
 
 foreach($getBalances as $index) { //go through each coin you have
 
@@ -53,37 +56,35 @@ foreach($getBalances as $index) { //go through each coin you have
 
 }
 
-if($data['action'] == 'buy') {
-    //buyLimit ($market, $quantity, $rate)
+if($data['action'] == 'buy') { //set ther orders based on action
     $buyLimit = $bittrex->buyLimit($pair, $buyQT, $ask);   
-    $output .= 'buy';
+    $output .= ' buy ';
 }
 else if($data['action'] == 'sell') {
     $sellLimit = $bittrex->sellLimit ($pair, $sellQT, $bid);
-    $output .= 'sell';
+    $output .= ' sell ';
 }
 
-$output = 'cronjob: '.$cronjob.' | post data: '.$data['alert'].' | '.$data['action'].' '.$data['ticker'].' | '.$newline;
+$output = 'cronjob: '.$cronjob.' | post data: '.$data['alert'].' | '.$dataAction.' '.$data['ticker'].' | '.$newline;
 
 $output .= $newline. 'bid: '.$bid.' | ask: '.$bid.' | buyQT: '.$buyQT.' sellQT: '.$sellQT; 
 echo $output;
 
 
-$output1 = '<pre>';print_r($getBalances).'</pre>';
+$output1 = var_dump($getBalances);
 
-echo     $date = date(time(), 'Y-m-d h:i:s');
+echo     $recorded = date('Y-m-d h:i:s', time());
 
 
-if($data['action']) {
+if($dataAction) { 
     //write to file
     $myFile = "log.txt";
     $fh = fopen($myFile, 'a') or print("Can't open file $myFile");
     fwrite($fh, $output); 
     fclose($fh);    
 
-    $date = date(time(), 'Y-m-d h:i:s');
     //write to log db
-    $insert = 'INSERT INTO $logTableName (recorded, log) values ("'.$date.'", "'.$output.'")';
+    $insert = 'INSERT INTO $logTableName (recorded, log) values ("'.$recorded.'", "'.$output.'")';
     $res = $db->query($insert);
 }
    
