@@ -65,15 +65,19 @@ else if($data['action'] == 'sell') {
     $output .= ' sell ';
 }
 
-$output = 'cronjob: '.$cronjob.' | post data: '.$data['alert'].' | '.$dataAction.' '.$data['ticker'].' | '.$newline;
 
-$output .= $newline. 'bid: '.$bid.' | ask: '.$bid.' | buyQT: '.$buyQT.' sellQT: '.$sellQT; 
+$recorded = date('Y-m-d h:i:s', time());
+
+$output = $recorded.' | cronjob: '.$cronjob.' | post data: '.$data['alert'].' | action: '.$dataAction.' '.$data['ticker'].' | '.$newline;
+
+$output .= 'bid: '.$bid.' | ask: '.$bid.' | buyQT: '.$buyQT.' sellQT: '.$sellQT.' '.$newline; 
 echo $output;
 
+$properties = get_object_vars($getBalances);
+print_r($properties);
 
-$output1 = var_dump($getBalances);
+//$output1 = var_dump($getBalances);
 
-echo     $recorded = date('Y-m-d h:i:s', time());
 
 
 if($dataAction) { 
