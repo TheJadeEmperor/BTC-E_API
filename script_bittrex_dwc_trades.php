@@ -74,7 +74,7 @@ $output1 = '<pre>';print_r($getBalances).'</pre>';
 echo     $date = date(time(), 'Y-m-d h:i:s');
 
 
-if($cronjob == 1) {
+if($data['action']) {
     //write to file
     $myFile = "log.txt";
     $fh = fopen($myFile, 'a') or print("Can't open file $myFile");
