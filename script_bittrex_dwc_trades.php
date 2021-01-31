@@ -2,6 +2,7 @@
 $dir = 'include/';
 include($dir.'api_database.php');
 include($dir.'api_bittrex.php');
+include($dir.'functions.php');
 include($dir.'config.php');
 
 $newline = '<br />';   //debugging newline
@@ -12,6 +13,9 @@ $newline = '<br />';   //debugging newline
 54.218.53.128
 52.32.178.7
 */
+
+
+echo 'ip: '. get_ip_address().' ';
 
 //get webhook data
 $json = file_get_contents('php://input');

@@ -1,4 +1,7 @@
 <?
+$dir = 'include/';
+include($dir.'api_database.php');
+include($dir.'functions.php');
 
 //debug mode or live mode
 $server = $_SERVER['SERVER_NAME'];
@@ -47,6 +50,10 @@ curl_close($curl);
  
 //table codegeas_trades   btc_log | fields: id | recorded | log
 
+
+
+
+echo 'ip: '. get_ip_address();
 
 
 ?>
