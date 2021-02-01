@@ -8,7 +8,7 @@
  * @link https://github.com/y0un1verse/bitmex-api-php
  */
 
-class BitMex {
+class Bitmex {
 
   //const API_URL = 'https://testnet.bitmex.com';
   const API_URL = 'https://www.bitmex.com';
@@ -53,9 +53,9 @@ class BitMex {
    * @return ticker array
    */
 
-  public function getTicker() {
-
-    $symbol = self::SYMBOL;
+  public function getTicker($symbol) {
+  
+    $this->symbol = $symbol;
     $data['function'] = "instrument";
     $data['params'] = array(
       "symbol" => $symbol
@@ -64,6 +64,19 @@ class BitMex {
     $return = $this->publicQuery($data);
 
     if(!$return || count($return) != 1 || !isset($return[0]['symbol'])) return false;
+
+//    print_r($return[0]);
+
+    //we only care about these prices
+    $priceArray = array('symbol', 'lastPrice', 'bidPrice', 'askPrice', 'highPrice', 'lowPrice');
+
+    foreach($return[0] as $index => $val) {
+      if(in_array($index, $priceArray))
+     
+      $num = number_format((float)$val, 2, '.', '');
+      echo $num.' '; 
+    }
+
 
     $return = array(
       "symbol" => $return[0]['symbol'],
@@ -486,7 +499,7 @@ class BitMex {
    * @return array
    */
 
-  public function getMargin() {
+  public function getMargin($currency) {
 
     $data['method'] = "GET";
     $data['function'] = "user/margin";
@@ -508,6 +521,7 @@ class BitMex {
   public function getOrderBook($depth = 25) {
 
     $symbol = self::SYMBOL;
+    //echo $symbol;
     $data['method'] = "GET";
     $data['function'] = "orderBook/L2";
     $data['params'] = array(
