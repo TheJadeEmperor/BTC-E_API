@@ -43,6 +43,7 @@ $bid = $getTicker->Bid;
 $ask = $getTicker->Ask;
 $fee = 0.004;
 
+$sellQT = 0; //default quantity if you don't have the coin
 $getBalances = $bittrex->getBalances();
 
 foreach($getBalances as $index) { //go through each coin you have
@@ -50,13 +51,13 @@ foreach($getBalances as $index) { //go through each coin you have
     $coin = explode('-', $pair); //get coin from USDT pair
 
     if($index->Currency == $coin[1]) { //match coin symbol
-        echo 'true';  $sellQT = $index->Available; 
+        $sellQT = $index->Available; 
     }
 
     if($index->Currency == 'USDT') {
         $USDTBalance = $index->Available; 
         $buyQT = $USDTBalance/$ask; //quantity to buy
-        $buyQT = $buyQT - $buyQT * 0.004; //subtract taker or maker fee
+        $buyQT = $buyQT - $buyQT * $fee; //subtract taker or maker fee
     }
 
 }
@@ -91,7 +92,7 @@ if($dataAction) {
 
     //write to log db
     $insert = 'INSERT INTO '.$logTableName.' (recorded, log) values ("'.$recorded.'", "'.$output.'")';
-    $res = $db->query($insert);
+    $res = $conn->query($insert);
 }
    
 

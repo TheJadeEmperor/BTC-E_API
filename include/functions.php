@@ -93,41 +93,15 @@ function dbInsert($opt) {
 	return $res;
 }
 
-/*
- * $opt = array(
- * 	'tableName' => $tableName,
- * 	'cond' => $cond)
- * */
-function dbSelect($opt) {
-	global $conn; 
-	
-	$sel = 'SELECT * FROM '.$opt['tableName']; 
-	
-	if($opt['cond'])
-		$sel .= ' '.$opt['cond']; 
-	
-	$res = $conn->query($sel);
 
-	while($rows = $res->fetch_array()) {
-		foreach($rows as $fld => $val) {	//remove slashes 
-			$rows[$fld] = stripslashes($val);  
-		}
-		$mysql[] = $rows;		
-	}
-
-	if($_GET['debug'] == 1) {
-		echo '<pre>'.$sel.'</pre>';
-	}
-	
-	return $mysql;
-}
 
 
 /*
 $opt = array(
 	'tableName' => $tableName,
-	'cond' => $cond
+	'cond' => 'cond'
 );
+$res = dbSelectQuery($opt);
  */
 function dbSelectQuery($opt) {
 	global $conn; 
