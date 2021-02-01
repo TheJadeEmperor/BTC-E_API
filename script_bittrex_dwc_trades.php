@@ -5,17 +5,6 @@ include($dir.'api_bittrex.php');
 include($dir.'functions.php');
 include($dir.'config.php');
 
-$newline = '<br />';   //debugging newline
-
-/** tradingview IPs
- * 52.89.214.238
-34.212.75.30
-54.218.53.128
-52.32.178.7
-*/
-
-
-echo 'ip: '. get_ip_address().' ';
 
 //get webhook data
 $json = file_get_contents('php://input');
@@ -29,6 +18,18 @@ if($dataAlert != 'DWC') { //must have DWC for alert
     echo 'Invalid request';
     exit;
 }
+
+/** tradingview IPs
+ * 52.89.214.238
+34.212.75.30
+54.218.53.128
+52.32.178.7
+*/
+
+$ipAddress = get_ip_address();
+$recorded = date('Y-m-d h:i:s', time());
+$newline = '<br />';   //debugging newline
+
 
 //connect to Bittrex
 $bittrex = new Client ($bittrex_api_key, $bittrex_api_secret);
@@ -70,9 +71,8 @@ else if($data['action'] == 'sell') {
 }
 
 
-$recorded = date('Y-m-d h:i:s', time());
 
-$output = $recorded.' | cronjob: '.$cronjob.' | post data: '.$data['alert'].' | action: '.$dataAction.' '.$data['ticker'].' | '.$newline;
+$output = $recorded.' | IP: '.$ipAddress.' | post data: '.$data['alert'].' | action: '.$dataAction.' | '.$data['ticker'].' | '.$newline;
 
 $output .= 'bid: '.$bid.' | ask: '.$bid.' | buyQT: '.$buyQT.' sellQT: '.$sellQT.' '.$newline; 
 echo $output;
@@ -82,8 +82,6 @@ print_r($properties);
 
 //$output1 = var_dump($getBalances);
 
-
-
 if($dataAction) { 
     //write to file
     $myFile = "log.txt";
@@ -92,7 +90,7 @@ if($dataAction) {
     fclose($fh);    
 
     //write to log db
-    $insert = 'INSERT INTO $logTableName (recorded, log) values ("'.$recorded.'", "'.$output.'")';
+    $insert = 'INSERT INTO '.$logTableName.' (recorded, log) values ("'.$recorded.'", "'.$output.'")';
     $res = $db->query($insert);
 }
    
