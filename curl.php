@@ -19,7 +19,7 @@ else {
 
 $url = 'https://code.bestpayingsites.com/script_bittrex_dwc_trades.php';
 $json = array(
-    "alert" => "DWC", "action" => "", "ticker" => "USDT-LINK");
+    "alert" => "DWC", "action" => "1", "ticker" => "USDT-LINK");
 $data = json_encode($json);
 
 //print_r($data_string);
@@ -49,6 +49,7 @@ echo '<br /><br />';
 
 sleep(2); //delay before showing log
 
+
 //log table fields: id | recorded | log
 $opt = array(
 	'tableName' => $logTableName,
@@ -59,8 +60,5 @@ $res = dbSelectQuery($opt);
 while($log = $res->fetch_array()) {
     echo $log['log'].'<br />';
 }
-
-//echo ' ip: '. get_ip_address();
-
 
 ?>
