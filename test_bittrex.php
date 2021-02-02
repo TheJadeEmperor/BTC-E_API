@@ -42,7 +42,7 @@ else {
 $bittrex = new Client ($bittrex_api_key, $bittrex_api_secret);
 
 // /$pair = 'USDT-LINK'; 
-$percentBalance = 100; //% of your balance for buying
+$percentBalance = 1; //% of your balance for purchases | 1=100% | 0.5=50%
 $getTicker = $bittrex->getTicker ($pair);
 
 $bid = $getTicker->Bid; //for sells
@@ -59,6 +59,7 @@ foreach($getBalances as $index) { //go through each coin you have
 
     if($index->Currency == $coin[1]) { //match coin symbol
         $sellQT = $index->Available; 
+        $sellQT = $sellQT * $percentBalance;
         $totalBalance += $sellQT * $bid;
     }
 
@@ -67,6 +68,7 @@ foreach($getBalances as $index) { //go through each coin you have
         $totalBalance += $USDBalance;
         $buyQT = $USDTBalance/$ask; //quantity to buy
         $buyQT = $buyQT - $buyQT * $fee; //subtract taker or maker fee
+        $buyQT = $buyQT * $percentBalance; 
     }
 }
 
@@ -75,11 +77,11 @@ if($live == 1)
         //pair examples: USDT-LINK BTC-LINK
     
         $buyLimit = $bittrex->buyLimit($pair, $buyQT, $ask);   
-        $output .= ' buy ';
+        //$output .= ' buy ';
     }
     else if($data['action'] == 'sell') {
         $sellLimit = $bittrex->sellLimit ($pair, $sellQT, $bid);
-        $output .= ' sell ';
+        //$output .= ' sell ';
     }
 
 
