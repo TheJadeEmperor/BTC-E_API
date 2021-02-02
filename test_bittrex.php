@@ -65,7 +65,7 @@ foreach($getBalances as $index) { //go through each coin you have
 
     if($index->Currency == 'USDT') {
         $USDTBalance = $index->Available; 
-        $totalBalance += $USDBalance;
+        $totalBalance += $USDBalance; //add to totalBalance
         $buyQT = $USDTBalance/$ask; //quantity to buy
         $buyQT = $buyQT - $buyQT * $fee; //subtract taker or maker fee
         $buyQT = $buyQT * $percentBalance; 
@@ -73,9 +73,8 @@ foreach($getBalances as $index) { //go through each coin you have
 }
 
 if($live == 1)
-    if($data['action'] == 'buy') { //set ther orders based on action
+    if($data['action'] == 'buy') { //set the orders based on action
         //pair examples: USDT-LINK BTC-LINK
-    
         $buyLimit = $bittrex->buyLimit($pair, $buyQT, $ask);   
         //$output .= ' buy ';
     }
@@ -86,7 +85,7 @@ if($live == 1)
 
 
 
-$output = 'live: '.$live.' '.$recorded.' | IP: '.$ipAddress.' | post data: '.$data['alert'].' | action: '.$dataAction.' | '.$data['ticker'].' | '.$newline;
+$output = 'live: '.$live.' | '.$recorded.' | IP: '.$ipAddress.' | post data: '.$data['alert'].' | action: '.$dataAction.' | '.$data['ticker'].' | '.$newline;
 
 $output .= 'bid: '.$bid.' | ask: '.$bid.' | buyQT: '.$buyQT.' sellQT: '.$sellQT.' | totalBalance: '.$totalBalance.$newline; 
 echo $output;

@@ -8,9 +8,6 @@ include($dir.'config.php');
 $server = $_SERVER['SERVER_NAME'];
 if ($server == 'localhost' || $server == 'btcAPI.test') {
 	$cronjob = 0;
-	
-	if($_GET['cronjob'] == 1 || $_GET['live'] == 1) 
-		$cronjob = 1; //live mode in localhost
 }
 else {
     exit;
@@ -18,6 +15,9 @@ else {
 
 
 $url = 'https://code.bestpayingsites.com/script_bittrex_dwc_trades.php';
+$url = 'http://localhost/btcAPI/script_bittrex_dwc_trades.php';
+//$url = 'http://localhost/btcAPI/test_bittrex.php';
+
 $json = array(
     "alert" => "DWC", "action" => "", "ticker" => "USDT-LINK");
 $data = json_encode($json);
@@ -58,7 +58,10 @@ $opt = array(
 $res = dbSelectQuery($opt);
 
 while($log = $res->fetch_array()) {
-    echo $log['log'].'<br />';
+    $logOutput .= $log['log'].'<br />';
 }
+
+echo 'log begin <hr /> '.$logOutput.'';
+
 
 ?>
