@@ -45,12 +45,13 @@ $bittrex = new Client ($bittrex_api_key, $bittrex_api_secret);
 $percentBalance = 100; //% of your balance for buying
 $getTicker = $bittrex->getTicker ($pair);
 
-$bid = $getTicker->Bid;
-$ask = $getTicker->Ask;
-$fee = 0.004;
+$bid = $getTicker->Bid; //for sells
+$ask = $getTicker->Ask; //for buys
+$fee = 0.004; //get fee from api
 
 $sellQT = $buyQT = 0; //default quantity if you don't have the coin
 $getBalances = $bittrex->getBalances();
+$totalBalance = 0;
 
 foreach($getBalances as $index) { //go through each coin you have
 
@@ -58,30 +59,34 @@ foreach($getBalances as $index) { //go through each coin you have
 
     if($index->Currency == $coin[1]) { //match coin symbol
         $sellQT = $index->Available; 
+        $totalBalance += $sellQT * $bid;
     }
 
     if($index->Currency == 'USDT') {
         $USDTBalance = $index->Available; 
+        $totalBalance += $USDBalance;
         $buyQT = $USDTBalance/$ask; //quantity to buy
         $buyQT = $buyQT - $buyQT * $fee; //subtract taker or maker fee
     }
 }
 
-if($data['action'] == 'buy') { //set ther orders based on action
-    //pair examples: USDT-LINK BTC-LINK
-    $buyLimit = $bittrex->buyLimit($pair, $buyQT, $ask);   
-    $output .= ' buy ';
-}
-else if($data['action'] == 'sell') {
-    $sellLimit = $bittrex->sellLimit ($pair, $sellQT, $bid);
-    $output .= ' sell ';
-}
+if($live == 1)
+    if($data['action'] == 'buy') { //set ther orders based on action
+        //pair examples: USDT-LINK BTC-LINK
+    
+        $buyLimit = $bittrex->buyLimit($pair, $buyQT, $ask);   
+        $output .= ' buy ';
+    }
+    else if($data['action'] == 'sell') {
+        $sellLimit = $bittrex->sellLimit ($pair, $sellQT, $bid);
+        $output .= ' sell ';
+    }
 
 
 
 $output = 'live: '.$live.' '.$recorded.' | IP: '.$ipAddress.' | post data: '.$data['alert'].' | action: '.$dataAction.' | '.$data['ticker'].' | '.$newline;
 
-$output .= 'bid: '.$bid.' | ask: '.$bid.' | buyQT: '.$buyQT.' sellQT: '.$sellQT.' '.$newline; 
+$output .= 'bid: '.$bid.' | ask: '.$bid.' | buyQT: '.$buyQT.' sellQT: '.$sellQT.' | totalBalance: '.$totalBalance.$newline; 
 echo $output;
 
 $properties = get_object_vars($getBalances);
