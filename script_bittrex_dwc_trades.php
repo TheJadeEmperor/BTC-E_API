@@ -41,7 +41,7 @@ else {
 //connect to Bittrex
 $bittrex = new Client ($bittrex_api_key, $bittrex_api_secret);
 
-// /$pair = 'USDT-LINK'; 
+//$pair = 'USDT-LTC'; 
 $percentBalance = 1; //% of your balance for purchases | 1=100% | 0.5=50%
 $getTicker = $bittrex->getTicker ($pair);
 
@@ -58,6 +58,7 @@ foreach($getBalances as $index) { //go through each coin you have
     $coin = explode('-', $pair); //get coin from USDT pair
 
     if($index->Currency == $coin[1]) { //match coin symbol
+       // echo $coin[1]. ' ';
         $sellQT = $index->Available; 
         $sellQT = $sellQT * $percentBalance;
         $totalBalance += $sellQT * $bid;

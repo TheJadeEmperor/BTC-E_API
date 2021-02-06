@@ -19,7 +19,7 @@ $url = 'http://localhost/btcAPI/script_bittrex_dwc_trades.php';
 //$url = 'http://localhost/btcAPI/test_bittrex.php';
 
 $json = array(
-    "alert" => "DWC", "action" => "", "ticker" => "USDT-LINK");
+    "alert" => "DWC", "action" => "", "ticker" => "USDT-LTC");
 $data = json_encode($json);
 
 //print_r($data_string);
