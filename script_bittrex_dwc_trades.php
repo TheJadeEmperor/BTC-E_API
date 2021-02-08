@@ -5,8 +5,7 @@ include($dir.'api_bittrex.php');
 include($dir.'functions.php');
 include($dir.'config.php');
 
-
-$ipAddress = get_ip_address();
+$ipAddress = get_ip_address(); 
 $recorded = date('Y-m-d h:i:s', time());
 $newline = '<br />';   //debugging newline
 
@@ -23,7 +22,7 @@ $trustedIPs = array(
     '52.89.214.238',
     '34.212.75.30',
     '54.218.53.128',
-    '52.32.178.7'
+    '52.32.178.7',
 );
 
 //security measures
@@ -41,7 +40,6 @@ else {
 //connect to Bittrex
 $bittrex = new Client ($bittrex_api_key, $bittrex_api_secret);
 
-//$pair = 'USDT-LTC'; 
 $percentBalance = 1; //% of your balance for purchases | 1=100% | 0.5=50%
 $getTicker = $bittrex->getTicker ($pair);
 

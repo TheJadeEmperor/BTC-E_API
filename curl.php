@@ -4,22 +4,54 @@ include($dir.'api_database.php');
 include($dir.'functions.php');
 include($dir.'config.php');
 
-//debug mode or live mode
+//debug mode only
 $server = $_SERVER['SERVER_NAME'];
 if ($server == 'localhost' || $server == 'btcAPI.test') {
 	$cronjob = 0;
+    $localHost = 'http://localhost/btcAPI/';
+    $serverHost = 'https://code.bestpayingsites.com/';
+}
+else {
+    echo 'Invalid Request';
+    exit;
+}
+
+//list of scripts 
+$exchanges = array(
+    'script_bittrex_dwc_trades', 
+    'script_binance_dwc_trades', 
+    'script_kucoin_dwc_trades', 
+);
+
+foreach($exchanges as $ex) {
+    echo '<p><a href="curl.php?ex='.$ex.'">'.$ex.'</a></p>'; 
+}
+
+
+if($_GET['ex'] == 'script_bittrex_dwc_trades') {
+    //urls to use for curl
+    $url = $serverHost.'script_bittrex_dwc_trades.php';
+    $url = $localHost.'script_bittrex_dwc_trades.php';
+    $url = $localHost.'test_bittrex.php';
+    $cond = ' exchange="bittrex"';
+}
+else if ($_GET['ex'] == 'script_binance_dwc_trades') {
+    $url = $serverHost.'script_binance_dwc_trades.php';
+    $url = $localHost.'script_binance_dwc_trades.php';
+    $cond = ' exchange="binance"';
+}
+else if ($_GET['ex'] == 'script_kucoin_dwc_trades') {
+    $url = $serverHost.'script_kucoin_dwc_trades.php';
+    $url = $localHost.'script_kucoin_dwc_trades.php';
+    $cond = ' exchange="kucoin1"';
 }
 else {
     exit;
 }
 
 
-$url = 'https://code.bestpayingsites.com/script_bittrex_dwc_trades.php';
-$url = 'http://localhost/btcAPI/script_bittrex_dwc_trades.php';
-//$url = 'http://localhost/btcAPI/test_bittrex.php';
-
 $json = array(
-    "alert" => "DWC", "action" => "", "ticker" => "USDT-LTC");
+    "alert" => "DWC", "action" => "buy", "ticker" => "USDT-DOGE");
 $data = json_encode($json);
 
 //print_r($data_string);
@@ -50,10 +82,10 @@ echo '<br /><br />';
 sleep(2); //delay before showing log
 
 
-//log table fields: id | recorded | log
+//log table fields: id | recorded | log | exchange | action
 $opt = array(
 	'tableName' => $logTableName,
-	'cond' => 'ORDER BY recorded desc'
+	'cond' => ' WHERE'. $cond.' ORDER BY recorded desc'
 );
 $res = dbSelectQuery($opt);
 
