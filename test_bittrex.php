@@ -94,16 +94,10 @@ print_r($properties);
 
 //$output1 = var_dump($getBalances);
 
-if($dataAction && $live == 0) { 
-    //write to file
-    $myFile = "log.txt";
-    $fh = fopen($myFile, 'a') or print("Can't open file $myFile");
-    fwrite($fh, $output);  
-    fclose($fh);    
-
+if($dataAction) { 
     //write to log db
     $insert = 'INSERT INTO '.$logTableName.' (recorded, log, exchange, action) values ("'.$recorded.'", "'.$output.'",  "bittrex",  "'.$dataAction.'")';
-    $res = $conn->query($insert); 
+    $res = $conn->query($insert);
 }
    
 
