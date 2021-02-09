@@ -32,9 +32,9 @@ foreach($exchanges as $ex) {
 if($_GET['ex'] == 'script_bittrex_dwc_trades') {
     //urls to use for curl
     $url = $serverHost.'script_bittrex_dwc_trades.php';
-    //$url = $localHost.'script_bittrex_dwc_trades.php';
+    $url = $localHost.'script_bittrex_dwc_trades.php';
 
-    //$url = $serverHost.'test_bittrex.php';
+    $url = $localHost.'test_bittrex.php';
     $cond = ' exchange="bittrex"';
 }
 else if ($_GET['ex'] == 'script_binance_dwc_trades') {
@@ -54,8 +54,8 @@ else {
 
 $json = array(
     "alert" => "DWC",
-    "action" => "sell", 
-    "ticker" => "test");
+    "action" => "buy", 
+    "ticker" => "USDT-ADA");
 $data = json_encode($json);
 
 //print_r($data_string);
