@@ -1,9 +1,15 @@
 <?php
 $dir = 'include/';
 include($dir.'api_database.php');
-include($dir.'api_kucoin.php');
+include($dir.'api_kucoin_1.php');
 include($dir.'functions.php');
 include($dir.'config.php');
+
+//kucoin subaccount keys
+$key = $kucoin1_key;
+$secret = $kucoin1_secret;
+$passphrase = $kucoin1_passphrase;
+
 
 $ipAddress = get_ip_address(); 
 $recorded = date('Y-m-d h:i:s', time());
@@ -37,68 +43,73 @@ else {
     $live = 1;
 }
 
-//connect to Kucoin
-//$kucoin1 = new Client ($kucoin1_api_key, $kucoin1_api_secret);
+//$pair = 'USDT-XRP'; //delete when live
+$live = 1; //delete when live
+
+$coin = explode('-', $pair); //USDT-XRP
+echo ' '.$coin[1].' '; 
+$pair = $coin[1].'-'.$coin[0]; //XRP-USDT
 
 $percentBalance = 1; //% of your balance for purchases | 1=100% | 0.5=50%
-$getTicker = $kucoin1->getTicker ($pair);
 
-$bid = $getTicker->Bid; //for sells
-$ask = $getTicker->Ask; //for buys
-$fee = 0.001; //get fee from api
+$getPrices = getMarketPrice($pair);
+$ask = $getPrices['data']['bestAsk'];
+$bid = $getPrices['data']['bestBid'];
+$fee = 0.001; //taker or maker fee
 
 $sellQT = $buyQT = 0; //default quantity if you don't have the coin
-$getBalances = $kucoin1->getBalances();
+$getBalances = checkBalance();
 $totalBalance = 0;
 
-foreach($getBalances as $index) { //go through each coin you have
-
-    $coin = explode('-', $pair); //get coin from USDT pair
-
-    if($index->Currency == $coin[1]) { //match coin symbol
-       // echo $coin[1]. ' ';
-        $sellQT = $index->Available; 
-        $sellQT = $sellQT * $percentBalance;
-        $totalBalance += $sellQT * $bid;
+foreach($getBalances['data'] as $index) { //go through each coin you have
+   // echo $index['currency'];
+    if($index['currency'] == $coin[1]) { //match coin symbol
+         echo $coin[1]. ' ';
+         $sellQT = $index['available']; 
+         $totalBalance += $sellQT * $bid;
     }
 
-    if($index->Currency == 'USDT') {
-        $USDTBalance = $index->Available; 
-        $totalBalance += $USDBalance; //add to totalBalance
+    if($index['currency'] == 'USDT') {
+        $USDTBalance = $index['available']; 
+        $totalBalance += $USDTBalance; //add to totalBalance
         $buyQT = $USDTBalance/$ask; //quantity to buy
         $buyQT = $buyQT - $buyQT * $fee; //subtract taker or maker fee
         $buyQT = $buyQT * $percentBalance; 
     }
+
 }
+
+//echo 'sellQT '. $sellQT;
+echo $buyQT = number_format($buyQT, 4, '.', '');
+echo $sellQT = number_format($sellQT, 4, '.', '');
 
 if($live == 1)
     if($data['action'] == 'buy') { //set the orders based on action
-        //pair examples: 
-     //   $buyLimit = $kucoin1->buyLimit($pair, $buyQT, $ask);   
-
+        //pair examples: XRP-USDT BTC-USDT
+        $buyResult = buyLimit($pair, $buyQT, $ask);
+        $orderId = $buyResult['data']['orderId'];
     }
     else if($data['action'] == 'sell') {
-    //    $sellLimit = $kucoin1->sellLimit ($pair, $sellQT, $bid);
-        
+        $sellResult = sellLimit($pair, $sellQT, $bid);
+        $orderId = $sellResult['data']['orderId'];
     }
 
+//echo 'bid '.$bid;
 
+//cancelOrder($orderID);
 
 $output = 'live: '.$live.' | '.$recorded.' | IP: '.$ipAddress.' | post data: '.$data['alert'].' | action: '.$dataAction.' | '.$data['ticker'].' | '.$newline;
 
-$output .= 'bid: '.$bid.' | ask: '.$bid.' | buyQT: '.$buyQT.' sellQT: '.$sellQT.' | totalBalance: '.$totalBalance.$newline; 
+$output .= 'bid: '.$bid.' | ask: '.$bid.' | buyQT: '.$buyQT.' sellQT: '.$sellQT.' | totalBalance: '.$totalBalance.' | orderId: '.$orderId.$newline; 
 echo $output;
 
-$properties = get_object_vars($getBalances);
-print_r($properties);
 
-//$output1 = var_dump($getBalances);
-
-if($dataAction && $live == 0) { 
+if($dataAction) { 
     //write to log db
-    $insert = 'INSERT INTO '.$logTableName.' (recorded, log) values ("'.$recorded.'", "'.$output.'")';
+    $insert = 'INSERT INTO '.$logTableName.' (recorded, log, exchange, action) values ("'.$recorded.'", "'.$output.'",  "kucoin1",  "'.$dataAction.'")';
     $res = $conn->query($insert);
 }
    
+
 
 ?>
