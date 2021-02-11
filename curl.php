@@ -45,6 +45,8 @@ else if ($_GET['ex'] == 'script_binance_dwc_trades') {
 else if ($_GET['ex'] == 'script_kucoin_dwc_trades') {
     $url = $serverHost.'script_kucoin_dwc_trades.php';
     $url = $localHost.'script_kucoin_dwc_trades.php';
+    $url = $localHost.'test_kucoin.php';
+
     $cond = ' exchange="kucoin1"';
 }
 else {
@@ -54,8 +56,8 @@ else {
 
 $json = array(
     "alert" => "DWC",
-    "action" => "buy", 
-    "ticker" => "USDT-ADA");
+    "action" => "", 
+    "ticker" => "USDT-DOT");
 $data = json_encode($json);
 
 //print_r($data_string);

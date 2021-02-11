@@ -1,7 +1,7 @@
 <?php
 $dir = 'include/';
 include($dir.'api_database.php');
-include($dir.'api_bittrex.php');
+include($dir.'api_kucoin.php');
 include($dir.'functions.php');
 include($dir.'config.php');
 
@@ -37,8 +37,8 @@ else {
     $live = 1;
 }
 
-//connect to Bittrex
-$kucoin1 = new Client ($kucoin1_api_key, $kucoin1_api_secret);
+//connect to Kucoin
+//$kucoin1 = new Client ($kucoin1_api_key, $kucoin1_api_secret);
 
 $percentBalance = 1; //% of your balance for purchases | 1=100% | 0.5=50%
 $getTicker = $kucoin1->getTicker ($pair);
