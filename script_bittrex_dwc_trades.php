@@ -64,7 +64,7 @@ foreach($getBalances as $index) { //go through each coin you have
 
     if($index->Currency == 'USDT') {
         $USDTBalance = $index->Available; 
-        $totalBalance += $USDBalance; //add to totalBalance
+        $totalBalance += $USDTBalance; //add to totalBalance
         $buyQT = $USDTBalance/$ask; //quantity to buy
         $buyQT = $buyQT - $buyQT * $fee; //subtract taker or maker fee
         $buyQT = $buyQT * $percentBalance; 

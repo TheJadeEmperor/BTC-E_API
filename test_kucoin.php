@@ -61,7 +61,6 @@ $sellQT = $buyQT = 0; //default quantity if you don't have the coin
 $getBalances = checkBalance();
 $totalBalance = 0;
 
-
 foreach($getBalances['data'] as $index) { //go through each coin you have
    // echo $index['currency'];
     if($index['currency'] == $coin[1]) { //match coin symbol
@@ -72,7 +71,7 @@ foreach($getBalances['data'] as $index) { //go through each coin you have
 
     if($index['currency'] == 'USDT') {
         $USDTBalance = $index['available']; 
-        $totalBalance += $USDBalance; //add to totalBalance
+        $totalBalance += $USDTBalance; //add to totalBalance
         $buyQT = $USDTBalance/$ask; //quantity to buy
         $buyQT = $buyQT - $buyQT * $fee; //subtract taker or maker fee
         $buyQT = $buyQT * $percentBalance; 

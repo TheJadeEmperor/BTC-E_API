@@ -21,7 +21,7 @@ else {
 $exchanges = array(
     'script_bittrex_dwc_trades', 
     'script_binance_dwc_trades', 
-    'script_kucoin_dwc_trades', 
+    'script_kucoin1_dwc_trades', 
 );
 
 foreach($exchanges as $ex) {
@@ -42,10 +42,10 @@ else if ($_GET['ex'] == 'script_binance_dwc_trades') {
     $url = $localHost.'script_binance_dwc_trades.php';
     $cond = ' exchange="binance"';
 }
-else if ($_GET['ex'] == 'script_kucoin_dwc_trades') {
+else if ($_GET['ex'] == 'script_kucoin1_dwc_trades') {
     $url = $serverHost.'script_kucoin_dwc_trades.php';
     $url = $localHost.'script_kucoin_dwc_trades.php';
-    $url = $localHost.'test_kucoin.php';
+    $url = $serverHost.'test_kucoin.php';
 
     $cond = ' exchange="kucoin1"';
 }
@@ -56,7 +56,7 @@ else {
 
 $json = array(
     "alert" => "DWC",
-    "action" => "", 
+    "action" => "sell", 
     "ticker" => "USDT-DOT");
 $data = json_encode($json);
 
@@ -96,7 +96,7 @@ $opt = array(
 $res = dbSelectQuery($opt);
 
 while($log = $res->fetch_array()) {
-    $logOutput .= $log['log'].'<br />';
+    $logOutput .= 'log id: '.$log['id'].' | '.$log['log'].'<br />';
 }
 
 echo 'log begin <hr /> '.$logOutput.'';
