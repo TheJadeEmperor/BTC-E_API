@@ -6,9 +6,23 @@ include($dir.'functions.php');
 include($dir.'config.php');
 
 //kucoin subaccount keys
-$key = $kucoin1_key;
-$secret = $kucoin1_secret;
-$passphrase = $kucoin1_passphrase;
+$sub = $_GET['sub'];
+if($sub == 'kucoin2') {
+    $key = $kucoin2_key;
+    $secret = $kucoin2_secret;
+    $passphrase = $kucoin2_passphrase;
+}
+else if ($sub == 'kucoin3') {
+    $key = $kucoin3_key;
+    $secret = $kucoin3_secret;
+    $passphrase = $kucoin3_passphrase;
+}
+else { //default is kucoin1
+    $key = $kucoin1_key;
+    $secret = $kucoin1_secret;
+    $passphrase = $kucoin1_passphrase;    
+}
+
 
 
 $ipAddress = get_ip_address(); 
