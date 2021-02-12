@@ -78,11 +78,11 @@ else {
     exit;
 }
 
-
+//json data to pass into webhook
 $json = array(
     "alert" => "DWC",
-    "action" => "buy", 
-    "ticker" => "USDT-KCS");
+    "action" => "", 
+    "ticker" => "USDT-XRP");
 $data = json_encode($json);
 
 //print_r($data_string);

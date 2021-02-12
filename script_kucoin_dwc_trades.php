@@ -63,11 +63,7 @@ else {
     $live = 1;
 }
 
-//$pair = 'USDT-XRP'; //delete when live
-$live = 1; //delete when live
-
 $coin = explode('-', $pair); //USDT-XRP
-echo ' '.$coin[1].' '; 
 $pair = $coin[1].'-'.$coin[0]; //XRP-USDT
 
 $percentBalance = 1; //% of your balance for purchases | 1=100% | 0.5=50%
@@ -115,9 +111,7 @@ if($live == 1)
         $sellResult = sellLimit($pair, $sellQT, $bid);
         $orderId = $sellResult['data']['orderId'];
     }
-
-//echo 'bid '.$bid;
-
+ 
 //cancelOrder($orderID);
 
 $output = 'live: '.$live.' | '.$recorded.' | IP: '.$ipAddress.' | post data: '.$data['alert'].' | action: '.$dataAction.' | '.$data['ticker'].' | '.$newline;
