@@ -5,6 +5,7 @@ include($dir.'api_kucoin_1.php');
 include($dir.'functions.php');
 include($dir.'config.php');
 
+
 //kucoin subaccount keys
 $sub = $_GET['sub'];
 if($sub == 'kucoin2') {
@@ -17,12 +18,17 @@ else if ($sub == 'kucoin3') {
     $secret = $kucoin3_secret;
     $passphrase = $kucoin3_passphrase;
 }
+else if ($sub == 'kucoin4') {
+    $key = $kucoin4_key;
+    $secret = $kucoin4_secret;
+    $passphrase = $kucoin4_passphrase;
+}
 else { //default is kucoin1
+    $sub == 'kucoin1';
     $key = $kucoin1_key;
     $secret = $kucoin1_secret;
     $passphrase = $kucoin1_passphrase;    
 }
-
 
 
 $ipAddress = get_ip_address(); 
@@ -69,7 +75,7 @@ $percentBalance = 1; //% of your balance for purchases | 1=100% | 0.5=50%
 $getPrices = getMarketPrice($pair);
 $ask = $getPrices['data']['bestAsk'];
 $bid = $getPrices['data']['bestBid'];
-$fee = 0.001; //taker or maker fee
+$fee = 0.002; //taker or maker fee
 
 $sellQT = $buyQT = 0; //default quantity if you don't have the coin
 $getBalances = checkBalance();
@@ -78,9 +84,11 @@ $totalBalance = 0;
 foreach($getBalances['data'] as $index) { //go through each coin you have
    // echo $index['currency'];
     if($index['currency'] == $coin[1]) { //match coin symbol
-         echo $coin[1]. ' ';
-         $sellQT = $index['available']; 
-         $totalBalance += $sellQT * $bid;
+        //echo $coin[1]. ' ';
+        if($index['available'] > 0) { //check for available balance
+            $sellQT = $index['available']; 
+            $totalBalance += $sellQT * $bid;
+        }
     }
 
     if($index['currency'] == 'USDT') {
@@ -117,13 +125,10 @@ $output = 'live: '.$live.' | '.$recorded.' | IP: '.$ipAddress.' | post data: '.$
 $output .= 'bid: '.$bid.' | ask: '.$bid.' | buyQT: '.$buyQT.' sellQT: '.$sellQT.' | totalBalance: '.$totalBalance.' | orderId: '.$orderId.$newline; 
 echo $output;
 
-
-if($dataAction) { 
-    //write to log db
-    $insert = 'INSERT INTO '.$logTableName.' (recorded, log, exchange, action) values ("'.$recorded.'", "'.$output.'",  "kucoin1",  "'.$dataAction.'")';
+//write to log db - if dataAction and an order is made   
+if($dataAction && $orderId) { 
+    $insert = 'INSERT INTO '.$logTableName.' (recorded, log, exchange, action) values ("'.$recorded.'", "'.$output.'",  "'.$sub.'",  "'.$dataAction.'")';
     $res = $conn->query($insert);
 }
    
-
-
 ?>
