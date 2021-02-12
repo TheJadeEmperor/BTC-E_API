@@ -24,6 +24,7 @@ $exchanges = array(
     'script_kucoin1_dwc_trades', 
     'script_kucoin2_dwc_trades', 
     'script_kucoin3_dwc_trades', 
+    'script_kucoin4_dwc_trades', 
 );
 
 foreach($exchanges as $ex) {
@@ -66,6 +67,13 @@ else if ($ex == 'script_kucoin3_dwc_trades') {
 
     $cond = ' exchange="kucoin3"';
 }
+else if ($ex == 'script_kucoin4_dwc_trades') {
+    $url = $serverHost.'script_kucoin_dwc_trades.php?sub=kucoin4';
+    $url = $localHost.'script_kucoin_dwc_trades.php?sub=kucoin4';
+    $url = $localHost.'test_kucoin.php?sub=kucoin4';
+
+    $cond = ' exchange="kucoin4"';
+}
 else {
     exit;
 }
@@ -73,8 +81,8 @@ else {
 
 $json = array(
     "alert" => "DWC",
-    "action" => "sell", 
-    "ticker" => "USDT-DOT");
+    "action" => "buy", 
+    "ticker" => "USDT-KCS");
 $data = json_encode($json);
 
 //print_r($data_string);
