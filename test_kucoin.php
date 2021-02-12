@@ -24,6 +24,7 @@ else if ($sub == 'kucoin4') {
     $passphrase = $kucoin4_passphrase;
 }
 else { //default is kucoin1
+    $sub == 'kucoin1';
     $key = $kucoin1_key;
     $secret = $kucoin1_secret;
     $passphrase = $kucoin1_passphrase;    
@@ -124,13 +125,10 @@ $output = 'live: '.$live.' | '.$recorded.' | IP: '.$ipAddress.' | post data: '.$
 $output .= 'bid: '.$bid.' | ask: '.$bid.' | buyQT: '.$buyQT.' sellQT: '.$sellQT.' | totalBalance: '.$totalBalance.' | orderId: '.$orderId.$newline; 
 echo $output;
 
-
-if($dataAction) { 
-    //write to log db
-    $insert = 'INSERT INTO '.$logTableName.' (recorded, log, exchange, action) values ("'.$recorded.'", "'.$output.'",  "kucoin1",  "'.$dataAction.'")';
+//write to log db - if dataAction and an order is made   
+if($dataAction && $orderId) { 
+    $insert = 'INSERT INTO '.$logTableName.' (recorded, log, exchange, action) values ("'.$recorded.'", "'.$output.'",  "'.$sub.'",  "'.$dataAction.'")';
     $res = $conn->query($insert);
 }
    
-
-
 ?>
