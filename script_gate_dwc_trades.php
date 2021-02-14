@@ -1,7 +1,7 @@
 <?php
 $dir = 'include/';
 include($dir.'api_database.php');
-include($dir.'api_bittrex.php');
+include($dir.'api_gate.php');
 include($dir.'functions.php');
 include($dir.'config.php');
 
@@ -37,61 +37,34 @@ else {
     $live = 1;
 }
 
-//connect to Binance
-//$binance = new Client ($binance_api_key, $binance_api_secret);
+$coin = explode('-', $pair); //USDT-GT
+$pair = $coin[1].'_'.$coin[0]; //GT_USDT
+echo $pair.' ';
 
-$percentBalance = 1; //% of your balance for purchases | 1=100% | 0.5=50%
-$getTicker = $binance->getTicker ($pair);
+$getMarketPrice = getMarketPrice($pair);
+$bid = $getMarketPrice[0]['highest_bid'];
+$ask = $getMarketPrice[0]['lowest_ask'];
 
-$bid = $getTicker->Bid; //for sells
-$ask = $getTicker->Ask; //for buys
 $fee = 0.001; //get fee from api
 
-$sellQT = $buyQT = 0; //default quantity if you don't have the coin
-$getBalances = $binance->getBalances();
-$totalBalance = 0;
+$sellQT = $buyQT = 700; //set default quantity - unable to get balance from api
 
-
-foreach($getBalances as $index) { //go through each coin you have
-
-    $coin = explode('-', $pair); //get coin from USDT pair
-
-    if($index->Currency == $coin[1]) { //match coin symbol
-       // echo $coin[1]. ' ';
-        $sellQT = $index->Available; 
-        $sellQT = $sellQT * $percentBalance;
-        $totalBalance += $sellQT * $bid;
-    }
-
-    if($index->Currency == 'USDT') {
-        $USDTBalance = $index->Available; 
-        $totalBalance += $USDBalance; //add to totalBalance
-        $buyQT = $USDTBalance/$ask; //quantity to buy
-        $buyQT = $buyQT - $buyQT * $fee; //subtract taker or maker fee
-        $buyQT = $buyQT * $percentBalance; 
-    }
-}
 
 if($live == 1)
     if($data['action'] == 'buy') { //set the orders based on action
-        //pair examples: 
-        //$buyLimit = $binance->buyLimit($pair, $buyQT, $ask);   
-        //$output .= ' buy ';
+        $buyOrder = buyOrder('limit', $pair, $buyQT, $ask);
+        $orderId = $buyOrder['id'];
     }
     else if($data['action'] == 'sell') {
-        // $sellLimit = $binance->sellLimit ($pair, $sellQT, $bid);
-        //$output .= ' sell ';
+        $sellOrder =  sellOrder('limit', $pair, $sellQT, $bid);
+        $orderId = $sellOrder['id'];
     }
-
-
 
 $output = 'live: '.$live.' | '.$recorded.' | IP: '.$ipAddress.' | post data: '.$data['alert'].' | action: '.$dataAction.' | '.$data['ticker'].' | '.$newline;
 
 $output .= 'bid: '.$bid.' | ask: '.$bid.' | buyQT: '.$buyQT.' sellQT: '.$sellQT.' | totalBalance: '.$totalBalance.$newline; 
 echo $output;
 
-$properties = get_object_vars($getBalances);
-print_r($properties);
 
 //$output1 = var_dump($getBalances);
 

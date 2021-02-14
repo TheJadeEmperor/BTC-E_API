@@ -19,8 +19,9 @@ else {
 
 //list of scripts 
 $exchanges = array(
-    'script_bittrex_dwc_trades', 
+    'script_gate_dwc_trades', 
     'script_binance_dwc_trades', 
+    'script_bittrex_dwc_trades', 
     'script_kucoin1_dwc_trades', 
     'script_kucoin2_dwc_trades', 
     'script_kucoin3_dwc_trades', 
@@ -33,56 +34,63 @@ foreach($exchanges as $ex) {
 
 $ex = $_GET['ex'];
 
-if($ex == 'script_bittrex_dwc_trades') {
-    //urls to use for curl
-    $url = $serverHost.'script_bittrex_dwc_trades.php';
-    $url = $localHost.'script_bittrex_dwc_trades.php';
+switch($ex) {
+    case 'script_kucoin4_dwc_trades':
+        $url = $serverHost.'script_kucoin_dwc_trades.php?sub=kucoin4';
+        $url = $localHost.'script_kucoin_dwc_trades.php?sub=kucoin4';
+    
+        $cond = ' exchange="kucoin4"';
+        break;
+    case 'script_kucoin3_dwc_trades':
+        $url = $serverHost.'script_kucoin_dwc_trades.php?sub=kucoin3';
+        $url = $localHost.'script_kucoin_dwc_trades.php?sub=kucoin3';
+        $url = $localHost.'test_kucoin.php?sub=kucoin3';
+    
+        $cond = ' exchange="kucoin3"';
+        break;
+    case 'script_kucoin2_dwc_trades':
+        $url = $serverHost.'script_kucoin_dwc_trades.php?sub=kucoin2';
+        $url = $localHost.'script_kucoin_dwc_trades.php?sub=kucoin2';
+        $url = $localHost.'test_kucoin.php?sub=kucoin2';
+    
+        $cond = ' exchange="kucoin2"';
+        break;
+    case 'script_kucoin1_dwc_trades':
+        $url = $serverHost.'script_kucoin_dwc_trades.php';
+        $url = $localHost.'script_kucoin_dwc_trades.php';
+        $url = $serverHost.'test_kucoin.php';
+    
+        $cond = ' exchange="kucoin1"';
+        break;
+    case 'script_binance_dwc_trades':
+        $url = $serverHost.'script_binance_dwc_trades.php';
+        $url = $localHost.'script_binance_dwc_trades.php';
 
-    $url = $localHost.'test_bittrex.php';
-    $cond = ' exchange="bittrex"';
-}
-else if ($ex == 'script_binance_dwc_trades') {
-    $url = $serverHost.'script_binance_dwc_trades.php';
-    $url = $localHost.'script_binance_dwc_trades.php';
-    $cond = ' exchange="binance"';
-} 
-else if ($ex == 'script_kucoin1_dwc_trades') {
-    $url = $serverHost.'script_kucoin_dwc_trades.php';
-    $url = $localHost.'script_kucoin_dwc_trades.php';
-    $url = $serverHost.'test_kucoin.php';
+        $cond = ' exchange="binance"';
+        break;
+    case 'script_bittrex_dwc_trades':
+        $url = $serverHost.'script_bittrex_dwc_trades.php';
+        $url = $localHost.'script_bittrex_dwc_trades.php';
+        $url = $localHost.'test_bittrex.php';
 
-    $cond = ' exchange="kucoin1"';
-}
-else if ($ex == 'script_kucoin2_dwc_trades') {
-    $url = $serverHost.'script_kucoin_dwc_trades.php?sub=kucoin2';
-    $url = $localHost.'script_kucoin_dwc_trades.php?sub=kucoin2';
-    $url = $localHost.'test_kucoin.php?sub=kucoin2';
+        $cond = ' exchange="bittrex"';
+        break;
+    case 'script_gate_dwc_trades':
+        $url = $serverHost.'script_gate_dwc_trades.php';
+        $url = $localHost.'script_gate_dwc_trades.php';
 
-    $cond = ' exchange="kucoin2"';
-}
-else if ($ex == 'script_kucoin3_dwc_trades') {
-    $url = $serverHost.'script_kucoin_dwc_trades.php?sub=kucoin3';
-    $url = $localHost.'script_kucoin_dwc_trades.php?sub=kucoin3';
-    $url = $localHost.'test_kucoin.php?sub=kucoin3';
-
-    $cond = ' exchange="kucoin3"';
-}
-else if ($ex == 'script_kucoin4_dwc_trades') {
-    $url = $serverHost.'script_kucoin_dwc_trades.php?sub=kucoin4';
-    $url = $localHost.'script_kucoin_dwc_trades.php?sub=kucoin4';
-    $url = $localHost.'test_kucoin.php?sub=kucoin4';
-
-    $cond = ' exchange="kucoin4"';
-}
-else {
-    exit;
+        $cond = ' exchange="gate1"';
+        break;
+    default: 
+        exit;
 }
 
 //json data to pass into webhook
 $json = array(
-    "alert" => "DWC",
-    "action" => "", 
-    "ticker" => "USDT-XRP");
+    "alert" => "DWC", //DWC
+    "action" => "", //buy or sell 
+    "ticker" => "USDT-GT",
+    "amt" => '700'); 
 $data = json_encode($json);
 
 //print_r($data_string);
