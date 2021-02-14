@@ -2,9 +2,6 @@
 
 $host = 'https://api.gateio.ws'; //production
 
-$key = $gate_key;
-$secret = $gate_secret;
-
 
 function signature($method = 'GET', $request_path = '', $query_string = '', $body = '', $timestamp = false) 
 {

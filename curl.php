@@ -34,7 +34,7 @@ foreach($exchanges as $ex) {
 
 $ex = $_GET['ex'];
 
-switch($ex) {
+switch($ex) { //URL to call and which exchange to get from log
     case 'script_kucoin4_dwc_trades':
         $url = $serverHost.'script_kucoin_dwc_trades.php?sub=kucoin4';
         $url = $localHost.'script_kucoin_dwc_trades.php?sub=kucoin4';
@@ -88,9 +88,9 @@ switch($ex) {
 //json data to pass into webhook
 $json = array(
     "alert" => "DWC", //DWC
-    "action" => "", //buy or sell 
+    "action" => "buy", //buy or sell 
     "ticker" => "USDT-GT",
-    "amt" => '700'); 
+    "amt" => '10'); 
 $data = json_encode($json);
 
 //print_r($data_string);
@@ -129,10 +129,10 @@ $opt = array(
 $res = dbSelectQuery($opt);
 
 while($log = $res->fetch_array()) {
-    $logOutput .= 'log id: '.$log['id'].' | '.$log['log'].'<br />';
+    $logOutput .= 'id: <b>'.$log['id'].'</b> | '.$log['log'].'<br />';
 }
 
-echo 'log begin <hr /> '.$logOutput.'';
+echo 'log begin<hr /><br />'.$logOutput.'';
 
 
 ?>
