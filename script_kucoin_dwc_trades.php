@@ -79,7 +79,8 @@ $totalBalance = 0;
 
 foreach($getBalances['data'] as $index) { //go through each coin you have
    // echo $index['currency'];
-    if($index['currency'] == $coin[1]) { //match coin symbol
+    $available = $index['available'];
+    if($index['currency'] == $coin[1] && $available > 0) { //match coin symbol
         //echo $coin[1]. ' ';
         if($index['available'] > 0) { //check for available balance
             $sellQT = $index['available']; 
@@ -87,7 +88,7 @@ foreach($getBalances['data'] as $index) { //go through each coin you have
         }
     }
 
-    if($index['currency'] == 'USDT') {
+    if($index['currency'] == 'USDT' && $available > 0) {
         $USDTBalance = $index['available']; 
         $totalBalance += $USDTBalance; //add to totalBalance
         $buyQT = $USDTBalance/$ask; //quantity to buy
@@ -98,8 +99,11 @@ foreach($getBalances['data'] as $index) { //go through each coin you have
 }
 
 //echo 'sellQT '. $sellQT;
-echo $buyQT = number_format($buyQT, 4, '.', '');
-echo $sellQT = number_format($sellQT, 4, '.', '');
+$buyQT = number_format($buyQT, 4, '.', '');
+$sellQT = number_format($sellQT, 4, '.', '');
+
+if($sellQT > $index['available']) //fix balance insufficient error 
+   $sellQT = $sellQT - 0.0001;
 
 if($live == 1)
     if($data['action'] == 'buy') { //set the orders based on action
@@ -111,7 +115,9 @@ if($live == 1)
         $sellResult = sellLimit($pair, $sellQT, $bid);
         $orderId = $sellResult['data']['orderId'];
     }
- 
+
+//echo 'bid '.$bid;
+
 //cancelOrder($orderID);
 
 $output = 'live: '.$live.' | '.$recorded.' | IP: '.$ipAddress.' | post data: '.$data['alert'].' | action: '.$dataAction.' | '.$data['ticker'].' | '.$newline;

@@ -67,7 +67,6 @@ else {
 $live = 1; //delete when live
 
 $coin = explode('-', $pair); //USDT-XRP
-echo ' '.$coin[1].' '; 
 $pair = $coin[1].'-'.$coin[0]; //XRP-USDT
 
 $percentBalance = 1; //% of your balance for purchases | 1=100% | 0.5=50%
@@ -102,8 +101,10 @@ foreach($getBalances['data'] as $index) { //go through each coin you have
 }
 
 //echo 'sellQT '. $sellQT;
-echo $buyQT = number_format($buyQT, 4, '.', '');
-echo $sellQT = number_format($sellQT, 4, '.', '');
+$buyQT = number_format($buyQT, 4, '.', '');
+$sellQT = number_format($sellQT, 4, '.', '');
+if($sellQT > $index['available']) //fix balance insufficient error 
+   $sellQT = $sellQT-0.0001;
 
 if($live == 1)
     if($data['action'] == 'buy') { //set the orders based on action
