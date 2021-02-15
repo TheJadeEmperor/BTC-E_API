@@ -42,7 +42,7 @@ else {
 }
 
 //////////////////////////////
-$live = 1; //delete when live 
+//$live = 1; //delete when live 
 //////////////////////////////
 
 $coin = explode('-', $pair); //USDT-GT

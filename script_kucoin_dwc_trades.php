@@ -96,12 +96,15 @@ foreach($getBalances['data'] as $index) { //go through each coin you have
     }
 
 }
- 
-//echo 'sellQT '. $sellQT;
+
 $buyQT = number_format($buyQT, 4, '.', '');
 $sellQT = number_format($sellQT, 4, '.', '');
 if($sellQT > $index['available']) //fix balance insufficient error 
    $sellQT = $sellQT-0.0001;
+
+if($amt) {
+    $buyQT = $sellQT = $amt;
+}
 
 if($live == 1)
     if($data['action'] == 'buy') { //set the orders based on action

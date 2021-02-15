@@ -16,6 +16,7 @@ $data = json_decode($json, true);
 $dataAlert = $data['alert'];
 $dataAction = $data['action'];
 $pair = $data['ticker'];
+$amt = $data['amt'];
 
 //IP white list from tradingview
 $trustedIPs = array(
@@ -51,6 +52,9 @@ $sellQT = $buyQT = 0; //default quantity if you don't have the coin
 $getBalances = $bittrex->getBalances();
 $totalBalance = 0;
 
+$properties = get_object_vars($getBalances);
+var_dump($properties);
+
 foreach($getBalances as $index) { //go through each coin you have
 
     $coin = explode('-', $pair); //get coin from USDT pair
@@ -64,37 +68,37 @@ foreach($getBalances as $index) { //go through each coin you have
 
     if($index->Currency == 'USDT') {
         $USDTBalance = $index->Available; 
-        $totalBalance += $USDTBalance; //add to totalBalance
+        $totalBalance += $USDBalance; //add to totalBalance
         $buyQT = $USDTBalance/$ask; //quantity to buy
         $buyQT = $buyQT - $buyQT * $fee; //subtract taker or maker fee
         $buyQT = $buyQT * $percentBalance; 
     }
 }
 
+if($amt) {
+    $buyQT = $sellQT = $amt;
+}
+
 if($live == 1)
     if($data['action'] == 'buy') { //set the orders based on action
         //pair examples: USDT-LINK BTC-LINK
         $buyLimit = $bittrex->buyLimit($pair, $buyQT, $ask);   
-        //$output .= ' buy ';
+        // var_dump($buyLimit);
+        $orderId = $buyLimit->uuid;
     }
     else if($data['action'] == 'sell') {
         $sellLimit = $bittrex->sellLimit ($pair, $sellQT, $bid);
-        //$output .= ' sell ';
+        $orderId = $sellLimit->uuid;
+        //var_dump($sellLimit);
     }
-
 
 
 $output = 'live: '.$live.' | '.$recorded.' | IP: '.$ipAddress.' | post data: '.$data['alert'].' | action: '.$dataAction.' | '.$data['ticker'].' | '.$newline;
 
-$output .= 'bid: '.$bid.' | ask: '.$bid.' | buyQT: '.$buyQT.' sellQT: '.$sellQT.' | totalBalance: '.$totalBalance.$newline; 
+$output .= 'bid: '.$bid.' | ask: '.$bid.' | buyQT: '.$buyQT.' sellQT: '.$sellQT.' | totalBalance: '.$totalBalance.' | orderId: '.$orderId.$newline; 
 echo $output;
 
-$properties = get_object_vars($getBalances);
-print_r($properties);
-
-//$output1 = var_dump($getBalances);
-
-if($dataAction) { 
+if($dataAction && $orderId) { 
     //write to log db
     $insert = 'INSERT INTO '.$logTableName.' (recorded, log, exchange, action) values ("'.$recorded.'", "'.$output.'",  "bittrex",  "'.$dataAction.'")';
     $res = $conn->query($insert);
