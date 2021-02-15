@@ -61,7 +61,7 @@ function buyLimit($pair, $buyQT, $ask) {
   $method = 'POST';
   $request_path = '/api/v1/orders';
   $timestamp = time() * 1000;
-  $body ='{"side":"buy","symbol":"'.$pair.'","type":"limit","price":"'.$ask.'","size":"'.$buyQT.'","clientOid":"'.microtime(true).'"}';
+  $body ='{"side":"buy","symbol":"'.$pair.'","type":"market","price":"'.$ask.'","size":"'.$buyQT.'","clientOid":"'.microtime(true).'"}';
 
   $curl = curl_init();
 
@@ -103,7 +103,7 @@ function sellLimit($pair, $sellQT, $ask) {
   $method = 'POST';
   $request_path = '/api/v1/orders';
   $timestamp = time() * 1000;
-  $body ='{"side":"sell","symbol":"'.$pair.'","type":"limit","price":"'.$ask.'","size":"'.$sellQT.'","clientOid":"'.microtime(true).'"}';
+  $body ='{"side":"sell","symbol":"'.$pair.'","type":"market","price":"'.$ask.'","size":"'.$sellQT.'","clientOid":"'.microtime(true).'"}';
 
   $curl = curl_init();
 

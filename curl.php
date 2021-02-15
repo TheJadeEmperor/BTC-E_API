@@ -38,7 +38,8 @@ switch($ex) { //URL to call and which exchange to get from log
     case 'script_kucoin4_dwc_trades':
         $url = $serverHost.'script_kucoin_dwc_trades.php?sub=kucoin4';
         $url = $localHost.'script_kucoin_dwc_trades.php?sub=kucoin4';
-    
+        $url = $localHost.'test_kucoin.php?sub=kucoin4';
+
         $cond = ' exchange="kucoin4"';
         break;
     case 'script_kucoin3_dwc_trades':
@@ -77,7 +78,7 @@ switch($ex) { //URL to call and which exchange to get from log
         break;
     case 'script_gate_dwc_trades':
         $url = $serverHost.'script_gate_dwc_trades.php';
-        $url = $localHost.'script_gate_dwc_trades.php';
+        //$url = $localHost.'script_gate_dwc_trades.php';
 
         $cond = ' exchange="gate1"';
         break;
@@ -88,9 +89,9 @@ switch($ex) { //URL to call and which exchange to get from log
 //json data to pass into webhook
 $json = array(
     "alert" => "DWC", //DWC
-    "action" => "buy", //buy or sell 
-    "ticker" => "USDT-GT",
-    "amt" => '10'); 
+    "action" => "sell", //buy or sell 
+    "ticker" => "USDT-DOGE",
+    "amt" => '100'); 
 $data = json_encode($json);
 
 //print_r($data_string);
