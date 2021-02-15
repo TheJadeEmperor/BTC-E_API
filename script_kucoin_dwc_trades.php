@@ -1,10 +1,9 @@
 <?php
 $dir = 'include/';
 include($dir.'api_database.php');
-include($dir.'api_kucoin_1.php');
+include($dir.'api_kucoin.php');
 include($dir.'functions.php');
 include($dir.'config.php');
-
 
 //kucoin subaccount keys
 $sub = $_GET['sub'];
@@ -79,8 +78,8 @@ $totalBalance = 0;
 
 foreach($getBalances['data'] as $index) { //go through each coin you have
    // echo $index['currency'];
-    $available = $index['available'];
-    if($index['currency'] == $coin[1] && $available > 0) { //match coin symbol
+   $available = $index['available'];
+   if($index['currency'] == $coin[1] && $available > 0) { //match coin symbol
         //echo $coin[1]. ' ';
         if($index['available'] > 0) { //check for available balance
             $sellQT = $index['available']; 
@@ -97,28 +96,24 @@ foreach($getBalances['data'] as $index) { //go through each coin you have
     }
 
 }
-
+ 
 //echo 'sellQT '. $sellQT;
 $buyQT = number_format($buyQT, 4, '.', '');
 $sellQT = number_format($sellQT, 4, '.', '');
-
 if($sellQT > $index['available']) //fix balance insufficient error 
-   $sellQT = $sellQT - 0.0001;
+   $sellQT = $sellQT-0.0001;
 
 if($live == 1)
     if($data['action'] == 'buy') { //set the orders based on action
         //pair examples: XRP-USDT BTC-USDT
-        $buyResult = buyLimit($pair, $buyQT, $ask);
+        $buyResult = buyOrder('market', $pair, $buyQT, $ask);
         $orderId = $buyResult['data']['orderId'];
     }
     else if($data['action'] == 'sell') {
-        $sellResult = sellLimit($pair, $sellQT, $bid);
+        $sellResult = sellOrder('market', $pair, $sellQT, $bid);
         $orderId = $sellResult['data']['orderId'];
     }
 
-//echo 'bid '.$bid;
-
-//cancelOrder($orderID);
 
 $output = 'live: '.$live.' | '.$recorded.' | IP: '.$ipAddress.' | post data: '.$data['alert'].' | action: '.$dataAction.' | '.$data['ticker'].' | '.$newline;
 
