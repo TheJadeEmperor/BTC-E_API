@@ -41,6 +41,7 @@ $data = json_decode($json, true);
 $dataAlert = $data['alert'];
 $dataAction = $data['action'];
 $pair = $data['ticker'];
+$amt = $data['amt'];
 
 //IP white list from tradingview
 $trustedIPs = array(
@@ -61,7 +62,9 @@ else if(!in_array($ipAddress, $trustedIPs)) {
 else {
     $live = 1;
 }
-
+//////////////////////////////
+//$live = 1; //delete when live
+//////////////////////////////
 $coin = explode('-', $pair); //USDT-XRP
 $pair = $coin[1].'-'.$coin[0]; //XRP-USDT
 
@@ -70,7 +73,6 @@ $percentBalance = 1; //% of your balance for purchases | 1=100% | 0.5=50%
 $getPrices = getMarketPrice($pair);
 $ask = $getPrices['data']['bestAsk'];
 $bid = $getPrices['data']['bestBid'];
-$fee = 0.002; //taker or maker fee
 
 $sellQT = $buyQT = 0; //default quantity if you don't have the coin
 $getBalances = checkBalance();
@@ -91,18 +93,20 @@ foreach($getBalances['data'] as $index) { //go through each coin you have
         $USDTBalance = $index['available']; 
         $totalBalance += $USDTBalance; //add to totalBalance
         $buyQT = $USDTBalance/$ask; //quantity to buy
-        $buyQT = $buyQT - $buyQT * $fee; //subtract taker or maker fee
         $buyQT = $buyQT * $percentBalance; 
     }
 
 }
 
+//orders only take 4 decimals
 $buyQT = number_format($buyQT, 4, '.', '');
 $sellQT = number_format($sellQT, 4, '.', '');
-if($sellQT > $index['available']) //fix balance insufficient error 
-   $sellQT = $sellQT-0.0001;
 
-if($amt) {
+//fix balance insufficient error
+if($sellQT > $index['available']) //balance is rounded up from number_format
+   $sellQT = $sellQT - 0.0001; //balance needs to be rounded down
+
+if($amt) { //override amt from json data
     $buyQT = $sellQT = $amt;
 }
 
