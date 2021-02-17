@@ -14,12 +14,17 @@ else {
     exit;
 }
 
-$database = new Database($conn);
 
 $id = $_GET['id'];
 
-$message = $database->deleteLog($id);
+if($_POST['delete']) {
+    $database = new Database($conn);
 
-echo 'id: '.$id.' | message: '.$message;
-
+    $message = $database->deleteLog($id);
+    $dis = 'disabled';
+    echo 'id: '.$id.' | message: '.$message;
+}
 ?>
+<form method="POST">
+<input type="submit" value="Delete Record <?=$id?>" name="delete" <?=$dis?> />
+</form>
