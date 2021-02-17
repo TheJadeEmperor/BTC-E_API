@@ -4,7 +4,6 @@ include($dir.'api_database.php');
 include($dir.'functions.php');
 include($dir.'config.php');
 
-
 //debug mode only
 $server = $_SERVER['SERVER_NAME'];
 if ($server == 'localhost' || $server == 'btcAPI.test') {
@@ -26,6 +25,7 @@ $exchanges = array(
     'script_kucoin2_dwc_trades', 
     'script_kucoin3_dwc_trades', 
     'script_kucoin4_dwc_trades', 
+    'script_kucoin5_dwc_trades', 
 );
 
 foreach($exchanges as $ex) {
@@ -35,17 +35,24 @@ foreach($exchanges as $ex) {
 $ex = $_GET['ex'];
 
 switch($ex) { //URL to call and which exchange to get from log
+    case 'script_kucoin5_dwc_trades':
+        $url = $serverHost.'script_kucoin_dwc_trades.php?sub=kucoin5';
+        $url = $localHost.'script_kucoin_dwc_trades.php?sub=kucoin5';
+        $url = $localHost.'test_kucoin.php?sub=kucoin5';
+
+        $cond = ' exchange="kucoin5"';
+        break;
     case 'script_kucoin4_dwc_trades':
         $url = $serverHost.'script_kucoin_dwc_trades.php?sub=kucoin4';
         $url = $localHost.'script_kucoin_dwc_trades.php?sub=kucoin4';
-        $url = $localHost.'test_kucoin.php?sub=kucoin4';
+        //$url = $localHost.'test_kucoin.php?sub=kucoin4';
 
         $cond = ' exchange="kucoin4"';
         break;
     case 'script_kucoin3_dwc_trades':
         $url = $serverHost.'script_kucoin_dwc_trades.php?sub=kucoin3';
         $url = $localHost.'script_kucoin_dwc_trades.php?sub=kucoin3';
-        $url = $localHost.'test_kucoin.php?sub=kucoin3';
+        //$url = $localHost.'test_kucoin.php?sub=kucoin3';
     
         $cond = ' exchange="kucoin3"';
         break;
@@ -78,7 +85,7 @@ switch($ex) { //URL to call and which exchange to get from log
         break;
     case 'script_gate_dwc_trades':
         $url = $serverHost.'script_gate_dwc_trades.php';
-        //$url = $localHost.'script_gate_dwc_trades.php';
+        $url = $localHost.'script_gate_dwc_trades.php';
 
         $cond = ' exchange="gate1"';
         break;
@@ -89,12 +96,10 @@ switch($ex) { //URL to call and which exchange to get from log
 //json data to pass into webhook
 $json = array(
     "alert" => "DWC", //DWC
-    "action" => "sell", //buy or sell 
-    "ticker" => "USDT-DOGE",
-    "amt" => '100'); 
+    "action" => "", //buy or sell
+    "ticker" => "USDT-", 
+    "amt" => ''); 
 $data = json_encode($json);
-
-//print_r($data_string);
 
 $curl = curl_init();
 curl_setopt($curl, CURLOPT_URL, $url);
@@ -119,6 +124,7 @@ curl_close($curl);
 
 echo '<br /><br />';
 
+
 sleep(2); //delay before showing log
 
 
@@ -130,7 +136,7 @@ $opt = array(
 $res = dbSelectQuery($opt);
 
 while($log = $res->fetch_array()) {
-    $logOutput .= 'id: <b>'.$log['id'].'</b> | '.$log['log'].'<br />';
+    $logOutput .= 'id: <b><a href="deleteLog.php?id='.$log['id'].'" target="_BLANK">'.$log['id'].'</a></b> | '.$log['log'].'<br />';
 }
 
 echo 'log begin<hr /><br />'.$logOutput.'';

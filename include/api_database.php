@@ -7,6 +7,7 @@ class Database {
 		'alertsTable' => 'btc_alerts',
 		'tradesTable' => 'btc_trades',
         'optionsTable' => 'btc_options',
+		'logTable' => 'btc_log'
     );
     
     public function __construct($db) {
@@ -32,8 +33,21 @@ class Database {
 
 		return $conn;
 	}
+
+	public function deleteLog($logID) {
+		//delete from db 
+		$delQ = 'DELETE FROM btc_log WHERE id="'.$logID.'" LIMIT 1';
+		$result = $this->db->query($delQ);
+
+		if( FALSE === $result ) {
+			$message = 'Failed to delete log: '.$delQ;
+		} 
+		else {
+			$message = 'Successfully deleted log '.$id;
+		}
+		return $message;
+	}
     
-	
 	public function format_percent_display($percent_number) {
 		$percent_number = number_format($percent_number, 2).'%';
 		
