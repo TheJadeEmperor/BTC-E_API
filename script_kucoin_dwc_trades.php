@@ -32,7 +32,7 @@ else { //default is kucoin1
 
 $ipAddress = get_ip_address(); 
 $recorded = date('Y-m-d h:i:s', time());
-$newline = '<br />';   //debugging newline
+$newline = '<br />'; //debugging newline
 
 //get webhook data
 $json = file_get_contents('php://input');
@@ -124,7 +124,7 @@ if($live == 1)
 
 $output = 'live: '.$live.' | '.$recorded.' | IP: '.$ipAddress.' | post data: '.$data['alert'].' | action: '.$dataAction.' | '.$data['ticker'].' | '.$newline;
 
-$output .= 'bid: '.$bid.' | ask: '.$bid.' | buyQT: '.$buyQT.' sellQT: '.$sellQT.' | totalBalance: '.$totalBalance.' | orderId: '.$orderId.$newline; 
+$output .= 'bid: '.$bid.' | ask: '.$bid.' | buyQT: '.$buyQT.' | sellQT: '.$sellQT.' | totalBalance: '.$totalBalance.' | orderId: '.$orderId.$newline; 
 echo $output;
 
 //write to log db - if dataAction and an order is made   

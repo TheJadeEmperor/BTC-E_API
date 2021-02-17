@@ -22,8 +22,13 @@ else if ($sub == 'kucoin4') {
     $secret = $kucoin4_secret;
     $passphrase = $kucoin4_passphrase;
 }
+else if ($sub == 'kucoin5') {
+    $key = $kucoin5_key;
+    $secret = $kucoin5_secret;
+    $passphrase = $kucoin5_passphrase;
+}
 else { //default is kucoin1
-    $sub == 'kucoin1';
+    $sub = 'kucoin1';
     $key = $kucoin1_key;
     $secret = $kucoin1_secret;
     $passphrase = $kucoin1_passphrase;    
