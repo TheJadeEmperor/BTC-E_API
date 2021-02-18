@@ -45,7 +45,7 @@ switch($ex) { //URL to call and which exchange to get from log
     case 'script_kucoin4_dwc_trades':
         $url = $serverHost.'script_kucoin_dwc_trades.php?sub=kucoin4';
         $url = $localHost.'script_kucoin_dwc_trades.php?sub=kucoin4';
-        //$url = $localHost.'test_kucoin.php?sub=kucoin4';
+        $url = $localHost.'test_kucoin.php?sub=kucoin4';
 
         $cond = ' exchange="kucoin4"';
         break;
@@ -66,7 +66,7 @@ switch($ex) { //URL to call and which exchange to get from log
     case 'script_kucoin1_dwc_trades':
         $url = $serverHost.'script_kucoin_dwc_trades.php';
         $url = $localHost.'script_kucoin_dwc_trades.php';
-        $url = $serverHost.'test_kucoin.php';
+        //$url = $localHost.'test_kucoin.php';
     
         $cond = ' exchange="kucoin1"';
         break;
@@ -97,8 +97,8 @@ switch($ex) { //URL to call and which exchange to get from log
 $json = array(
     "alert" => "DWC", //DWC
     "action" => "", //buy or sell
-    "ticker" => "USDT-", 
-    "amt" => ''); 
+    "ticker" => "USDT-DOT", 
+    "amt" => '0.01'); 
 $data = json_encode($json);
 
 $curl = curl_init();
@@ -131,7 +131,7 @@ sleep(2); //delay before showing log
 //log table fields: id | recorded | log | exchange | action
 $opt = array(
 	'tableName' => $logTableName,
-	'cond' => ' WHERE'. $cond.' ORDER BY recorded desc'
+	'cond' => ' WHERE'. $cond.' ORDER BY id desc'
 );
 $res = dbSelectQuery($opt);
 

@@ -34,7 +34,6 @@ else { //default is kucoin1
     $passphrase = $kucoin1_passphrase;    
 }
 
-
 $ipAddress = get_ip_address(); 
 $recorded = date('Y-m-d h:i:s', time());
 $newline = '<br />';   //debugging newline
@@ -133,8 +132,10 @@ echo $output;
 
 //write to log db - if dataAction and an order is made   
 if($dataAction && $orderId) { 
-    $insert = 'INSERT INTO '.$logTableName.' (recorded, log, exchange, action) values ("'.$recorded.'", "'.$output.'",  "'.$sub.'",  "'.$dataAction.'")';
+  $insert = 'INSERT INTO '.$logTableName.' (recorded, log, exchange, action) values ("'.$recorded.'", "'.$output.'",  "'.$sub.'",  "'.$dataAction.'")';
     $res = $conn->query($insert);
 }
+
+
    
 ?>

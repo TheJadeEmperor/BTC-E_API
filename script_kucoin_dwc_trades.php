@@ -23,12 +23,11 @@ else if ($sub == 'kucoin4') {
     $passphrase = $kucoin4_passphrase;
 }
 else { //default is kucoin1
-    $sub == 'kucoin1';
+    $sub = 'kucoin1';
     $key = $kucoin1_key;
     $secret = $kucoin1_secret;
     $passphrase = $kucoin1_passphrase;    
 }
-
 
 $ipAddress = get_ip_address(); 
 $recorded = date('Y-m-d h:i:s', time());
@@ -132,5 +131,6 @@ if($dataAction && $orderId) {
     $insert = 'INSERT INTO '.$logTableName.' (recorded, log, exchange, action) values ("'.$recorded.'", "'.$output.'",  "'.$sub.'",  "'.$dataAction.'")';
     $res = $conn->query($insert);
 }
-   
+
+
 ?>
