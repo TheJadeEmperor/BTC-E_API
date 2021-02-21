@@ -22,6 +22,11 @@ else if ($sub == 'kucoin4') {
     $secret = $kucoin4_secret;
     $passphrase = $kucoin4_passphrase;
 }
+else if ($sub == 'kucoin5') {
+    $key = $kucoin5_key;
+    $secret = $kucoin5_secret;
+    $passphrase = $kucoin5_passphrase;
+}
 else { //default is kucoin1
     $sub = 'kucoin1';
     $key = $kucoin1_key;
@@ -29,8 +34,9 @@ else { //default is kucoin1
     $passphrase = $kucoin1_passphrase;    
 }
 
+
 $ipAddress = get_ip_address(); 
-$recorded = date('Y-m-d h:i:s', time());
+$recorded = date('Y-m-d H:i:s', time());
 $newline = '<br />'; //debugging newline
 
 //get webhook data

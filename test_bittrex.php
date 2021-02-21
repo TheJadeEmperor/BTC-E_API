@@ -6,7 +6,7 @@ include($dir.'functions.php');
 include($dir.'config.php');
 
 $ipAddress = get_ip_address(); 
-$recorded = date('Y-m-d h:i:s', time());
+$recorded = date('Y-m-d H:i:s', time());
 $newline = '<br />';   //debugging newline
 
 //get webhook data
