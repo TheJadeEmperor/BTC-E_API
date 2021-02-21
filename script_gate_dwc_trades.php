@@ -42,7 +42,7 @@ else {
 }
 
 //////////////////////////////
-//$live = 1; //delete when live 
+$live = 1; //delete when live 
 //////////////////////////////
 
 $coin = explode('-', $pair); //USDT-GT
@@ -52,8 +52,8 @@ $getMarketPrice = getMarketPrice($pair);
 $bid = $getMarketPrice[0]['highest_bid'];
 $ask = $getMarketPrice[0]['lowest_ask'];
 
-//set default quantity - unable to get balance from api
-$sellQT = $buyQT = $amt; 
+//unable to get balance from api
+$sellQT = $buyQT = $amt; //get quantity from $amt in json data
 
 if($live == 1)
     if($data['action'] == 'buy') { //set the orders based on action
@@ -65,16 +65,6 @@ if($live == 1)
         $orderId = $sellOrder['id'];
     }
 
-$output = 'live: '.$live.' | '.$recorded.' | IP: '.$ipAddress.' | post data: '.$data['alert'].' | action: '.$dataAction.' | '.$data['ticker'].' | '.$newline;
-
-$output .= 'bid: '.$bid.' | ask: '.$bid.' | buyQT: '.$buyQT.' sellQT: '.$sellQT.' | orderId: '. $orderId.' '.$newline; 
-echo $output;
-
-if($dataAction && $orderId) {
-    //write to log db
-    $insert = 'INSERT INTO '.$logTableName.' (recorded, log, exchange, action) values ("'.$recorded.'", "'.$output.'",  "gate1",  "'.$dataAction.'")';
-    $res = $conn->query($insert);
-}
-   
+include('include/logInsert.php');
 
 ?>

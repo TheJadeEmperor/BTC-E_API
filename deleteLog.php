@@ -4,7 +4,7 @@ include($dir.'api_database.php');
 include($dir.'functions.php');
 include($dir.'config.php');
 
-//debug mode only
+//localhost only
 $server = $_SERVER['SERVER_NAME'];
 if ($server == 'localhost' || $server == 'btcAPI.test') {
     $localHost = 'http://localhost/btcAPI/';
