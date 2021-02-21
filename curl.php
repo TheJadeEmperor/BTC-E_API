@@ -7,7 +7,7 @@ include($dir.'config.php');
 //debug mode only
 $server = $_SERVER['SERVER_NAME'];
 if ($server == 'localhost' || $server == 'btcAPI.test') {
-	$cronjob = 0;
+	$database = new Database($conn);
     $localHost = 'http://localhost/btcAPI/';
     $serverHost = 'https://code.bestpayingsites.com/';
 }
@@ -38,56 +38,55 @@ switch($ex) { //URL to call and which exchange to get from log
     case 'script_kucoin5_dwc_trades':
         $url = $serverHost.'script_kucoin_dwc_trades.php?sub=kucoin5';
         $url = $localHost.'script_kucoin_dwc_trades.php?sub=kucoin5';
-        $url = $localHost.'test_kucoin.php?sub=kucoin5';
-
-        $cond = ' exchange="kucoin5"';
+        //// KC5 /////
+        $ex = 'kucoin5';
         break;
     case 'script_kucoin4_dwc_trades':
         $url = $serverHost.'script_kucoin_dwc_trades.php?sub=kucoin4';
         $url = $localHost.'script_kucoin_dwc_trades.php?sub=kucoin4';
         $url = $localHost.'test_kucoin.php?sub=kucoin4';
-
-        $cond = ' exchange="kucoin4"';
+        //// KC4 /////
+        $ex = 'kucoin4';
         break;
     case 'script_kucoin3_dwc_trades':
         $url = $serverHost.'script_kucoin_dwc_trades.php?sub=kucoin3';
         $url = $localHost.'script_kucoin_dwc_trades.php?sub=kucoin3';
-        //$url = $localHost.'test_kucoin.php?sub=kucoin3';
-    
-        $cond = ' exchange="kucoin3"';
+        $url = $localHost.'test_kucoin.php?sub=kucoin3';
+        //// KC3 /////
+        $ex = 'kucoin3';
         break;
     case 'script_kucoin2_dwc_trades':
         $url = $serverHost.'script_kucoin_dwc_trades.php?sub=kucoin2';
         $url = $localHost.'script_kucoin_dwc_trades.php?sub=kucoin2';
         $url = $localHost.'test_kucoin.php?sub=kucoin2';
-    
-        $cond = ' exchange="kucoin2"';
+        //// KC2 /////
+        $ex = 'kucoin2';
         break;
     case 'script_kucoin1_dwc_trades':
         $url = $serverHost.'script_kucoin_dwc_trades.php';
         $url = $localHost.'script_kucoin_dwc_trades.php';
-        //$url = $localHost.'test_kucoin.php';
-    
-        $cond = ' exchange="kucoin1"';
+        $url = $localHost.'test_kucoin.php';
+        //// KC1 /////
+        $ex = 'kucoin1';
         break;
     case 'script_binance_dwc_trades':
         $url = $serverHost.'script_binance_dwc_trades.php';
         $url = $localHost.'script_binance_dwc_trades.php';
 
-        $cond = ' exchange="binance"';
+        $ex = 'binance';
         break;
     case 'script_bittrex_dwc_trades':
         $url = $serverHost.'script_bittrex_dwc_trades.php';
         $url = $localHost.'script_bittrex_dwc_trades.php';
-        $url = $localHost.'test_bittrex.php';
-
-        $cond = ' exchange="bittrex"';
+        //$url = $localHost.'test_bittrex.php';
+        //// bittrex /////
+        $ex = 'bittrex'; 
         break;
     case 'script_gate_dwc_trades':
         $url = $serverHost.'script_gate_dwc_trades.php';
         $url = $localHost.'script_gate_dwc_trades.php';
-
-        $cond = ' exchange="gate1"';
+        //// gate1 /////
+        $ex = 'gate1';
         break;
     default: 
         exit;
@@ -97,7 +96,7 @@ switch($ex) { //URL to call and which exchange to get from log
 $json = array(
     "alert" => "DWC", //DWC
     "action" => "", //buy or sell
-    "ticker" => "USDT-DOT", 
+    "ticker" => "USDT-", //USDT-XXX 
     "amt" => '0.01'); 
 $data = json_encode($json);
 
@@ -128,18 +127,13 @@ echo '<br /><br />';
 sleep(2); //delay before showing log
 
 
-//log table fields: id | recorded | log | exchange | action
-$opt = array(
-	'tableName' => $logTableName,
-	'cond' => ' WHERE'. $cond.' ORDER BY id desc'
-);
-$res = dbSelectQuery($opt);
+$res = $database->getLogs($ex);
 
 while($log = $res->fetch_array()) {
-    $logOutput .= 'id: <b><a href="deleteLog.php?id='.$log['id'].'" target="_BLANK">'.$log['id'].'</a></b> | '.$log['log'].'<br />';
+    $logOutput .= 'id: <b><a href="deleteLog.php?id='.$log['id'].'" target="_BLANK">'.$log['id'].'</a></b> | recorded: '.$log['recorded'].' <br />'.$log['log'].'<br />';
 }
 
-echo 'log begin<hr /><br />'.$logOutput.'';
 
+echo 'log begin<hr /><br />'.$logOutput.'';
 
 ?>
