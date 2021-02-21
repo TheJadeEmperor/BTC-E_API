@@ -34,6 +34,24 @@ class Database {
 		return $conn;
 	}
 
+	public function getLogs($exchange) {
+
+		$selQuery = 'SELECT *, DATE_FORMAT(recorded, "%Y-%m-%d %h:%i:%s") as recorded FROM '.$this->context['logTable'].' WHERE exchange="'.$exchange.'" ORDER BY id desc';
+		$result = $this->db->query($selQuery);
+
+		if($_GET['debug'] == 1) {
+			echo '<pre>'.$selQuery.'</pre>';
+		}
+	
+		if( FALSE === $result ) {
+			$message = 'Query failed: '.$selQuery;
+		} 
+		else { 
+			return $result;
+		}
+
+	}
+
 	public function deleteLog($logID) {
 		//delete from db 
 		$delQ = 'DELETE FROM btc_log WHERE id="'.$logID.'" LIMIT 1';
