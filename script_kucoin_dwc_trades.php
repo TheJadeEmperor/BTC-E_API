@@ -34,10 +34,9 @@ else { //default is kucoin1
     $passphrase = $kucoin1_passphrase;    
 }
 
-
 $ipAddress = get_ip_address(); 
 $recorded = date('Y-m-d H:i:s', time());
-$newline = '<br />'; //debugging newline
+$newline = '<br />';   //debugging newline
 
 //get webhook data
 $json = file_get_contents('php://input');
@@ -68,7 +67,7 @@ else {
     $live = 1;
 }
 //////////////////////////////
-//$live = 1; //delete when live
+$live = 1; //delete when live
 //////////////////////////////
 $coin = explode('-', $pair); //USDT-XRP
 $pair = $coin[1].'-'.$coin[0]; //XRP-USDT
@@ -84,10 +83,10 @@ $getBalances = checkBalance();
 $totalBalance = 0;
 
 foreach($getBalances['data'] as $index) { //go through each coin you have
-   // echo $index['currency'];
    $available = $index['available'];
-   if($index['currency'] == $coin[1] && $available > 0) { //match coin symbol
-        //echo $coin[1]. ' ';
+   
+   if($index['currency'] == $coin[1] && $available > 0) { //match coin symbol   
+        $coinBalance = $available; 
         if($index['available'] > 0) { //check for available balance
             $sellQT = $index['available']; 
             $totalBalance += $sellQT * $bid;
@@ -95,17 +94,19 @@ foreach($getBalances['data'] as $index) { //go through each coin you have
     }
 
     if($index['currency'] == 'USDT' && $available > 0) {
-        $USDTBalance = $index['available']; 
+        $USDTBalance = $available; 
         $totalBalance += $USDTBalance; //add to totalBalance
         $buyQT = $USDTBalance/$ask; //quantity to buy
         $buyQT = $buyQT * $percentBalance; 
     }
-
 }
 
 //orders only take 4 decimals
 $buyQT = number_format($buyQT, 4, '.', '');
 $sellQT = number_format($sellQT, 4, '.', '');
+$coinBalance = number_format($coinBalance, 4, '.', '');
+$USDTBalance = number_format($USDTBalance, 4, '.', '');
+$totalBalance = number_format($totalBalance, 4, '.', '');
 
 //fix balance insufficient error
 if($sellQT > $index['available']) //balance is rounded up from number_format
@@ -126,17 +127,6 @@ if($live == 1)
         $orderId = $sellResult['data']['orderId'];
     }
 
-
-$output = 'live: '.$live.' | '.$recorded.' | IP: '.$ipAddress.' | post data: '.$data['alert'].' | action: '.$dataAction.' | '.$data['ticker'].' | '.$newline;
-
-$output .= 'bid: '.$bid.' | ask: '.$bid.' | buyQT: '.$buyQT.' | sellQT: '.$sellQT.' | totalBalance: '.$totalBalance.' | orderId: '.$orderId.$newline; 
-echo $output;
-
-//write to log db - if dataAction and an order is made   
-if($dataAction && $orderId) { 
-    $insert = 'INSERT INTO '.$logTableName.' (recorded, log, exchange, action) values ("'.$recorded.'", "'.$output.'",  "'.$sub.'",  "'.$dataAction.'")';
-    $res = $conn->query($insert);
-}
-
+include('include/logInsert.php');
 
 ?>

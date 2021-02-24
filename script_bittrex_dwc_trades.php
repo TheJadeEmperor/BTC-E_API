@@ -8,6 +8,7 @@ include($dir.'config.php');
 $ipAddress = get_ip_address(); 
 $recorded = date('Y-m-d H:i:s', time());
 $newline = '<br />';   //debugging newline
+$sub = 'bittrex';
 
 //get webhook data
 $json = file_get_contents('php://input');
@@ -38,6 +39,9 @@ else {
     $live = 1;
 }
 
+//////////////////////////////
+//$live = 1; //delete when live
+//////////////////////////////
 //connect to Bittrex
 $bittrex = new Client ($bittrex_api_key, $bittrex_api_secret);
 
@@ -56,18 +60,18 @@ $properties = get_object_vars($getBalances);
 var_dump($properties);
 
 foreach($getBalances as $index) { //go through each coin you have
-
+    $available = $index->Available;
     $coin = explode('-', $pair); //get coin from USDT pair
 
     if($index->Currency == $coin[1]) { //match coin symbol
-       // echo $coin[1]. ' ';
-        $sellQT = $index->Available; 
+        $coinBalance = $available; 
+        $sellQT = $available; 
         $sellQT = $sellQT * $percentBalance;
         $totalBalance += $sellQT * $bid;
     }
 
     if($index->Currency == 'USDT') {
-        $USDTBalance = $index->Available; 
+        $USDTBalance = $available; 
         $totalBalance += $USDBalance; //add to totalBalance
         $buyQT = $USDTBalance/$ask; //quantity to buy
         $buyQT = $buyQT - $buyQT * $fee; //subtract taker or maker fee
@@ -83,15 +87,17 @@ if($live == 1)
     if($data['action'] == 'buy') { //set the orders based on action
         //pair examples: USDT-LINK BTC-LINK
         $buyLimit = $bittrex->buyLimit($pair, $buyQT, $ask);   
-        // var_dump($buyLimit);
         $orderId = $buyLimit->uuid;
-    }
+    } // var_dump($buyLimit);
     else if($data['action'] == 'sell') {
         $sellLimit = $bittrex->sellLimit ($pair, $sellQT, $bid);
         $orderId = $sellLimit->uuid;
-        //var_dump($sellLimit);
-    }
+        
+    }   //var_dump($sellLimit);
 
+
+include('include/logInsert.php'); 
+exit;
 
 $output = 'live: '.$live.' | '.$recorded.' | IP: '.$ipAddress.' | post data: '.$data['alert'].' | action: '.$dataAction.' | '.$data['ticker'].' | '.$newline;
 

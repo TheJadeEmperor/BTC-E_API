@@ -7,6 +7,7 @@ include($dir.'config.php');
 
 $key = $gate_key;
 $secret = $gate_secret;
+$sub = 'gate1';
 
 $ipAddress = get_ip_address(); 
 $recorded = date('Y-m-d H:i:s', time());

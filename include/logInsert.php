@@ -3,11 +3,17 @@
 $output = 'live: '.$live.' | '.$recorded.' | IP: '.$ipAddress.' | post data: '.$data['alert'].' | action: '.$dataAction.' | '.$data['ticker'].' | '.$newline;
 
 $output .= 'bid: '.$bid.' | ask: '.$bid.' | buyQT: '.$buyQT.' sellQT: '.$sellQT.' | orderId: '. $orderId.' '.$newline; 
-echo $output;
 
-if($dataAction && $orderId) {
+if($totalBalance) {
+    $output .= 'coinBalance: '.$coinBalance.' | USDTBalance: '. $USDTBalance.' | totalBalance: '.$totalBalance.$newline; 
+}
+
+echo $output; //show output before inserting into log
+
+//only log valid actions and valid orders 
+if($dataAction && $orderId) { 
     //write to log db
-    $insert = 'INSERT INTO '.$logTableName.' (recorded, log, exchange, action) values ("'.$recorded.'", "'.$output.'",  "gate1",  "'.$dataAction.'")';
+    $insert = 'INSERT INTO '.$logTableName.' (recorded, log, exchange, action) values ("'.$recorded.'", "'.$output.'",  "'.$sub.'",  "'.$dataAction.'")';
     $res = $conn->query($insert);
 }
 
