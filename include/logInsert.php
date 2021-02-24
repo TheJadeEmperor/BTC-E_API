@@ -1,6 +1,6 @@
 <?
 
-$output = 'live: '.$live.' | '.$recorded.' | IP: '.$ipAddress.' | post data: '.$data['alert'].' | action: '.$dataAction.' | '.$data['ticker'].' | '.$newline;
+$output = 'live: '.$live.' | '.$recorded.' | IP: '.$ipAddress.' | action: '.$dataAction.' | '.$data['ticker'].' | '.$newline;
 
 $output .= 'bid: '.$bid.' | ask: '.$bid.' | buyQT: '.$buyQT.' sellQT: '.$sellQT.' | orderId: '. $orderId.' '.$newline; 
 
@@ -14,7 +14,7 @@ echo $output; //show output before inserting into log
 if($dataAction && $orderId) { 
     //write to log db
     $insert = 'INSERT INTO '.$logTableName.' (recorded, log, exchange, action) values ("'.$recorded.'", "'.$output.'",  "'.$sub.'",  "'.$dataAction.'")';
-    $res = $conn->query($insert);
+    $res = $conn->query($insert) or print($conn->error);
 }
 
 ?>

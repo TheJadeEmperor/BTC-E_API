@@ -8,6 +8,7 @@ include($dir.'config.php');
 $ipAddress = get_ip_address(); 
 $recorded = date('Y-m-d H:i:s', time());
 $newline = '<br />';   //debugging newline
+$database = new Database($conn);
 $sub = 'bittrex';
 
 //get webhook data
@@ -38,9 +39,8 @@ else if(!in_array($ipAddress, $trustedIPs)) {
 else {
     $live = 1;
 }
-
 //////////////////////////////
-//$live = 1; //delete when live
+$live = 1; //delete when live
 //////////////////////////////
 //connect to Bittrex
 $bittrex = new Client ($bittrex_api_key, $bittrex_api_secret);
@@ -79,7 +79,7 @@ foreach($getBalances as $index) { //go through each coin you have
     }
 }
 
-if($amt) {
+if($amt) { //override the amt
     $buyQT = $sellQT = $amt;
 }
 
@@ -90,25 +90,25 @@ if($live == 1)
         $orderId = $buyLimit->uuid;
     } // var_dump($buyLimit);
     else if($data['action'] == 'sell') {
-        $sellLimit = $bittrex->sellLimit ($pair, $sellQT, $bid);
-        $orderId = $sellLimit->uuid;
+
+        //loss protection - do not sell at lower price than entry price
+        $res = $database->getLatestBuy($sub, $pair); //get log for this ex & pair
         
-    }   //var_dump($sellLimit);
+        if($log = $res->fetch_array()) {  
+            $entryPrice = $log['price']; //get entry price
+        }
+
+        if ($bid < $entryPrice) {
+            $orderId = ' Loss protection: latest entry price: '.$entryPrice.' '; 
+        }
+        else {
+            $sellLimit = $bittrex->sellLimit ($pair, $sellQT, $bid);
+            $orderId = $sellLimit->uuid;
+        }
+        
+    }  //var_dump($sellLimit);
 
 
 include('include/logInsert.php'); 
-exit;
-
-$output = 'live: '.$live.' | '.$recorded.' | IP: '.$ipAddress.' | post data: '.$data['alert'].' | action: '.$dataAction.' | '.$data['ticker'].' | '.$newline;
-
-$output .= 'bid: '.$bid.' | ask: '.$bid.' | buyQT: '.$buyQT.' sellQT: '.$sellQT.' | totalBalance: '.$totalBalance.' | orderId: '.$orderId.$newline; 
-echo $output;
-
-if($dataAction && $orderId) { 
-    //write to log db
-    $insert = 'INSERT INTO '.$logTableName.' (recorded, log, exchange, action) values ("'.$recorded.'", "'.$output.'",  "bittrex",  "'.$dataAction.'")';
-    $res = $conn->query($insert);
-}
-   
 
 ?>
