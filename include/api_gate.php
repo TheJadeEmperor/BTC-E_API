@@ -1,11 +1,8 @@
 <?php
-
 $host = 'https://api.gateio.ws'; //production
 
-
-function signature($method = 'GET', $request_path = '', $query_string = '', $body = '', $timestamp = false) 
-{
-    global $secret;
+function signature($method = 'GET', $request_path = '', $query_string = '', $body = '', $timestamp = false) {
+    global $gate_secret;
 
     $body = is_array($body) ? json_encode($body) : $body; // Body must be in json format
     $timestamp = $timestamp ? $timestamp : time();
@@ -22,13 +19,12 @@ function signature($method = 'GET', $request_path = '', $query_string = '', $bod
       $timestamp
     );
 
-    return hash_hmac("sha512", $signatureString, $secret);
+    return hash_hmac("sha512", $signatureString, $gate_secret);
 }
 
-  function getBalances()
-  {
+  function getBalances() {
     global $host;
-    global $key;
+    global $gate_key;
 
     $method = 'GET';
     $request_path = '/api/v4/wallet/sub_account_balances';
@@ -49,7 +45,7 @@ function signature($method = 'GET', $request_path = '', $query_string = '', $bod
       CURLOPT_CUSTOMREQUEST => $method,
       CURLOPT_HTTPHEADER => array(
         "Content-Type:application/json",
-        "KEY:".$key,
+        "KEY:".$gate_key,
         "TIMESTAMP:".$timestamp,
         "SIGN:".signature($method, $request_path, $query_string, $body, $timestamp)
       ),
@@ -77,7 +73,7 @@ function signature($method = 'GET', $request_path = '', $query_string = '', $bod
   function getMarketPrice($currencyPair)
   {
     global $host;
-    global $key;
+    global $gate_key;
 
     $method = 'GET';
     $request_path = '/api/v4/spot/tickers?currency_pair='.$currencyPair;
@@ -120,7 +116,7 @@ function signature($method = 'GET', $request_path = '', $query_string = '', $bod
   function buyOrder($type, $pair, $amount, $price)
   {
     global $host;
-    global $key;
+    global $gate_key;
 
     $method = 'POST';
     $request_path = '/api/v4/spot/orders';
@@ -143,7 +139,7 @@ function signature($method = 'GET', $request_path = '', $query_string = '', $bod
       CURLOPT_POSTFIELDS => $body,
       CURLOPT_HTTPHEADER => array(
         "Content-Type:application/json",
-        "KEY:".$key,
+        "KEY:".$gate_key,
         "TIMESTAMP:".$timestamp,
         "SIGN:".signature($method, $request_path, $query_string, $body, $timestamp)
       ),
@@ -171,7 +167,7 @@ function signature($method = 'GET', $request_path = '', $query_string = '', $bod
   function sellOrder($type, $pair, $amount, $price)
   {
     global $host;
-    global $key;
+    global $gate_key;
 
     $method = 'POST';
     $request_path = '/api/v4/spot/orders';
@@ -194,7 +190,7 @@ function signature($method = 'GET', $request_path = '', $query_string = '', $bod
       CURLOPT_POSTFIELDS => $body,
       CURLOPT_HTTPHEADER => array(
         "Content-Type:application/json",
-        "KEY:".$key,
+        "KEY:".$gate_key,
         "TIMESTAMP:".$timestamp,
         "SIGN:".signature($method, $request_path, $query_string, $body, $timestamp)
       ),

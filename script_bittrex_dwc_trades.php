@@ -40,7 +40,7 @@ else {
     $live = 1;
 }
 //////////////////////////////
-$live = 1; //delete when live
+//$live = 1; //delete when live
 //////////////////////////////
 //connect to Bittrex
 $bittrex = new Client ($bittrex_api_key, $bittrex_api_secret);

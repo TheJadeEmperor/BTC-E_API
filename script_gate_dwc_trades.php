@@ -5,9 +5,6 @@ include($dir.'api_gate.php');
 include($dir.'functions.php');
 include($dir.'config.php');
 
-$key = $gate_key;
-$secret = $gate_secret;
-
 $ipAddress = get_ip_address(); 
 $recorded = date('Y-m-d H:i:s', time());
 $newline = '<br />';   //debugging newline
@@ -44,7 +41,7 @@ else {
 }
 
 //////////////////////////////
-$live = 1; //delete when live 
+//$live = 1; //delete when live 
 //////////////////////////////
 
 $coin = explode('-', $pair); //USDT-GT
@@ -71,7 +68,7 @@ if($live == 1)
         }
 
         if ($bid < $entryPrice) {
-            $orderId = ' Loss protection: latest entry price: '.$entryPrice.' '; 
+            $orderId = 'Loss protection: latest entry price: '.$entryPrice.' '; 
         }
         else {
             $sellOrder = sellOrder('limit', $pair, $sellQT, $bid);

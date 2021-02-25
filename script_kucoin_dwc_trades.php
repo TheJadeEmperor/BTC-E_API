@@ -68,7 +68,7 @@ else {
     $live = 1;
 }
 //////////////////////////////
-$live = 1; //delete when live
+//$live = 1; //delete when live
 //////////////////////////////
 $coin = explode('-', $pair); //USDT-XRP
 $pair = $coin[1].'-'.$coin[0]; //XRP-USDT
