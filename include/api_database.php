@@ -39,10 +39,6 @@ class Database {
 		$selQuery = 'SELECT price FROM '.$this->context['logTable'].' WHERE exchange="'.$exchange.'" AND ticker="'.$ticker.'" AND action="buy" ORDER BY id desc LIMIT 1';
 
 		$result = $this->db->query($selQuery);
-
-		if($_GET['debug'] == 1) {
-			echo '<pre>'.$selQuery.'</pre>';
-		}
 	
 		if( FALSE === $result ) {
 			echo 'Query failed: '.$this->db->error;
@@ -57,10 +53,6 @@ class Database {
 		$selQuery = 'SELECT *, DATE_FORMAT(recorded, "%Y-%m-%d %h:%i:%s") as recorded FROM '.$this->context['logTable'].' WHERE exchange="'.$exchange.'" ORDER BY id desc';
 		$result = $this->db->query($selQuery);
 
-		if($_GET['debug'] == 1) {
-			echo '<pre>'.$selQuery.'</pre>';
-		}
-	
 		if( FALSE === $result ) {
 			echo 'Query failed: '.$this->db->error;
 		} 

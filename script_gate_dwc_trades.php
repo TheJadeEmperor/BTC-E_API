@@ -7,11 +7,12 @@ include($dir.'config.php');
 
 $key = $gate_key;
 $secret = $gate_secret;
-$sub = 'gate1';
 
 $ipAddress = get_ip_address(); 
 $recorded = date('Y-m-d H:i:s', time());
 $newline = '<br />';   //debugging newline
+$database = new Database($conn);
+$sub = 'gate1';
 
 //get webhook data
 $json = file_get_contents('php://input');
@@ -62,8 +63,21 @@ if($live == 1)
         $orderId = $buyOrder['id'];
     }
     else if($data['action'] == 'sell') {
-        $sellOrder =  sellOrder('limit', $pair, $sellQT, $bid);
-        $orderId = $sellOrder['id'];
+        //loss protection - do not sell at lower price than entry price
+        $res = $database->getLatestBuy($sub, $data['ticker']); //get log for this ex & pair
+        
+        if($log = $res->fetch_array()) {  
+            $entryPrice = $log['price']; //get entry price
+        }
+
+        if ($bid < $entryPrice) {
+            $orderId = ' Loss protection: latest entry price: '.$entryPrice.' '; 
+        }
+        else {
+            $sellOrder = sellOrder('limit', $pair, $sellQT, $bid);
+            $orderId = $sellOrder['id'];
+        }
+       
     }
 
 include('include/logInsert.php');

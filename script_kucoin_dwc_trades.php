@@ -37,6 +37,7 @@ else { //default is kucoin1
 $ipAddress = get_ip_address(); 
 $recorded = date('Y-m-d H:i:s', time());
 $newline = '<br />';   //debugging newline
+$database = new Database($conn);
 
 //get webhook data
 $json = file_get_contents('php://input');
@@ -123,8 +124,20 @@ if($live == 1)
         $orderId = $buyResult['data']['orderId'];
     }
     else if($data['action'] == 'sell') {
-        $sellResult = sellOrder('market', $pair, $sellQT, $bid);
-        $orderId = $sellResult['data']['orderId'];
+        //loss protection - do not sell at lower price than entry price
+        $res = $database->getLatestBuy($sub, $data['ticker']); //get log for this ex & pair
+
+        if($log = $res->fetch_array()) {  
+            $entryPrice = $log['price']; //get entry price
+        }
+
+        if ($bid < $entryPrice) {
+            $orderId = ' Loss protection: latest entry price: '.$entryPrice.' '; 
+        }
+        else {
+            $sellResult = sellOrder('market', $pair, $sellQT, $bid);
+            $orderId = $sellResult['data']['orderId'];
+        }  
     }
 
 include('include/logInsert.php');

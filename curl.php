@@ -35,57 +35,52 @@ foreach($exchanges as $ex) {
 $ex = $_GET['ex'];
 
 switch($ex) { //URL to call and which exchange to get from log
-    case 'script_kucoin5_dwc_trades':
+    case 'script_kucoin5_dwc_trades':  //// KC5 /////
         $url = $serverHost.'script_kucoin_dwc_trades.php?sub=kucoin5';
-        // $url = $localHost.'script_kucoin_dwc_trades.php?sub=kucoin5';
-        //// KC5 /////
+        $url = $localHost.'script_kucoin_dwc_trades.php?sub=kucoin5';
+       
         $ex = 'kucoin5';
         break;
-    case 'script_kucoin4_dwc_trades':
+    case 'script_kucoin4_dwc_trades': //// KC4 /////
         $url = $serverHost.'script_kucoin_dwc_trades.php?sub=kucoin4';
         $url = $localHost.'script_kucoin_dwc_trades.php?sub=kucoin4';
 
-        //// KC4 /////
         $ex = 'kucoin4';
         break;
-    case 'script_kucoin3_dwc_trades':
+    case 'script_kucoin3_dwc_trades': //// KC3 /////
         $url = $serverHost.'script_kucoin_dwc_trades.php?sub=kucoin3';
         $url = $localHost.'script_kucoin_dwc_trades.php?sub=kucoin3';
      
-        //// KC3 /////
         $ex = 'kucoin3';
         break;
-    case 'script_kucoin2_dwc_trades':
+    case 'script_kucoin2_dwc_trades': //// KC2 /////
         $url = $serverHost.'script_kucoin_dwc_trades.php?sub=kucoin2';
         $url = $localHost.'script_kucoin_dwc_trades.php?sub=kucoin2';
 
-        //// KC2 /////
         $ex = 'kucoin2';
         break;
-    case 'script_kucoin1_dwc_trades':
+    case 'script_kucoin1_dwc_trades':  //// KC1 /////
         $url = $serverHost.'script_kucoin_dwc_trades.php';
         $url = $localHost.'script_kucoin_dwc_trades.php';
 
-        //// KC1 /////
         $ex = 'kucoin1';
         break;
-    case 'script_binance_dwc_trades':
+    case 'script_binance_dwc_trades': //// Binance ////
         $url = $serverHost.'script_binance_dwc_trades.php';
         $url = $localHost.'script_binance_dwc_trades.php';
 
         $ex = 'binance';
         break;
-    case 'script_bittrex_dwc_trades':
+    case 'script_bittrex_dwc_trades':  //// Bittrex ////
         $url = $serverHost.'script_bittrex_dwc_trades.php';
         $url = $localHost.'script_bittrex_dwc_trades.php';
 
-        //// bittrex /////
         $ex = 'bittrex'; 
         break;
-    case 'script_gate_dwc_trades':
+    case 'script_gate_dwc_trades':  //// gate1 /////
         $url = $serverHost.'script_gate_dwc_trades.php';
         $url = $localHost.'script_gate_dwc_trades.php';
-        //// gate1 /////
+
         $ex = 'gate1';
         break;
     default: 
@@ -95,9 +90,9 @@ switch($ex) { //URL to call and which exchange to get from log
 //json data to pass into webhook
 $json = array(
     "alert" => "DWC", //DWC
-    "action" => "sell", //buy or sell
+    "action" => "", //buy or sell
     "ticker" => "USDT-ADA", //USDT-XXX 
-    "amt" => '22'); 
+    "amt" => '1'); 
 
 $data = json_encode($json);
 
@@ -133,7 +128,6 @@ $res = $database->getLogs($ex);
 while($log = $res->fetch_array()) {
     $logOutput .= 'id: <b><a href="deleteLog.php?id='.$log['id'].'" target="_BLANK">'.$log['id'].'</a></b> | recorded: '.$log['recorded'].' <br />'.$log['log'].'<br />';
 }
-
 
 echo 'log begin<hr /><br />'.$logOutput.'';
 
