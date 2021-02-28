@@ -13,8 +13,21 @@ echo $output; //show output before inserting into log
 //only log valid actions and valid orders 
 if($dataAction && $orderId) { 
     //write to log db
-    $insert = 'INSERT INTO '.$logTableName.' 
-    (recorded, log, exchange, action, ticker, price) VALUES ("'.$recorded.'", "'.$output.'",  "'.$sub.'", "'.$data['ticker'].'", "'.$dataAction.'", "'. $ask.'")';
+    $insert = 'INSERT INTO '.$logTableName.' (
+        recorded, 
+        log, 
+        exchange, 
+        action, 
+        ticker, 
+        price
+        ) VALUES (
+        "'.$recorded.'", 
+        "'.$output.'",  
+        "'.$sub.'", 
+        "'.$dataAction.'", 
+        "'.$data['ticker'].'", 
+        "'. $ask.'" 
+        )';
     $res = $conn->query($insert) or print($conn->error);
 }
 
