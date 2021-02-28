@@ -127,6 +127,7 @@ if($live == 1)
         //loss protection - do not sell at lower price than entry price
         $res = $database->getLatestBuy($sub, $data['ticker']); //get log for this ex & pair
 
+  
         if($log = $res->fetch_array()) {  
             $entryPrice = $log['price']; //get entry price
         }
@@ -138,6 +139,7 @@ if($live == 1)
             $sellResult = sellOrder('market', $pair, $sellQT, $bid);
             $orderId = $sellResult['data']['orderId'];
         }  
+
     }
 
 include('include/logInsert.php');
