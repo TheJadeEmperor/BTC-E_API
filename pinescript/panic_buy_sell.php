@@ -128,8 +128,7 @@ if crossover(close, bbLower)
 //strategy.order("sell", false, 3, when = condition)   
 
 
-strategy.order("sell", false, bear - 3, when = bear > 3)  
-strategy.order("buy", true, bull - 3, when = bull > 3)     
+
 
 
 // strategy.entry("PS", strategy.short, comment="Sell")
