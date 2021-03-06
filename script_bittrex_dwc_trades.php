@@ -75,11 +75,9 @@ if($live == 1)
     if($data['action'] == 'buy') { //set the orders based on action
         //pair examples: USDT-LINK BTC-LINK
         $buyLimit = $bittrex->buyLimit($pair, $buyQT, $ask);   
-        //$output .= ' buy ';
     }
     else if($data['action'] == 'sell') {
         $sellLimit = $bittrex->sellLimit ($pair, $sellQT, $bid);
-        //$output .= ' sell ';
     }
 
 
