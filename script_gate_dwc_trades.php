@@ -6,8 +6,10 @@ include($dir.'functions.php');
 include($dir.'config.php');
 
 $ipAddress = get_ip_address(); 
-$recorded = date('Y-m-d h:i:s', time());
+$recorded = date('Y-m-d H:i:s', time());
 $newline = '<br />';   //debugging newline
+$database = new Database($conn);
+$sub = 'gate1';
 
 //get webhook data
 $json = file_get_contents('php://input');
@@ -16,6 +18,7 @@ $data = json_decode($json, true);
 $dataAlert = $data['alert'];
 $dataAction = $data['action'];
 $pair = $data['ticker'];
+$amt = $data['amt'];
 
 //IP white list from tradingview
 $trustedIPs = array(
@@ -37,18 +40,19 @@ else {
     $live = 1;
 }
 
+//////////////////////////////
+//$live = 1; //delete when live 
+//////////////////////////////
+
 $coin = explode('-', $pair); //USDT-GT
 $pair = $coin[1].'_'.$coin[0]; //GT_USDT
-echo $pair.' ';
 
 $getMarketPrice = getMarketPrice($pair);
 $bid = $getMarketPrice[0]['highest_bid'];
 $ask = $getMarketPrice[0]['lowest_ask'];
 
-$fee = 0.001; //get fee from api
-
-$sellQT = $buyQT = 700; //set default quantity - unable to get balance from api
-
+//unable to get balance from api
+$sellQT = $buyQT = $amt; //get quantity from $amt in json data
 
 if($live == 1)
     if($data['action'] == 'buy') { //set the orders based on action
@@ -56,24 +60,23 @@ if($live == 1)
         $orderId = $buyOrder['id'];
     }
     else if($data['action'] == 'sell') {
-        $sellOrder =  sellOrder('limit', $pair, $sellQT, $bid);
-        $orderId = $sellOrder['id'];
+        //loss protection - do not sell at lower price than entry price
+        $res = $database->getLatestBuy($sub, $data['ticker']); //get log for this ex & pair
+        
+        if($log = $res->fetch_array()) {  
+            $entryPrice = $log['price']; //get entry price
+        }
+
+        if ($bid < $entryPrice) {
+            $orderId = 'Loss protection: latest entry price: '.$entryPrice.' '; 
+        }
+        else {
+            $sellOrder = sellOrder('limit', $pair, $sellQT, $bid);
+            $orderId = $sellOrder['id'];
+        }
+       
     }
 
-$output = 'live: '.$live.' | '.$recorded.' | IP: '.$ipAddress.' | post data: '.$data['alert'].' | action: '.$dataAction.' | '.$data['ticker'].' | '.$newline;
-
-$output .= 'bid: '.$bid.' | ask: '.$bid.' | buyQT: '.$buyQT.' sellQT: '.$sellQT.' | totalBalance: '.$totalBalance.$newline; 
-echo $output;
-
-
-//$output1 = var_dump($getBalances);
-
-if($dataAction && $live == 0) { 
-
-    //write to log db
-    $insert = 'INSERT INTO '.$logTableName.' (recorded, log) values ("'.$recorded.'", "'.$output.'")';
-    $res = $conn->query($insert);
-}
-   
+include('include/logInsert.php');
 
 ?>

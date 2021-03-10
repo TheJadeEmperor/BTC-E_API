@@ -7,6 +7,7 @@ class Database {
 		'alertsTable' => 'btc_alerts',
 		'tradesTable' => 'btc_trades',
         'optionsTable' => 'btc_options',
+		'logTable' => 'btc_log'
     );
     
     public function __construct($db) {
@@ -32,8 +33,50 @@ class Database {
 
 		return $conn;
 	}
-    
+
+	public function getLatestBuy($exchange, $ticker) { 
+
+		$selQuery = 'SELECT price FROM '.$this->context['logTable'].' WHERE exchange="'.$exchange.'" AND ticker="'.$ticker.'" AND action="buy" ORDER BY id desc LIMIT 1';
+
+		$result = $this->db->query($selQuery);
 	
+		if( FALSE === $result ) {
+			echo 'Query failed: '.$this->db->error;
+		}
+		else { 
+			return $result;
+		}
+	}
+
+	public function getLogs($exchange) {
+
+		$selQuery = 'SELECT *, DATE_FORMAT(recorded, "%Y-%m-%d %h:%i:%s") as recorded FROM '.$this->context['logTable'].' WHERE exchange="'.$exchange.'" ORDER BY id desc';
+		$result = $this->db->query($selQuery);
+
+		if( FALSE === $result ) {
+			echo 'Query failed: '.$this->db->error;
+		} 
+		else { 
+			return $result;
+		}
+
+	}
+
+	public function deleteLog($logID) {
+		//delete from db 
+		$delQ = 'DELETE FROM btc_log WHERE id="'.$logID.'" LIMIT 1';
+		$result = $this->db->query($delQ);
+
+		if( FALSE === $result ) {
+			$message = 'Failed to delete log: '.$this->db->error;
+		} 
+		else {
+			$message = 'Successfully deleted log '.$id;
+		}
+		return $message;
+	}
+
+    
 	public function format_percent_display($percent_number) {
 		$percent_number = number_format($percent_number, 2).'%';
 		
@@ -89,7 +132,7 @@ class Database {
 		return $resultT;
 	}
 	
-	 public function getTrades () {
+	public function getTrades () {
 		$queryT = "SELECT *, date_format(until, '%m/%d/%Y') as until_date,
 		date_format(until, '%H:%i:%s') as until_time,
 		date_format(until, '%m/%d %h:%i %p') as until_format

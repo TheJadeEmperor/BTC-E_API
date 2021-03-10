@@ -6,8 +6,10 @@ include($dir.'functions.php');
 include($dir.'config.php');
 
 $ipAddress = get_ip_address(); 
-$recorded = date('Y-m-d h:i:s', time());
+$recorded = date('Y-m-d H:i:s', time());
 $newline = '<br />';   //debugging newline
+$database = new Database($conn);
+$sub = 'bittrex';
 
 //get webhook data
 $json = file_get_contents('php://input');
@@ -16,6 +18,7 @@ $data = json_decode($json, true);
 $dataAlert = $data['alert'];
 $dataAction = $data['action'];
 $pair = $data['ticker'];
+$amt = $data['amt'];
 
 //IP white list from tradingview
 $trustedIPs = array(
@@ -36,7 +39,9 @@ else if(!in_array($ipAddress, $trustedIPs)) {
 else {
     $live = 1;
 }
-
+//////////////////////////////
+//$live = 1; //delete when live
+//////////////////////////////
 //connect to Bittrex
 $bittrex = new Client ($bittrex_api_key, $bittrex_api_secret);
 
@@ -51,52 +56,58 @@ $sellQT = $buyQT = 0; //default quantity if you don't have the coin
 $getBalances = $bittrex->getBalances();
 $totalBalance = 0;
 
-foreach($getBalances as $index) { //go through each coin you have
+$properties = get_object_vars($getBalances);
+var_dump($properties);
 
+foreach($getBalances as $index) { //go through each coin you have
+    $available = $index->Available;
     $coin = explode('-', $pair); //get coin from USDT pair
 
     if($index->Currency == $coin[1]) { //match coin symbol
-       // echo $coin[1]. ' ';
-        $sellQT = $index->Available; 
+        $coinBalance = $available; 
+        $sellQT = $available; 
         $sellQT = $sellQT * $percentBalance;
         $totalBalance += $sellQT * $bid;
     }
 
     if($index->Currency == 'USDT') {
-        $USDTBalance = $index->Available; 
-        $totalBalance += $USDTBalance; //add to totalBalance
+        $USDTBalance = $available; 
+        $totalBalance += $USDBalance; //add to totalBalance
         $buyQT = $USDTBalance/$ask; //quantity to buy
         $buyQT = $buyQT - $buyQT * $fee; //subtract taker or maker fee
         $buyQT = $buyQT * $percentBalance; 
     }
 }
 
+if($amt) { //override the amt
+    $buyQT = $sellQT = $amt;
+}
+
 if($live == 1)
     if($data['action'] == 'buy') { //set the orders based on action
         //pair examples: USDT-LINK BTC-LINK
         $buyLimit = $bittrex->buyLimit($pair, $buyQT, $ask);   
-    }
+        $orderId = $buyLimit->uuid;
+    } // var_dump($buyLimit);
     else if($data['action'] == 'sell') {
-        $sellLimit = $bittrex->sellLimit ($pair, $sellQT, $bid);
-    }
+        //loss protection - do not sell at lower price than entry price
+        $res = $database->getLatestBuy($sub, $pair); //get log for this ex & pair
+        
+        if($log = $res->fetch_array()) {  
+            $entryPrice = $log['price']; //get entry price
+        }
+
+        if ($bid < $entryPrice) {
+            $orderId = ' Loss protection: latest entry price: '.$entryPrice.' '; 
+        }
+        else {
+            $sellLimit = $bittrex->sellLimit ($pair, $sellQT, $bid);
+            $orderId = $sellLimit->uuid;
+        }
+        
+    }  //var_dump($sellLimit);
 
 
-
-$output = 'live: '.$live.' | '.$recorded.' | IP: '.$ipAddress.' | post data: '.$data['alert'].' | action: '.$dataAction.' | '.$data['ticker'].' | '.$newline;
-
-$output .= 'bid: '.$bid.' | ask: '.$bid.' | buyQT: '.$buyQT.' sellQT: '.$sellQT.' | totalBalance: '.$totalBalance.$newline; 
-echo $output;
-
-$properties = get_object_vars($getBalances);
-print_r($properties);
-
-//$output1 = var_dump($getBalances);
-
-if($dataAction) { 
-    //write to log db
-    $insert = 'INSERT INTO '.$logTableName.' (recorded, log, exchange, action) values ("'.$recorded.'", "'.$output.'",  "bittrex",  "'.$dataAction.'")';
-    $res = $conn->query($insert);
-}
-   
+include('include/logInsert.php'); 
 
 ?>

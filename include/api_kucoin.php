@@ -1,143 +1,235 @@
 <?php
-  //include('include/config.php');
-  $host = 'https://api.kucoin.com'; //production
+$host = 'https://api.kucoin.com'; //production
+//$host = 'https://openapi-sandbox.kucoin.com'; //sandbox
 
-  //$host = 'https://openapi-sandbox.kucoin.com'; //sandbox
+function signature($request_path = '', $body = '', $timestamp = false, $method = 'GET') {
+  global $secret;
 
-  function signature($request_path = '', $body = '', $timestamp = false, $method = 'GET') 
-  {
-    global $secret;
+  $body = is_array($body) ? json_encode($body) : $body; // Body must be in json format
+  $timestamp = $timestamp ? $timestamp : time() * 1000;
+  $what = $timestamp . $method . $request_path . $body;
+  return base64_encode(hash_hmac("sha256", $what, $secret, true));
+}
 
-    $body = is_array($body) ? json_encode($body) : $body; // Body must be in json format
-    $timestamp = $timestamp ? $timestamp : time() * 1000;
-    $what = $timestamp . $method . $request_path . $body;
-    return base64_encode(hash_hmac("sha256", $what, $secret, true));
-  }
 
-  function checkBalance()
-  {
-    global $host;
-    global $key;
-    global $passphrase;
+function checkBalance() {
+  global $host;
+  global $key;
+  global $passphrase;
 
-    $method = 'GET';
-    $request_path = '/api/v1/accounts';
-    $timestamp = time() * 1000;
-    $body = '';
+  $method = 'GET';
+  $request_path = '/api/v1/accounts';
+  $timestamp = time() * 1000;
+  $body = '';
 
-    $curl = curl_init();
+  $curl = curl_init();
 
-    curl_setopt_array($curl, array(
-      CURLOPT_URL => $host . $request_path,
-      CURLOPT_RETURNTRANSFER => true,
-      CURLOPT_ENCODING => "",
-      CURLOPT_MAXREDIRS => 10,
-      CURLOPT_TIMEOUT => 0,
-      CURLOPT_FOLLOWLOCATION => true,
-      CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-      CURLOPT_CUSTOMREQUEST => $method,
-      CURLOPT_HTTPHEADER => array(
-        "Content-Type:application/json",
-        "KC-API-SIGN:".signature($request_path, $body, $timestamp, $method),
-        "KC-API-TIMESTAMP:".$timestamp,
-        "KC-API-KEY:".$key,
-        "KC-API-PASSPHRASE:".$passphrase
-      ),
-    ));
+  curl_setopt_array($curl, array(
+    CURLOPT_URL => $host . $request_path,
+    CURLOPT_RETURNTRANSFER => true,
+    CURLOPT_ENCODING => "",
+    CURLOPT_MAXREDIRS => 10,
+    CURLOPT_TIMEOUT => 0,
+    CURLOPT_FOLLOWLOCATION => true,
+    CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+    CURLOPT_CUSTOMREQUEST => $method,
+    CURLOPT_HTTPHEADER => array(
+      "Content-Type:application/json",
+      "KC-API-SIGN:".signature($request_path, $body, $timestamp, $method),
+      "KC-API-TIMESTAMP:".$timestamp,
+      "KC-API-KEY:".$key,
+      "KC-API-PASSPHRASE:".$passphrase
+    ),
+  ));
 
-    $response = curl_exec($curl);
-    $responseArr = json_decode($response,true);
+  $response = curl_exec($curl);
+  $responseArr = json_decode($response,true);
 
-    curl_close($curl);
+  curl_close($curl);
 
-    echo '<pre>';
-    echo '<h1>Check Balance: </h1><br>';
-    print_r($responseArr);
-  }
+  $responseArr['function'] = 'checkBalance()';
+  echo '<pre>'; print_r($responseArr); echo '</pre>';
+  return $responseArr;
+}
 
-  function MakeOrder()
-  {
-    global $host;
-    global $key;
-    global $passphrase;
+//type is market or limit
+function buyOrder($type, $pair, $buyQT, $ask) {
+  global $host;
+  global $key;
+  global $passphrase;
 
-    $method = 'POST';
-    $request_path = '/api/v1/orders';
-    $timestamp = time() * 1000;
-    $body ='{"side":"sell","symbol":"XRP-USDT","type":"limit","price":"0.0445","size":"1","clientOid":"'.microtime(true).'"}';
+  $method = 'POST';
+  $request_path = '/api/v1/orders';
+  $timestamp = time() * 1000;
+  $body ='{"side":"buy","symbol":"'.$pair.'","type":"'.$type.'","price":"'.$ask.'","size":"'.$buyQT.'","clientOid":"'.microtime(true).'"}';
 
-    $curl = curl_init();
+  $curl = curl_init();
 
-    curl_setopt_array($curl, array(
-      CURLOPT_URL => $host . $request_path,
-      CURLOPT_RETURNTRANSFER => true,
-      CURLOPT_ENCODING => "",
-      CURLOPT_MAXREDIRS => 10,
-      CURLOPT_TIMEOUT => 0,
-      CURLOPT_FOLLOWLOCATION => true,
-      CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-      CURLOPT_CUSTOMREQUEST => $method,
-      CURLOPT_POST => 1,
-      CURLOPT_POSTFIELDS => $body,
-      CURLOPT_HTTPHEADER => array(
-        "Content-Type:application/json",
-        "KC-API-SIGN:".signature($request_path, $body, $timestamp, $method),
-        "KC-API-TIMESTAMP:".$timestamp,
-        "KC-API-KEY:".$key,
-        "KC-API-PASSPHRASE:".$passphrase
-      ),
-    ));
+  curl_setopt_array($curl, array(
+    CURLOPT_URL => $host . $request_path,
+    CURLOPT_RETURNTRANSFER => true,
+    CURLOPT_ENCODING => "",
+    CURLOPT_MAXREDIRS => 10,
+    CURLOPT_TIMEOUT => 0,
+    CURLOPT_FOLLOWLOCATION => true,
+    CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+    CURLOPT_CUSTOMREQUEST => $method,
+    CURLOPT_POST => 1,
+    CURLOPT_POSTFIELDS => $body,
+    CURLOPT_HTTPHEADER => array(
+      "Content-Type:application/json",
+      "KC-API-SIGN:".signature($request_path, $body, $timestamp, $method),
+      "KC-API-TIMESTAMP:".$timestamp,
+      "KC-API-KEY:".$key,
+      "KC-API-PASSPHRASE:".$passphrase
+    ),
+  ));
 
-    $response = curl_exec($curl);
-    $responseArr = json_decode($response,true);
+  $response = curl_exec($curl);
+  $responseArr = json_decode($response,true);
 
-    curl_close($curl);
+  curl_close($curl);
 
-    echo '<pre>';
-    echo '<h1>Place a New Order: </h1><br>';
-    print_r($responseArr);
-  }
+  $responseArr['function'] = 'function buyOrder($type, $pair, $buyQT, $ask)';
+  echo '<pre>'; print_r($responseArr); echo '</pre>';
+  return $responseArr;
+}
 
-  function CancelOrder()
-  {
-    global $host;
-    global $key;
-    global $passphrase;
+function sellOrder($type, $pair, $sellQT, $ask) {
+  global $host;
+  global $key;
+  global $passphrase;
 
-    $method = 'DELETE';
-    $orderId = "5c714d17cdaba40702ea1abd";
-    $request_path = '/api/v1/orders/'.$orderId;
-    $timestamp = time() * 1000;
-    $body = '';
+  $method = 'POST';
+  $request_path = '/api/v1/orders';
+  $timestamp = time() * 1000;
+  $body ='{"side":"sell","symbol":"'.$pair.'","type":"'.$type.'","price":"'.$ask.'","size":"'.$sellQT.'","clientOid":"'.microtime(true).'"}';
 
-    $curl = curl_init();
+  $curl = curl_init();
 
-    curl_setopt_array($curl, array(
-      CURLOPT_URL => $host . $request_path,
-      CURLOPT_RETURNTRANSFER => true,
-      CURLOPT_ENCODING => "",
-      CURLOPT_MAXREDIRS => 10,
-      CURLOPT_TIMEOUT => 0,
-      CURLOPT_FOLLOWLOCATION => true,
-      CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-      CURLOPT_CUSTOMREQUEST => $method,
-      CURLOPT_HTTPHEADER => array(
-        "Content-Type:application/json",
-        "KC-API-SIGN:".signature($request_path, $body, $timestamp, $method),
-        "KC-API-TIMESTAMP:".$timestamp,
-        "KC-API-KEY:".$key,
-        "KC-API-PASSPHRASE:".$passphrase
-      ),
-    ));
+  curl_setopt_array($curl, array(
+    CURLOPT_URL => $host . $request_path,
+    CURLOPT_RETURNTRANSFER => true,
+    CURLOPT_ENCODING => "",
+    CURLOPT_MAXREDIRS => 10,
+    CURLOPT_TIMEOUT => 0,
+    CURLOPT_FOLLOWLOCATION => true,
+    CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+    CURLOPT_CUSTOMREQUEST => $method,
+    CURLOPT_POST => 1,
+    CURLOPT_POSTFIELDS => $body,
+    CURLOPT_HTTPHEADER => array(
+      "Content-Type:application/json",
+      "KC-API-SIGN:".signature($request_path, $body, $timestamp, $method),
+      "KC-API-TIMESTAMP:".$timestamp,
+      "KC-API-KEY:".$key,
+      "KC-API-PASSPHRASE:".$passphrase
+    ),
+  ));
 
-    $response = curl_exec($curl);
-    $responseArr = json_decode($response,true);
+  $response = curl_exec($curl);
+  $responseArr = json_decode($response,true);
 
-    curl_close($curl);
+  curl_close($curl);
 
-    echo '<pre>';
-    echo '<h1>Cancel Order: </h1><br>';
-    print_r($responseArr);
-  }
+  $responseArr['function'] = 'function sellOrder($type, $pair, $sellQT, $ask)';
+  echo '<pre>'; print_r($responseArr); echo '</pre>';
+  return $responseArr;
+}
+
+/**
+Array (
+    [code] => 200000
+    [data] => Array
+        (
+            [cancelledOrderIds] => Array
+                (
+                    [0] => 602370228313f700068bc252
+                )
+
+        )
+
+)
+*/
+function cancelOrder($orderId) {
+  global $host;
+  global $key;
+  global $passphrase;
+
+  $method = 'DELETE';
+  $request_path = '/api/v1/orders/'.$orderId;
+  $timestamp = time() * 1000;
+  $body = '';
+
+  $curl = curl_init();
+
+  curl_setopt_array($curl, array(
+    CURLOPT_URL => $host . $request_path,
+    CURLOPT_RETURNTRANSFER => true,
+    CURLOPT_ENCODING => "",
+    CURLOPT_MAXREDIRS => 10,
+    CURLOPT_TIMEOUT => 0,
+    CURLOPT_FOLLOWLOCATION => true,
+    CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+    CURLOPT_CUSTOMREQUEST => $method,
+    CURLOPT_HTTPHEADER => array(
+      "Content-Type:application/json",
+      "KC-API-SIGN:".signature($request_path, $body, $timestamp, $method),
+      "KC-API-TIMESTAMP:".$timestamp,
+      "KC-API-KEY:".$key,
+      "KC-API-PASSPHRASE:".$passphrase
+    ),
+  ));
+
+  $response = curl_exec($curl);
+  $responseArr = json_decode($response,true);
+
+  curl_close($curl);
+
+  $responseArr['function'] = 'cancelOrder($orderId)';
+  echo '<pre>'; print_r($responseArr); echo '</pre>';
+  return $responseArr;
+}
+
+function getMarketPrice($currencyPair) {
+  global $host;
+  global $key;
+  global $passphrase;
+
+  $method = 'GET';
+  $request_path = '/api/v1/market/orderbook/level1?symbol='.$currencyPair;
+  $timestamp = time() * 1000;
+  $body = '';
+
+  $curl = curl_init();
+
+  curl_setopt_array($curl, array(
+    CURLOPT_URL => $host . $request_path,
+    CURLOPT_RETURNTRANSFER => true,
+    CURLOPT_ENCODING => "",
+    CURLOPT_MAXREDIRS => 10,
+    CURLOPT_TIMEOUT => 0,
+    CURLOPT_FOLLOWLOCATION => true,
+    CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+    CURLOPT_CUSTOMREQUEST => $method,
+    CURLOPT_HTTPHEADER => array(
+      "Content-Type:application/json",
+      "KC-API-SIGN:".signature($request_path, $body, $timestamp, $method),
+      "KC-API-TIMESTAMP:".$timestamp,
+      "KC-API-KEY:".$key,
+      "KC-API-PASSPHRASE:".$passphrase
+    ),
+  ));
+
+  $response = curl_exec($curl);
+  $responseArr = json_decode($response,true);
+
+  curl_close($curl);
+
+  $responseArr['function'] = 'getMarketPrice($currencyPair)';
+  $responseArr['currencyPair'] = $currencyPair;
+  echo '<pre>'; print_r($responseArr); echo '</pre>';
+  return $responseArr;
+}
 
 ?>
