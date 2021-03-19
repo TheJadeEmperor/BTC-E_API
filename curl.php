@@ -18,6 +18,7 @@ else {
 
 //list of scripts 
 $exchanges = array(
+    'script_binance_dwc_trades', 
     'script_gate_dwc_trades', 
     'script_bittrex_dwc_trades', 
     'script_kucoin1_dwc_trades', 
@@ -25,16 +26,17 @@ $exchanges = array(
     'script_kucoin3_dwc_trades', 
     'script_kucoin4_dwc_trades', 
     'script_kucoin5_dwc_trades', 
-    'script_binance_dwc_trades', 
 );
 
 foreach($exchanges as $ex) {
     echo '<p><a href="curl.php?ex='.$ex.'">'.$ex.'</a></p>'; 
+
+    $dropDown .= '<option value='.$ex.'>'.$ex.'</option>';
 }
 
-$ex = $_GET['ex'];
+$exch = $_POST['ex'];
 
-switch($ex) { //URL to call and which exchange to get from log
+switch($exch) { //URL to call and which exchange to get from log
     case 'script_kucoin5_dwc_trades':  //// KC5 /////
         $url = $serverHost.'script_kucoin_dwc_trades.php?sub=kucoin5';
         $url = $localHost.'script_kucoin_dwc_trades.php?sub=kucoin5';
@@ -83,45 +85,80 @@ switch($ex) { //URL to call and which exchange to get from log
 
         $ex = 'gate1';
         break;
-    default: 
-        exit;
+    // default: 
+        // exit;
 }
 
-//json data to pass into webhook
-$json = array(
-    "alert" => "DWC", //DWC
-    "action" => "", //buy or sell
-    "ticker" => "USDT-ADA", //USDT-XXX 
-    "amt" => '1'); 
+if($_POST) {
+     $ticker = $_POST['ticker'];
+    $action = $_POST['action'];
+    $amt = $_POST['amt'];
 
-$data = json_encode($json);
+    echo $ticker.' '.$action.' '.$amt;
 
-$curl = curl_init();
-curl_setopt($curl, CURLOPT_URL, $url);
-curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
-curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "POST");
-curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
-
-curl_setopt($curl, CURLOPT_HTTPHEADER, array ( 
-    'Content-Type: application/json', 
-    'Content-Length: ' . strlen($data)) 
-);
-
-$output = curl_exec($curl);
-
-if($output === FALSE)
-    echo curl_error($curl);
-else 
-    echo 'curl begin <hr /> '.$output.' <hr /> curl end';
-
-curl_close($curl);
-
-echo '<br /><br />';
+    //json data to pass into webhook
+    $json = array(
+        "alert" => "DWC", //DWC
+        "action" => $action, //buy or sell
+        "ticker" => $ticker, //USDT-XXX or BTC-KEY
+        "amt" => $amt //amt of coin
+    ); 
 
 
+    $data = json_encode($json);
+
+    $curl = curl_init();
+    curl_setopt($curl, CURLOPT_URL, $url);
+    curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+    curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+    curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "POST");
+    curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
+
+    curl_setopt($curl, CURLOPT_HTTPHEADER, array ( 
+        'Content-Type: application/json', 
+        'Content-Length: ' . strlen($data)) 
+    );
+
+    $output = curl_exec($curl);
+
+    
+    if($output === FALSE)
+        echo curl_error($curl);
+    else 
+        echo 'curl begin <hr /> '.$output.' <hr /> curl end';
+
+    curl_close($curl);
+
+    echo '<br /><br />';
+}
+
+?>
+<form method="POST">
+    <table>
+    <tr>
+        <td>
+            <p>ticker <input type="text" name="ticker" value="<?=$ticker?>" /></p>
+            <p>action <input type="text" name="action" value="<?=$action?>" /></p>
+            <p>amt <input type="text" name="amt" value="10" /></p>
+        </td>
+        <td width="10px"></td>
+        <td>
+            <select name="ex">
+                <option></option>
+                <?=$dropDown ?>
+            </select>
+        </td>
+    </tr>
+    <tr>
+    </tr>
+    </table>
+    <div>
+        <input type="submit" />
+    </div>
+</form>
+
+<?
 sleep(2); //delay before showing log
-
 
 $res = $database->getLogs($ex);
 
