@@ -1,11 +1,14 @@
 <?php
+include('include/functions.php');
+include('include/config.php');
 session_start();
 
 $err = '';
 if($_POST['login']) {
-    if($_POST['username'] == 'SetoKaiba' && $_POST['password'] == 'password') {
+    if($_POST['username'] == $dashboard_user && $_POST['password'] == $dashboard_pw) {
         $_SESSION['admin'] = $_POST['username'];
-        header('Location: main.php');
+
+        header('Location: dashboard.php');
 	}
     else {
         $err = '<p><font color="red"><b>Wrong credentials</b></font></p>';

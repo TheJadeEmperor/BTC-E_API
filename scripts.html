@@ -17,13 +17,21 @@ $loadbtcTrades = 'load.php?page=btcTrades&accessKey='.$accessKey;
 $loadPriceTable = 'load.php?page=priceTable&accessKey='.$accessKey;
 $loadCronAutoTrade = 'load.php?page=cronAutoTrade&accessKey='.$accessKey;
 $loadBalanceTable = 'load.php?page=balanceTable&accessKey='.$accessKey;
-$loadBtrexBalance = 'load.php?page=btrexBalance&accessKey='.$accessKey;
 
 $loadBitmexPositions = 'load.php?page=bitmexPositions&accessKey='.$accessKey;
 $loadBitmexPositions2 = 'load.php?page=bitmexPositions2&accessKey='.$accessKey;
 
 $loadNotesAjax = 'include/ajax.php?action=updateNotes';
 $loadNotes = 'load.php?page=notes&accessKey='.$accessKey;
+
+$loadKCBalance = 'load.php?page=KCMain&accessKey='.$accessKey;
+$loadKCBalance = 'load.php?page=KC1&accessKey='.$accessKey;
+$loadKCBalance = 'load.php?page=KC2&accessKey='.$accessKey;
+$loadKCBalance = 'load.php?page=KC3&accessKey='.$accessKey;
+$loadKCBalance = 'load.php?page=KC4&accessKey='.$accessKey;
+$loadKCBalance = 'load.php?page=KC5&accessKey='.$accessKey;
+$loadBtrexBalance = 'load.php?page=btrexBalance&accessKey='.$accessKey;
+
 ?>
 <script>
 	
@@ -296,7 +304,8 @@ $loadNotes = 'load.php?page=notes&accessKey='.$accessKey;
 	}
 	
 	
-	function reloadBtrexBalance(){
+	function reloadBtrexBalance() {
+		console.log('reloadBtrexBalance');
 		$('#btrexBalance').load('<?=$loadBtrexBalance?>');		
 	}
 	
@@ -477,7 +486,7 @@ $loadNotes = 'load.php?page=notes&accessKey='.$accessKey;
 			
 		reloadBitmexPositions2();
 		
-		//reloadBtrexBalance();
+		reloadBtrexBalance();
 		
     });
 </script>
