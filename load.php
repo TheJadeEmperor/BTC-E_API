@@ -1,43 +1,27 @@
 <?php
 $dir = 'include/';
-include($dir.'api_database.php');
-include($dir.'api_poloniex.php');
-include($dir.'api_bittrex.php');
-include($dir.'api_bitmex.php');
+include($dir.'functions.php');
 include($dir.'config.php');
-include($dir.'ez_sql_core.php');
-include($dir.'ez_sql_mysql.php');
-
-
-
-error_reporting(E_ALL & ~E_NOTICE & ~E_WARNING);
+include($dir.'api_database.php');
+include($dir.'api_bittrex.php');
 
 //set timezone
 date_default_timezone_set('America/New_York');
 
-if($_GET['accessKey'] != 'KickInTheDick') {
+if($_GET['accessKey'] != 'AllLivesMatter') {
 	echo "Wrong access key"; exit;
 }
 	
-
-global $db;
-$db = new ezSQL_mysql($dbUser, $dbPW, $dbName, $dbHost);
-
-
-//requires the extension php_openssl to work
-$polo1 = $polo = new poloniex($polo_api_key, $polo_api_secret);
-
-
 $bittrex = new Client ($bittrex_api_key, $bittrex_api_secret);
 
 
-$tableData = new Database($db);
+// $tableData = new Database($conn);
 
-$condTable = $tableData->alertsTable();
+// $condTable = $tableData->alertsTable();
 
-$tradesTable = $tableData->tradesTable();
+// $tradesTable = $tableData->tradesTable();
 
-$optionsTable = $tableData->getSettingsFromDB();
+// $optionsTable = $tableData->getSettingsFromDB();
 
 
 
@@ -243,14 +227,7 @@ function showPoloBalanceTable($polo, $tableTitle) {
 	Poloniex prices
 	===================
 	*/
-	$polo_btc_usd_ticker = $polo1->get_ticker('USDT_BTC');
-	$polo_eth_usd_ticker = $polo1->get_ticker('USDT_ETH');
-	$polo_ltc_usd_ticker = $polo1->get_ticker('USDT_LTC');
 
-	$polo_xrp_usd_ticker = $polo1->get_ticker('USDT_XRP');
-	
-	$polo_bchabc_usd_ticker = $polo1->get_ticker('BTC_BCHABC');
-	
 	//Raw prices
 	$polo_btc_usd_raw = $polo_btc_usd_ticker['last'];
 	$polo_eth_usd_raw = $polo_eth_usd_ticker['last'];
@@ -279,11 +256,11 @@ function showPoloBalanceTable($polo, $tableTitle) {
 	$xrp_percent_raw = $polo_xrp_usd_ticker['percentChange'] * 100;
 	$bchabc_percent_raw = $polo_bchabc_usd_ticker['percentChange'] * 100;
 	
-	$btc_percent_display = $tableData->format_percent_display($btc_percent_raw);
-	$eth_percent_display = $tableData->format_percent_display($eth_percent_raw);
-	$ltc_percent_display = $tableData->format_percent_display($ltc_percent_raw);
-	$xrp_percent_display = $tableData->format_percent_display($xrp_percent_raw);
-	$bchabc_percent_display = $tableData->format_percent_display($bchabc_percent_raw);
+	// $btc_percent_display = $tableData->format_percent_display($btc_percent_raw);
+	// $eth_percent_display = $tableData->format_percent_display($eth_percent_raw);
+	// $ltc_percent_display = $tableData->format_percent_display($ltc_percent_raw);
+	// $xrp_percent_display = $tableData->format_percent_display($xrp_percent_raw);
+	// $bchabc_percent_display = $tableData->format_percent_display($bchabc_percent_raw);
 	
 	/*
 	===================
@@ -311,11 +288,11 @@ function showPoloBalanceTable($polo, $tableTitle) {
 	Coinbase prices
 	===================
 	*/
-	$coinbase_btc_usd = $tableData->coinbasePrice('btc-usd');
-	$coinbase_eth_usd = $tableData->coinbasePrice('eth-usd');
-	$coinbase_ltc_usd = $tableData->coinbasePrice('ltc-usd');
-	$coinbase_bch_usd = $tableData->coinbasePrice('bch-usd');
-	$coinbase_xrp_usd = $tableData->coinbasePrice('xrp-usd');
+	// $coinbase_btc_usd = $tableData->coinbasePrice('btc-usd');
+	// $coinbase_eth_usd = $tableData->coinbasePrice('eth-usd');
+	// $coinbase_ltc_usd = $tableData->coinbasePrice('ltc-usd');
+	// $coinbase_bch_usd = $tableData->coinbasePrice('bch-usd');
+	// $coinbase_xrp_usd = $tableData->coinbasePrice('xrp-usd');
 	
 	$coinbase_btc_usd = number_format($coinbase_btc_usd, 2);
 	$coinbase_eth_usd = number_format($coinbase_eth_usd, 2);
@@ -569,66 +546,64 @@ else if($_GET['page'] == 'btrexBalance') {
 				<th colspan="8">Bittrex Balance <img src="include/refresh.png" class="clickable" onclick="javascript:reloadBtrexBalance()" width="25px" /> </th>
 			</tr>
 			<tr>
-				<th>Currency</th><th>Balance</th><th>Price</th><th>BTC Value</th><th>USDT</th><th>Chart</th>
+				<th>Currency</th><th>Balance</th><th>Price</th><th>BTC Value</th><th>USDT</th>
 			</tr>
 		<?
 		
-	if(!empty($balance)) { 
-		foreach($balance as $x => $val) {
+		if(!empty($balance)) { 
+			foreach($balance as $x => $val) {
 			
-			$currency = $val->Currency;
-			$currencyBalance = $val->Balance;
-			
-			if($currency == 'TRK') continue; //invalid market
-			if($currency == 'BTC' || $currency == 'USDT') {
-				$currencyPair = 'USDT-BTC';
-				$lastFormat = $bittrex_btc_usd_raw;
-				$btcValue = $currencyBalance;
-				$chartLink = 'https://www.tradingview.com/chart/BTCUSD';
+				$currency = $val->Currency;
+				$currencyBalance = $val->Balance;
 				
-				if($currency == 'USDT') {
-					$lastFormat = $currencyBalance;
-					$btcValue = 0;
+				if($currency == 'BTXCRD') continue; //invalid market
+				if($currency == 'BTC' ) {
+					// echo $currency.' '.$currencyBalance;
+					$currencyPair = 'USDT-BTC';
+					$lastFormat = $bittrex_btc_usd_raw;
+					$btcValue = $currencyBalance;
 				}
-			}
-			else {
-				$currencyPair = 'BTC-'.$currency;
+				else if ($currency == 'USDT') {
+					$lastFormat = 1;
+					$usdtValue = $currencyBalance;
+					$btcValue = $currencyBalance / $bittrex_btc_usd_raw;
+				}
+				else {
+					$currencyPair = 'BTC-'.$currency;
 				
-				//echo $currencyPair.' ';
-				$ticker = $bittrex->getTicker($currencyPair);
-				$lastFormat = $ticker->Last;
-				$btcValue = $currencyBalance * $lastFormat;	
-				$chartLink = 'https://www.tradingview.com/chart/'.$currency.'BTC';
-			}
+					$ticker = $bittrex->getTicker($currencyPair);
+					$lastFormat = $ticker->Last;
+					$btcValue = $currencyBalance * $lastFormat;	
+					$usdtValue = $btcValue * $bittrex_btc_usd_raw;
+				}
 			
-			$usdtValue = $btcValue * $bittrex_btc_usd_raw;
-			
-			$btcValueFormat = number_format($btcValue, 4);
-			$usdtValueFormat = number_format($usdtValue, 2);
-			$totalBTC += $btcValue;
-			$totalUSD += $usdtValue;
-			
-			
-			if($btcValue > 0.01 && $usdtValue > 1) {
-			echo '<tr><td>'.$currency.'</td>
-			<td>'.$currencyBalance.'</td>
-			<td>'.$lastFormat.'</td>
-			<td>'.$btcValueFormat.'</td>
-			<td><span style="color: white">'.$usdtValueFormat.'</span></td>
-			<td><a href="'.$chartLink.'" target="_BLANK">View</a></td>
-			</tr>';
-			}
-		 }
-		 
-		$totalBTCFormat	= number_format($totalBTC, 4);
-		$totalUSDTFormat	= number_format($totalUSD, 2);
-		 
-		echo '<tr><td colspan="10">Total BTC: '.$totalBTCFormat.' &nbsp;&nbsp; 
-		<span style="color: white">Total USDT: $'.$totalUSDTFormat.'</span></td>';
+				$btcValueFormat = number_format($btcValue, 4);
+				$usdtValueFormat = number_format($usdtValue, 2);
+				$totalBTC += $btcValue;
+				$totalUSD += $usdtValue;
+				
+				echo $currency.' '.$currencyBalance.' '.$usdtValue.' '.$ticker->Last.' '.$bittrex_btc_usd_raw.' <br />';
+				
+				if($btcValue > 0.01 || $usdtValue > 1) {
+					echo '<tr><td>'.$currency.'</td>
+					<td>'.$currencyBalance.'</td>
+					<td>'.$lastFormat.'</td>
+					<td>'.$btcValueFormat.'</td>
+					<td><span style="color: gray">'.$usdtValueFormat.'</span></td>
+					</tr>';
 	
-		echo '</table>';
-	}
-	
+				} //if($btcValue > 0.01 || $usdtValue > 1) 
+			} //foreach($balance as $x => $val)
+			 
+			$totalBTCFormat	= number_format($totalBTC, 4);
+			$totalUSDTFormat = number_format($totalUSD, 2);
+			 
+			echo '<tr><td colspan="10">Total BTC: '.$totalBTCFormat.' &nbsp;&nbsp; 
+			<span style="color: white">Total USDT: $'.$totalUSDTFormat.'</span></td>';
+		
+			echo '</table>';
+		} //if(!empty($balance)) 
+		
 }
 else if($_GET['page'] == 'bitmexPositions') {
 	
