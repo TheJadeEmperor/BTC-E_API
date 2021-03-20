@@ -1,38 +1,4 @@
-<?php
-//alert mysql ajax calls
-$createAlert = 'include/ajax.php?action=create';
-$readAlert = 'include/ajax.php?action=read';
-$updateAlert = 'include/ajax.php?action=update';
-$deleteAlert = 'include/ajax.php?action=delete';
 
-//trade mysql jax calls
-$createTrade = 'include/ajax.php?action=createTrade';
-$readTrade = 'include/ajax.php?action=readTrade';
-$updateTrade = 'include/ajax.php?action=updateTrade';
-$deleteTrade = 'include/ajax.php?action=deleteTrade';
-
-//page load ajax calls
-$loadCronSendAlerts = 'load.php?page=cronSendAlerts&accessKey='.$accessKey;
-$loadbtcTrades = 'load.php?page=btcTrades&accessKey='.$accessKey;
-$loadPriceTable = 'load.php?page=priceTable&accessKey='.$accessKey;
-$loadCronAutoTrade = 'load.php?page=cronAutoTrade&accessKey='.$accessKey;
-$loadBalanceTable = 'load.php?page=balanceTable&accessKey='.$accessKey;
-
-$loadBitmexPositions = 'load.php?page=bitmexPositions&accessKey='.$accessKey;
-$loadBitmexPositions2 = 'load.php?page=bitmexPositions2&accessKey='.$accessKey;
-
-$loadNotesAjax = 'include/ajax.php?action=updateNotes';
-$loadNotes = 'load.php?page=notes&accessKey='.$accessKey;
-
-$loadKCBalance = 'load.php?page=KCMain&accessKey='.$accessKey;
-$loadKCBalance = 'load.php?page=KC1&accessKey='.$accessKey;
-$loadKCBalance = 'load.php?page=KC2&accessKey='.$accessKey;
-$loadKCBalance = 'load.php?page=KC3&accessKey='.$accessKey;
-$loadKCBalance = 'load.php?page=KC4&accessKey='.$accessKey;
-$loadKCBalance = 'load.php?page=KC5&accessKey='.$accessKey;
-$loadBtrexBalance = 'load.php?page=btrexBalance&accessKey='.$accessKey;
-
-?>
 <script>
 	
 	function updateAlert(id) {
@@ -306,7 +272,37 @@ $loadBtrexBalance = 'load.php?page=btrexBalance&accessKey='.$accessKey;
 	
 	function reloadBtrexBalance() {
 		console.log('reloadBtrexBalance');
-		$('#btrexBalance').load('<?=$loadBtrexBalance?>');		
+		$('#btrexBalance').load('<?=$loadBtrexBalance?>');	
+		
+		$( "#btrexBalance" ).load( '<?=$loadBtrexBalance?>', function() {
+			console.log( "reloadBtrexBalance" );
+		});
+	}
+	
+	function reloadKucoinMainBalance() {
+		console.log('kucoinMainBalance');
+		$('#kucoinMainBalance').load('<?=$loadKCMBalance?>');		
+	}
+
+	function reloadKucoin1Balance() {
+		console.log('kucoinMainBalance');
+		$('#btrexBalance').load('<?=$loadKC1Balance?>');		
+	}
+	function reloadKucoin2Balance() {
+		console.log('kucoinMainBalance');
+		$('#btrexBalance').load('<?=$loadKC2Balance?>');		
+	}
+	function reloadKucoin3Balance() {
+		console.log('kucoinMainBalance');
+		$('#btrexBalance').load('<?=$loadKC3Balance?>');		
+	}
+	function reloadKucoin4Balance() {
+		console.log('kucoinMainBalance');
+		$('#btrexBalance').load('<?=$loadKC4Balance?>');		
+	}
+	function reloadKucoin5Balance() {
+		console.log('kucoinMainBalance');
+		$('#btrexBalance').load('<?=$loadKC5Balance?>');		
 	}
 	
 	
@@ -448,8 +444,6 @@ $loadBtrexBalance = 'load.php?page=btrexBalance&accessKey='.$accessKey;
 			})
 		});	
 	
-	
-		
 		$.fn.counter = function (num) {
 			var i = 1;
 			self = $(this).html(i);	//console.log(self);
@@ -470,7 +464,7 @@ $loadBtrexBalance = 'load.php?page=btrexBalance&accessKey='.$accessKey;
 		$('#counter').counter(60);
 	
 		
-		reloadNotes(); 
+		// reloadNotes(); 
 		
 		reloadPriceTable();
 		
@@ -486,7 +480,14 @@ $loadBtrexBalance = 'load.php?page=btrexBalance&accessKey='.$accessKey;
 			
 		reloadBitmexPositions2();
 		
-		reloadBtrexBalance();
 		
+		reloadKucoinMainBalance();
+		reloadKucoin1Balance();
+		reloadKucoin2Balance();
+		reloadKucoin3Balance();
+		reloadKucoin4Balance();
+		reloadKucoin5Balance();
+		reloadBtrexBalance();
+
     });
 </script>
