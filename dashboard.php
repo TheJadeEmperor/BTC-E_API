@@ -36,11 +36,11 @@ $loadNotesAjax = 'include/ajax.php?action=updateNotes';
 $loadNotes = 'load.php?page=notes&accessKey='.$accessKey;
 
 $loadKCMBalance = 'load/kucoinBalance.php?page=kucoinMainBalance&accessKey='.$accessKey;
-$loadKC1Balance = 'load.php?page=kucoin1Balance&accessKey='.$accessKey;
-$loadKC2Balance = 'load.php?page=kucoin2Balance&accessKey='.$accessKey;
-$loadKC3Balance = 'load.php?page=kucoin3Balance&accessKey='.$accessKey;
-$loadKC4Balance = 'load.php?page=kucoin4balance&accessKey='.$accessKey;
-$loadKC5Balance = 'load.php?page=kucoin5Balance&accessKey='.$accessKey;
+$loadKC1Balance = 'load/kucoinBalance.php?page=kucoin1Balance&accessKey='.$accessKey;
+$loadKC2Balance = 'load/kucoinBalance.php?page=kucoin2Balance&accessKey='.$accessKey;
+$loadKC3Balance = 'load/kucoinBalance.php?page=kucoin3Balance&accessKey='.$accessKey;
+$loadKC4Balance = 'load/kucoinBalance.php?page=kucoin4Balance&accessKey='.$accessKey;
+$loadKC5Balance = 'load/kucoinBalance.php?page=kucoin5Balance&accessKey='.$accessKey;
 
 $loadBtrexBalance = 'load/btrexBalance.php?accessKey='.$accessKey;
 
@@ -76,22 +76,31 @@ $loadBtrexBalance = 'load/btrexBalance.php?accessKey='.$accessKey;
         
         <div id="kucoinMainBalance">kucoinMainBalance</div>
 
-        <div id="kucoin1Balance"></div>
+        <div id="kucoin1Balance">kucoinMainBalance</div>
 
-        <div id="kucoin2Balance"></div>
+        <div id="kucoin2Balance">kucoinMainBalance</div>
 
-        <div id="kucoin3Balance"></div>
+        <div id="kucoin3Balance">kucoinMainBalance</div>
 
-        <div id="kucoin4Balance"></div>
+        <div id="kucoin4Balance">kucoinMainBalance</div>
 
-        <div id="kucoin5Balance"></div>
+        <div id="kucoin5Balance">kucoinMainBalance</div>
         
         <br />
     </div>
 
     <div class="col">
-		
-      
-        <br />
+        <h2>Links</h2>
+
+        <p align="left"><a href="https://www.tradingview.com/chart/gghdcAkO/" target="_blank">Chart 1</a>
+							
+        <br /><br />			
+
+        <a href="https://www.tradingview.com/chart/HRbO8WTw/" target="_blank">Chart 2</a>
+
+        <br /><br />
+
+        <a href="https://trade.kucoin.com/ADA-USDT" target="_blank">Kucoin Trade</a>
+        </p>
     </div>
 </div>

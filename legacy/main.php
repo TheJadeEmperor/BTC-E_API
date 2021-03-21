@@ -1,4 +1,5 @@
 <?php
+include('include/functions.php');
 include('include/config.php');
 
 session_start();
@@ -183,9 +184,7 @@ include('scripts.html');
 							<a href="http://coinmarketcap.com/currencies/views/all" target="_blank">1h 24h 7d</a>
 							
 							<br /><br />
-							
-							<a href="https://coinfarm.online/index.asp" target="_blank">Coinfarm Margin Trading</a>
-							
+														
 						
 							<br /><br /><br />
 							
@@ -289,7 +288,7 @@ include('scripts.html');
 		-->
 	</div>
 </div><!--container-->
-  
+
 <p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p>
 
 
