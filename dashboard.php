@@ -44,6 +44,7 @@ $loadKC5Balance = 'load/kucoinBalance.php?page=kucoin5Balance&accessKey='.$acces
 
 $loadBtrexBalance = 'load/btrexBalance.php?accessKey='.$accessKey;
 
+$loadingImage = '<img src="include/images/load.gif" />';
 ?>
 <head>
 	<title>BTC API Dashboard</title>
@@ -74,17 +75,17 @@ $loadBtrexBalance = 'load/btrexBalance.php?accessKey='.$accessKey;
     <div class="col-6">
         <div id="btrexBalance">btrexBalance</div>
         
-        <div id="kucoinMainBalance">kucoinMainBalance</div>
+        <div id="kucoinMainBalance"><?=$loadingImage?></div>
 
-        <div id="kucoin1Balance">kucoinMainBalance</div>
+        <div id="kucoin1Balance"><?=$loadingImage?></div>
 
-        <div id="kucoin2Balance">kucoinMainBalance</div>
+        <div id="kucoin2Balance"><?=$loadingImage?></div>
 
-        <div id="kucoin3Balance">kucoinMainBalance</div>
+        <div id="kucoin3Balance"><?=$loadingImage?></div>
 
-        <div id="kucoin4Balance">kucoinMainBalance</div>
+        <div id="kucoin4Balance"><?=$loadingImage?></div>
 
-        <div id="kucoin5Balance">kucoinMainBalance</div>
+        <div id="kucoin5Balance"><?=$loadingImage?></div>
         
         <br />
     </div>
