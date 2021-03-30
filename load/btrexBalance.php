@@ -25,7 +25,7 @@ catch(Exception $e){
     <table class="table">
         <thead class="thead-default">
         <tr>
-            <th colspan="8">Bittrex Balance <img src="include/refresh.png" class="clickable" onclick="javascript:reloadBtrexBalance()" width="25px" /> </th>
+            <th colspan="8">Bittrex Balance <img src="include/images/refresh.png" class="clickable" onclick="javascript:reloadBtrexBalance()" width="25px" /> </th>
         </tr>
         <tr>
             <th>Currency</th><th>Balance</th><th>Price</th><th>BTC Value</th><th>USDT</th>
@@ -37,26 +37,29 @@ catch(Exception $e){
         
             $currency = $val->Currency; //coin 
             $currencyBalance = $val->Balance; //coin balance
+
+            $btcTicker = $bittrex->getTicker('USDT-BTC');
+            $btcPrice = $btcTicker->Last;
             
             if($currency == 'BTXCRD') continue; //invalid market
             if($currency == 'BTC' ) {
                 $currencyPair = 'USDT-BTC';
                 $lastFormat = $bittrex_btc_usd_raw; //formatted price
                 $btcValue = $currencyBalance; //btc value
-                $usdtValue = $btcValue * $bittrex_btc_usd_raw; //get usdt value
+                $usdtValue = $btcValue * $btcPrice; //get usdt value
             }
-            else if ($currency == 'USDT') {
+            else if ($currency == 'USDT') { 
                 $lastFormat = 1; //usdt has no price
                 $usdtValue = $currencyBalance; 
-                $btcValue = $currencyBalance / $bittrex_btc_usd_raw;
+                $btcValue = $usdtValue / $btcPrice;
             }
-            else { //all other coins
-                $currencyPair = 'BTC-'.$currency; //ticker pair
-                $ticker = $bittrex->getTicker($currencyPair);
+            else { //all other coins 
+                $currencyPair = 'USDT-'.$currency; //ticker pair
+                $coinTicker = $bittrex->getTicker($currencyPair);
 
-                $lastFormat = $ticker->Last;
-                $btcValue = $currencyBalance * $lastFormat;	//btc value
-                $usdtValue = $btcValue * $bittrex_btc_usd_raw; //get usdt value
+                $lastFormat = $coinTicker->Last;
+                $usdtValue =  $currencyBalance * $lastFormat; //get usdt value
+                $btcValue = $usdtValue / $btcPrice;
             }
         
             $btcValueFormat = number_format($btcValue, 4);

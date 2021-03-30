@@ -12,20 +12,18 @@ if($_GET['accessKey'] != 'AllLivesMatter') {
 }
 
 
-
 function displayKCTable($subAccount, $apiFields) {
 	
 	$output = '
 	<table class="table">
 	<thead class="thead-default">
 	<tr>
-		<th colspan="8">'.$subAccount.'	<img src="include/refresh.png" class="clickable" onclick="javascript:'.$subAccount.'()" width="25px" /> </th>
+		<th colspan="8">'.$subAccount.'	<img src="include/images/refresh.png" class="clickable" onclick="javascript:'.$subAccount.'()" width="25px" /> </th>
 	</tr>
 	<tr>
-		<th>Currency</th><th>Balance</th><th>Price</th><th>BTC Value</th><th>USDT</th>
+		<th>Currency</th><th>Balance</th><th>Price</th><th>USDT</th>
 	</tr>
 ';
-
 
 	$apiKey = $apiFields['apiKey'];
 	$apiSecret = $apiFields['apiSecret'];
@@ -34,14 +32,12 @@ function displayKCTable($subAccount, $apiFields) {
 	$Kucoin = new Kucoin($apiKey, $apiSecret, $passphrase);
 	$getBalances = $Kucoin->checkBalance();
     $totalBalance = 0;
-
   
     foreach($getBalances['data'] as $index) { //go through each coin you have
           $available = $index['available']; 
 		  $currency = $index['currency'];
-        //   echo $available.' '.$index['currency'].' ';
 
-          if($available > 0) { //check for available balance
+		  if($available > 0) { //check for available balance
 				
 				if($index['currency'] == 'USDT') {
 					$USDTBalance = $available; 
@@ -58,29 +54,24 @@ function displayKCTable($subAccount, $apiFields) {
 					$totalBalance += $USDTBalance; //add to totalBalance
 				}
 
-				$output .= '<tr><td>'.$currency.'</td><td>'.$available.'</td><td>'.$bid.'</td><td>'.$btcValue.'</td><td>'.$USDTBalance.'</td></tr>';
+				$output .= '<tr><td>'.$currency.'</td><td>'.$available.'</td><td>'.$bid.'</td><td>'.$USDTBalance.'</td></tr>';
           }
     }
   
-    //orders only take 4 decimals
-    $buyQT = number_format($buyQT, 4, '.', '');
-    $sellQT = number_format($sellQT, 4, '.', '');
+    //show 4 decimals
     $coinBalance = number_format($coinBalance, 4, '.', '');
     $USDTBalance = number_format($USDTBalance, 4, '.', '');
     $totalBalance = number_format($totalBalance, 4, '.', '');
   
-    echo $USDTBalance.' '.$totalBalance;
-  
-
 	return $output;
 }
 
 if ($_GET['page'] == 'kucoinMainBalance') {
 
 	$apiFields = array(
-		'apiKey' => $kucoin1_key,
-		'apiSecret' => $kucoin1_secret,
-		'passphrase' => $kucoin1_passphrase
+		'apiKey' => $kucoin0_key,
+		'apiSecret' => $kucoin0_secret,
+		'passphrase' => $kucoin0_passphrase
 	);
 
 	echo displayKCTable('kucoinMainBalance', $apiFields);
@@ -106,7 +97,6 @@ else if ($_GET['page'] == 'kucoin2Balance') {
 	);
 
 	echo displayKCTable('kucoin2Balance', $apiFields);
-
 	
 }
 else if ($_GET['page'] == 'kucoin3Balance') {
