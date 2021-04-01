@@ -1,11 +1,19 @@
 <?php
-$dir = 'include/';
-include($dir.'functions.php');
-include($dir.'config.php');
+class Binance {
+  private $key;
+  private $secret; 
+  private $BASE_URL;
+
+  public function __construct ($apiKey, $apiSecret) {
+		$this->key    = $apiKey;
+		$this->secret = $apiSecret;
+		$this->baseUrl = 'https://api.binance.us/';
+	}
+
+}
 
 $KEY = $binance_api_key;
 $SECRET = $binance_api_secret;
-
 $BASE_URL = 'https://api.binance.us/';
 
 function signature($query_string, $secret) {
@@ -63,7 +71,7 @@ function getMarketPrice($symbol) {
   
   echo '<pre>';
   echo '<h1>Get Market Price: </h1><br>';
-  print_r($responseArr);
+  // print_r($responseArr);
   return $responseArr;
 }
 
@@ -101,6 +109,16 @@ function buyOrder($type, $pair, $amount, $price) {
     'price' => $price,
     'newOrderRespType' => 'FULL' //optional
   ]);
+
+  if($type == 'MARKET' or $type == 'market') {
+    $responseArr = signedRequest('POST', 'api/v3/order', [
+      'symbol' => $pair,
+      'side' => 'BUY',
+      'type' => $type,
+      'quantity' => $amount,
+      'newOrderRespType' => 'FULL' //optional
+    ]);
+  }
   
   echo '<pre>';
   echo '<h1>Buy Order: </h1><br>';
@@ -120,6 +138,17 @@ function sellOrder($type, $pair, $amount, $price) {
     'newOrderRespType' => 'FULL' //optional
   ]);
   
+
+  if($type == 'MARKET' or $type == 'market') {
+    $responseArr = signedRequest('POST', 'api/v3/order', [
+      'symbol' => $pair,
+      'side' => 'BUY',
+      'type' => $type,
+      'quantity' => $amount,
+      'newOrderRespType' => 'FULL' //optional
+    ]);
+  }
+
   echo '<pre>';
   echo '<h1>Sell Order: </h1><br>';
   print_r($responseArr);
@@ -152,16 +181,16 @@ function deleteOrders($symbol) {
 }
 
 
-$getAccount = getAccount();
+// $getAccount = getAccount();
 
-$getMarketPrice = getMarketPrice('VTHOUSDT');
+// $getMarketPrice = getMarketPrice('VTHOUSDT');
 
-$bid = $getMarketPrice[bids][0][0];
-$ask = $getMarketPrice[asks][0][0];
+// $bid = $getMarketPrice[bids][0][0];
+// $ask = $getMarketPrice[asks][0][0];
 
 // buyOrder('LIMIT', 'VTHOUSDT', 600, $ask);
 // sellOrder('LIMIT', 'VTHOUSDT', 600, $bid);
 //  deleteOrder('VTHOUSDT', 1);
 // deleteOrders('VTHOUSDT');
 
-echo $bid.' '.$ask;
+// echo $bid.' '.$ask;
