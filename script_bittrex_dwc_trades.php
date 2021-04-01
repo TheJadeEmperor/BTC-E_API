@@ -83,14 +83,21 @@ if($amt) { //override the amt
     $buyQT = $sellQT = $amt;
 }
 
+if ($action == 'buy') //get order type from orderbook 
+    $orderBookType = 'sell'; //get sells orderbook
+else
+    $orderBookType = 'buy'; //get buys orderbook
+
+
 if($live == 1)
     if($data['action'] == 'buy') { //set the orders based on action
         //pair examples: USDT-LINK BTC-LINK
         $buyLimit = $bittrex->buyLimit($pair, $buyQT, $ask);   
         $orderId = $buyLimit->uuid;
+
+        
     } // var_dump($buyLimit);
     else if($data['action'] == 'sell') {
-
         //loss protection - do not sell at lower price than entry price
         $res = $database->getLatestBuy($sub, $pair); //get log for this ex & pair
         

@@ -137,21 +137,6 @@ class Client {
 	}
 
 	/**
-	 * Place a buy order in a specific market. 
-	 * Make sure you have the proper permissions set on your API keys for this call to work
-	 * @param string $market  literal for the market (ex: BTC-LTC)
-	 * @param float $quantity the amount to purchase
-	 * @return array
-	 */
-	public function buyMarket ($market, $quantity) {
-		$params = array (
-			'market'   => $market,
-			'quantity' => $quantity
-		);
-		return $this->call ('market/buymarket', $params, true);
-	}
-
-	/**
 	 * Place a limit sell order in a specific market. 
 	 * Make sure you have the proper permissions set on your API keys for this call to work
 	 * @param string $market  literal for the market (ex: BTC-LTC)
@@ -168,12 +153,72 @@ class Client {
 		return $this->call ('market/selllimit', $params, true);
 	}
 
+	/** 
+	 * @param string $data 
+	 * 	$data['market'] 
+	 * 	$data['balance'] 
+	 * 	$data['orderBookType'] 
+	 * @return $output
+	 */
+	public function useOrderBook ($market, $balance, $orderBookType) {
+
+		if($orderBookType == 'buy') 
+			$action = 'sell';
+		else $action = 'buy';
+
+		//get orderbook getOrderBook ($market, $type, $depth) 
+		$getOrderBook = $this->getOrderBook ($market, $orderBookType, 10);
+
+		foreach($getOrderBook as $orderBook) {
+			$rate = $orderBook->Rate; //rate from orderbook 
+
+			var_dump($orderBook); //view current orderbook
+
+			$QT = $balance/$rate; //quantity of coin to buy or sell
+
+			if ($orderBook->Quantity <= $QT) //if orderbook has less than qt 
+				$QT = $orderBook->Quantity; //
+
+			$cost = $QT * $rate;  //how much this order costs USDT
+
+			if($balance > 0) { //if there is balance remaining
+				if ($action == 'buy') 
+					$limitOrder = $this->buyLimit ($market, $QT, $rate);
+				else if($action == 'sell')
+					$limitOrder = $this->sellLimit ($market, $QT, $rate);
+		
+				var_dump($limitOrder);
+		
+				$orderId = $limitOrder->uuid; 
+		
+				$balance = $balance - $cost; //substract cost from balance 
+		
+				$output .= 'action: '. $action.' |  bid: '.$bid.' | QT: '.$QT.' | cost: '.$cost.' | balance: '.$balance.' | orderId: '.$orderId.'<br />';
+			}
+			else { //balance limit reached - exit loop
+				$output .= ' end loop';
+				break;
+			}
+
+		}
+		return $orderId;
+	}
+
+	/**
+	 * Place a buy order in a specific market. 
+	 * Market orders are disabled on API
+	 */
+	public function buyMarket ($market, $quantity) {
+		$params = array (
+			'market'   => $market,
+			'quantity' => $quantity
+		);
+		return $this->call ('market/buymarket', $params, true);
+	}
+
 	/**
 	 * Place a sell order in a specific market. 
-	 * Make sure you have the proper permissions set on your API keys for this call to work
-	 * @param string $market  literal for the market (ex: BTC-LTC)
-	 * @param float $quantity the amount to sell
-	 * @return array
+	 * Market orders are disabled on API
 	 */
 	public function sellMarket ($market, $quantity) {
 		$params = array (
