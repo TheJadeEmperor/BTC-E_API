@@ -6,7 +6,7 @@ include($dir.'config.php');
 
 //debug mode only
 $server = $_SERVER['SERVER_NAME'];
-if ($server == 'localhost' || $server == 'btcAPI.test') {
+if ($server == 'localhost' || $server == 'btcAPI.test' || $server == 'btcapi.test') {
 	$database = new Database($conn);
     $localHost = 'http://localhost/btcAPI/';
     $serverHost = 'https://code.bestpayingsites.com/';
@@ -19,7 +19,7 @@ else {
 //list of scripts 
 $exchanges = array(
     'panic_binance', 
-    'panic_bittrex', 
+    'panic_kucoin_5', 
 );
 
 
@@ -38,13 +38,12 @@ switch($exch) { //URL to call and which exchange to get from log
        
         $ex = 'binance';
         break;
-    case 'panic_binance':  //// Bittrex /////
-        $url = $serverHost.'panic_bittrex.php';
-        $url = $localHost.'panic_bittrex.php';
+    case 'panic_kucoin_5':  //// Kucoin5 /////
+        $url = $serverHost.'panic_kucoin.php?sub=kucoin5';
+        $url = $localHost.'panic_kucoin.php?sub=kucoin5';
         
-        $ex = 'bittrex';
+        $ex = 'kucoin5';
         break;
- 
 }
 
 if($_POST) {
@@ -59,7 +58,7 @@ if($_POST) {
         "alert" => "DWC", //DWC
         "action" => $action, //buy or sell
         "ticker" => $ticker, //USDT-XXX or BTC-KEY
-        "amt" => $amt //amt of coin
+        "amt" => $amt //amt of coin 
     ); 
 
     $data = json_encode($json);
@@ -113,4 +112,3 @@ if($_POST) {
         <input type="submit" />
     </div>
 </form>
-
