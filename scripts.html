@@ -251,8 +251,10 @@
 		});	
 	}
 	
-	function reloadNotes(){
-		$('#notesDiv').load('<?=$loadNotes?>');		
+	function reloadLinksModule(){
+
+		$('#linksModule').load('<?=$linksModule?>');
+	
 	}
  
  
@@ -488,6 +490,6 @@
 		kucoin4Balance();
 		kucoin5Balance();
 		reloadBtrexBalance();
-
+		reloadLinksModule();
     });
 </script>

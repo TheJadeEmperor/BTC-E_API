@@ -44,7 +44,11 @@ $loadKC5Balance = 'load/kucoinBalance.php?page=kucoin5Balance&accessKey='.$acces
 
 $loadBtrexBalance = 'load/btrexBalance.php?accessKey='.$accessKey;
 
-$loadingImage = '<img src="include/images/load.gif" />';
+$linksModule = 'load/linksModule.php?accessKey='.$accessKey;
+
+
+
+$loadingImage = '<img src="include/images/load.gif" id="loadingImage" />';
 ?>
 <head>
 	<title>BTC API Dashboard</title>
@@ -90,18 +94,7 @@ $loadingImage = '<img src="include/images/load.gif" />';
         <br />
     </div>
 
-    <div class="col">
-        <h2>Links</h2>
-
-        <p align="left"><a href="https://www.tradingview.com/chart/gghdcAkO/" target="_blank">Chart 1</a>
-							
-        <br /><br />			
-
-        <a href="https://www.tradingview.com/chart/HRbO8WTw/" target="_blank">Chart 2</a>
-
-        <br /><br />
-
-        <a href="https://trade.kucoin.com/ADA-USDT" target="_blank">Kucoin Trade</a>
-        </p>
+    <div class="col" id="linksModule">
+        <?=$loadingImage?>
     </div>
 </div>
