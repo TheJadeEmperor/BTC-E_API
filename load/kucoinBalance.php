@@ -7,7 +7,7 @@ include($dir.'api_kucoin.php');
 //set timezone
 date_default_timezone_set('America/New_York');
 
-if($_GET['accessKey'] != 'AllLivesMatter') {
+if($_GET['accessKey'] != $accessKey) {
 	echo "Wrong access key"; exit;
 }
 
@@ -85,7 +85,7 @@ else if ($_GET['page'] == 'kucoin1Balance') {
 		'passphrase' => $kucoin1_passphrase
 	);
 
-	echo displayKCTable('kucoin1Balance', $apiFields);
+	echo displayKCTable('kucoin1_Balance', $apiFields);
 
 }
 else if ($_GET['page'] == 'kucoin2Balance') {
@@ -96,7 +96,7 @@ else if ($_GET['page'] == 'kucoin2Balance') {
 		'passphrase' => $kucoin2_passphrase
 	);
 
-	echo displayKCTable('kucoin2Balance', $apiFields);
+	echo displayKCTable('kucoin2_Balance', $apiFields);
 	
 }
 else if ($_GET['page'] == 'kucoin3Balance') {
@@ -107,7 +107,7 @@ else if ($_GET['page'] == 'kucoin3Balance') {
 		'passphrase' => $kucoin3_passphrase
 	);
 
-	echo displayKCTable('kucoin3Balance', $apiFields);
+	echo displayKCTable('kucoin3_Balance', $apiFields);
 
 }
 else if ($_GET['page'] == 'kucoin4Balance') {
@@ -117,7 +117,7 @@ else if ($_GET['page'] == 'kucoin4Balance') {
 		'passphrase' => $kucoin4_passphrase
 	);
 
-	echo displayKCTable('kucoin4Balance', $apiFields);
+	echo displayKCTable('kucoin4_Balance', $apiFields);
 }
 else if ($_GET['page'] == 'kucoin5Balance') {
 	$apiFields = array(
@@ -126,7 +126,7 @@ else if ($_GET['page'] == 'kucoin5Balance') {
 		'passphrase' => $kucoin5_passphrase
 	);
 
-	echo displayKCTable('kucoin5Balance', $apiFields);
+	echo displayKCTable('kucoin5_Balance', $apiFields);
 }
 
 ?>

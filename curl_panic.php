@@ -38,6 +38,30 @@ switch($exch) { //URL to call and which exchange to get from log
        
         $ex = 'binance';
         break;
+    case 'panic_kucoin_1':  //// Kucoin36 /////
+        $url = $serverHost.'panic_kucoin.php?sub=kucoin1';
+        $url = $localHost.'panic_kucoin.php?sub=kucoin1';
+        
+        $ex = 'kucoin1';
+        break;
+    case 'panic_kucoin_2':  //// Kucoin36 /////
+        $url = $serverHost.'panic_kucoin.php?sub=kucoin2';
+        $url = $localHost.'panic_kucoin.php?sub=kucoin2';
+        
+        $ex = 'kucoin2';
+        break;
+    case 'panic_kucoin_3':  //// Kucoin36 /////
+        $url = $serverHost.'panic_kucoin.php?sub=kucoin3';
+        $url = $localHost.'panic_kucoin.php?sub=kucoin3';
+        
+        $ex = 'kucoin3';
+        break;
+    case 'panic_kucoin_4':  //// Kucoin4 /////
+        $url = $serverHost.'panic_kucoin.php?sub=kucoin4';
+        $url = $localHost.'panic_kucoin.php?sub=kucoin4';
+        
+        $ex = 'kucoin4';
+        break;
     case 'panic_kucoin_5':  //// Kucoin5 /////
         $url = $serverHost.'panic_kucoin.php?sub=kucoin5';
         $url = $localHost.'panic_kucoin.php?sub=kucoin5';

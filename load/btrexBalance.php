@@ -7,7 +7,7 @@ include($dir.'api_bittrex.php');
 //set timezone
 date_default_timezone_set('America/New_York');
 
-if($_GET['accessKey'] != 'AllLivesMatter') {
+if($_GET['accessKey'] != $accessKey) {
 	echo "Wrong access key"; exit;
 }
 	

@@ -7,11 +7,32 @@ include($dir.'config.php');
 
 //kucoin subaccount keys
 $sub = $_GET['sub'];
-if ($sub == 'kucoin5') {
+if($sub == 'kucoin2') {
+    $key = $kucoin2_key;
+    $secret = $kucoin2_secret;
+    $passphrase = $kucoin2_passphrase;
+}
+else if ($sub == 'kucoin3') {
+    $key = $kucoin3_key;
+    $secret = $kucoin3_secret;
+    $passphrase = $kucoin3_passphrase;
+}
+else if ($sub == 'kucoin4') {
+    $key = $kucoin4_key;
+    $secret = $kucoin4_secret;
+    $passphrase = $kucoin4_passphrase;
+}
+else if ($sub == 'kucoin5') {
     $key = $kucoin5_key;
     $secret = $kucoin5_secret;
     $passphrase = $kucoin5_passphrase;
-} 
+}
+else { //default is kucoin1
+    $sub = 'kucoin1';
+    $key = $kucoin1_key;
+    $secret = $kucoin1_secret;
+    $passphrase = $kucoin1_passphrase;    
+}
 
 $ipAddress = get_ip_address(); 
 $recorded = date('Y-m-d H:i:s', time());
