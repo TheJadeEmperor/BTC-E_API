@@ -68,7 +68,7 @@ else {
     $live = 1;
 }
 //////////////////////////////
-//$live = 1; //delete when live
+$live = 1; //delete when live
 //////////////////////////////
 $coin = explode('-', $pair); //USDT-XRP
 $pair = $coin[1].'-'.$coin[0]; //XRP-USDT
@@ -124,22 +124,9 @@ if($live == 1)
         $orderId = $buyResult['data']['orderId'];
     }
     else if($data['action'] == 'sell') {
-        //loss protection - do not sell at lower price than entry price
-        $res = $database->getLatestBuy($sub, $data['ticker']); //get log for this ex & pair
 
-  
-        if($log = $res->fetch_array()) {  
-            $entryPrice = $log['price']; //get entry price
-        }
-
-        if ($bid < $entryPrice) {
-            $orderId = ' Loss protection: latest entry price: '.$entryPrice.' '; 
-        }
-        else {
-            $sellResult = sellOrder('market', $pair, $sellQT, $bid);
-            $orderId = $sellResult['data']['orderId'];
-        }  
-
+        $sellResult = sellOrder('market', $pair, $sellQT, $bid);
+        $orderId = $sellResult['data']['orderId'];
     }
 
 include('include/logInsert.php');

@@ -98,20 +98,9 @@ if($live == 1)
         
     } // var_dump($buyLimit);
     else if($data['action'] == 'sell') {
-        //loss protection - do not sell at lower price than entry price
-        $res = $database->getLatestBuy($sub, $pair); //get log for this ex & pair
-        
-        if($log = $res->fetch_array()) {  
-            $entryPrice = $log['price']; //get entry price
-        }
 
-        if ($bid < $entryPrice) {
-            $orderId = ' Loss protection: latest entry price: '.$entryPrice.' '; 
-        }
-        else {
-            $sellLimit = $bittrex->sellLimit ($pair, $sellQT, $bid);
-            $orderId = $sellLimit->uuid;
-        }
+        $sellLimit = $bittrex->sellLimit ($pair, $sellQT, $bid);
+        $orderId = $sellLimit->uuid; 
         
     }  //var_dump($sellLimit);
 
