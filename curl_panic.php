@@ -18,7 +18,11 @@ else {
 
 //list of scripts 
 $exchanges = array(
-    'panic_binance', 
+    'panic_binance',
+    'panic_kucoin_1', 
+    'panic_kucoin_2', 
+    'panic_kucoin_3', 
+    'panic_kucoin_4', 	
     'panic_kucoin_5', 
 );
 
@@ -32,6 +36,12 @@ foreach($exchanges as $ex) {
 $exch = $_POST['ex'];
 
 switch($exch) { //URL to call and which exchange to get from log
+    case 'panic_bittrex':  //// Binance /////
+        $url = $serverHost.'panic_bittrex.php';
+        $url = $localHost.'panic_bittrex.php';
+       
+        $ex = 'binance';
+        break;
     case 'panic_binance':  //// Binance /////
         $url = $serverHost.'panic_binance.php';
         $url = $localHost.'panic_binance.php';
