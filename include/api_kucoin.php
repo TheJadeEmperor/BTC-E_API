@@ -1,23 +1,21 @@
 <?php
+
 class Kucoin {
   private $host = 'https://api.kucoin.com'; //production
-  //$host = 'https://openapi-sandbox.kucoin.com'; //sandbox
+  //private $host = 'https://openapi-sandbox.kucoin.com'; //sandbox
   private $apiVersion;
   private $key;
   private $secret; 
-  private $passphrase; 
+  private $passphrase;
 
-  public function __construct ($key, $secret, $passphrase) {
-    $this->apiVersion = 'v1.1';
+  public function __construct($key, $secret, $passphrase) {
+    $this->apiVersion = 'v1';
     $this->key = $key;
-    $this->secret = $secret; 
+    $this->secret = $secret;
     $this->passphrase = $passphrase;
-    
 	}
 
-
   public function signature($request_path = '', $body = '', $timestamp = false, $method = 'GET') {
-    // global $secret;
     $secret = $this->secret;
   
     $body = is_array($body) ? json_encode($body) : $body; // Body must be in json format
@@ -29,15 +27,12 @@ class Kucoin {
   }
 
   public function checkBalance() {
-    // global $host;
-    // global $key;
-    // global $passphrase;
     $host = $this->host;
     $key = $this->key;
     $passphrase = $this->passphrase;
 
     $method = 'GET';
-    $request_path = '/api/v1/accounts';
+    $request_path = '/api/'.$this->apiVersion.'/accounts';
     $timestamp = time() * 1000;
     $body = '';
   
@@ -67,14 +62,14 @@ class Kucoin {
     curl_close($curl);
   
     $responseArr['function'] = 'checkBalance()';
-    //echo '<pre>'; print_r($responseArr); echo '</pre>';
+    echo '<pre>'; print_r($responseArr); echo '</pre>';
     return $responseArr;
   }
 
   public function getMarketPrice($currencyPair) {
-    global $host;
-    global $key;
-    global $passphrase;
+    $host = $this->host;
+    $key = $this->key;
+    $passphrase = $this->passphrase;
   
     $method = 'GET';
     $request_path = '/api/v1/market/orderbook/level1?symbol='.$currencyPair;
@@ -94,7 +89,7 @@ class Kucoin {
       CURLOPT_CUSTOMREQUEST => $method,
       CURLOPT_HTTPHEADER => array(
         "Content-Type:application/json",
-        "KC-API-SIGN:".signature($request_path, $body, $timestamp, $method),
+        "KC-API-SIGN:".$this->signature($request_path, $body, $timestamp, $method),
         "KC-API-TIMESTAMP:".$timestamp,
         "KC-API-KEY:".$key,
         "KC-API-PASSPHRASE:".$passphrase
@@ -106,18 +101,17 @@ class Kucoin {
   
     curl_close($curl);
   
-    $responseArr['function'] = 'getMarketPrice($currencyPair)';
+    $responseArr['function'] = '-getMarketPrice($currencyPair)';
     $responseArr['currencyPair'] = $currencyPair;
-    //echo '<pre>'; print_r($responseArr); echo '</pre>';
+    echo '<pre>'; print_r($responseArr); echo '</pre>';
     return $responseArr;
   }
   
-
   //type is market or limit
-  function buyOrder($type, $pair, $buyQT, $ask) {
-    global $host;
-    global $key;
-    global $passphrase;
+  public function buyOrder($type, $pair, $buyQT, $ask) {
+    $host = $this->host;
+    $key = $this->key;
+    $passphrase = $this->passphrase;
   
     $method = 'POST';
     $request_path = '/api/v1/orders';
@@ -139,7 +133,7 @@ class Kucoin {
       CURLOPT_POSTFIELDS => $body,
       CURLOPT_HTTPHEADER => array(
         "Content-Type:application/json",
-        "KC-API-SIGN:".signature($request_path, $body, $timestamp, $method),
+        "KC-API-SIGN:".$this->signature($request_path, $body, $timestamp, $method),
         "KC-API-TIMESTAMP:".$timestamp,
         "KC-API-KEY:".$key,
         "KC-API-PASSPHRASE:".$passphrase
@@ -156,10 +150,10 @@ class Kucoin {
     return $responseArr;
   }
   
-  function sellOrder($type, $pair, $sellQT, $ask) {
-    global $host;
-    global $key;
-    global $passphrase;
+  public function sellOrder($type, $pair, $sellQT, $ask) {
+    $host = $this->host;
+    $key = $this->key;
+    $passphrase = $this->passphrase;
   
     $method = 'POST';
     $request_path = '/api/v1/orders';
@@ -181,7 +175,7 @@ class Kucoin {
       CURLOPT_POSTFIELDS => $body,
       CURLOPT_HTTPHEADER => array(
         "Content-Type:application/json",
-        "KC-API-SIGN:".signature($request_path, $body, $timestamp, $method),
+        "KC-API-SIGN:".$this->signature($request_path, $body, $timestamp, $method),
         "KC-API-TIMESTAMP:".$timestamp,
         "KC-API-KEY:".$key,
         "KC-API-PASSPHRASE:".$passphrase
@@ -196,7 +190,7 @@ class Kucoin {
     $responseArr['function'] = 'function sellOrder($type, $pair, $sellQT, $ask)';
     echo '<pre>'; print_r($responseArr); echo '</pre>';
     return $responseArr;
-  }
+  } 
   
   /**
   Array (
@@ -212,10 +206,10 @@ class Kucoin {
   
   )
   */
-  function cancelOrder($orderId) {
-    global $host;
-    global $key;
-    global $passphrase;
+  public function cancelOrder($orderId) {
+    $host = $this->host;
+    $key = $this->key;
+    $passphrase = $this->passphrase;
   
     $method = 'DELETE';
     $request_path = '/api/v1/orders/'.$orderId;
@@ -235,7 +229,7 @@ class Kucoin {
       CURLOPT_CUSTOMREQUEST => $method,
       CURLOPT_HTTPHEADER => array(
         "Content-Type:application/json",
-        "KC-API-SIGN:".signature($request_path, $body, $timestamp, $method),
+        "KC-API-SIGN:".$this->signature($request_path, $body, $timestamp, $method),
         "KC-API-TIMESTAMP:".$timestamp,
         "KC-API-KEY:".$key,
         "KC-API-PASSPHRASE:".$passphrase
@@ -251,8 +245,8 @@ class Kucoin {
     echo '<pre>'; print_r($responseArr); echo '</pre>';
     return $responseArr;
   }
-   
-}
+} //class Kucoin
+
 
 $host = 'https://api.kucoin.com'; //production
 
@@ -302,7 +296,7 @@ function checkBalance() {
 
   curl_close($curl);
 
-  $responseArr['function'] = 'checkBalance()';
+  $responseArr['function'] = 'checkBalance( )';
   echo '<pre>'; print_r($responseArr); echo '</pre>';
   return $responseArr;
 }

@@ -74,12 +74,16 @@ $pair = $coin[1].'-'.$coin[0]; //XRP-USDT
 
 $percentBalance = 1; //% of your balance for purchases | 1=100% | 0.5=50%
 
-$getPrices = getMarketPrice($pair);
+$Kucoin = new Kucoin($key, $secret, $passphrase);
+$getPrices = $Kucoin->getMarketPrice($pair);
+
+// $getPrices = getMarketPrice($pair);
 $ask = $getPrices['data']['bestAsk'];
 $bid = $getPrices['data']['bestBid'];
 
 $sellQT = $buyQT = 0; //default quantity if you don't have the coin
-$getBalances = checkBalance();
+//$getBalances = checkBalance();
+$getBalances = $Kucoin->checkBalance();
 $totalBalance = 0;
 
 foreach($getBalances['data'] as $index) { //go through each coin you have
