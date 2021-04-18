@@ -41,18 +41,54 @@ else {
 }
 
 //////////////////////////////
-// $live = 1; //delete when live 
+$live = 1; //delete when live 
 //////////////////////////////
+$Gate = new Gate($gate_key, $gate_secret);
+
 
 $coin = explode('-', $pair); //USDT-GT
 $pair = $coin[1].'_'.$coin[0]; //GT_USDT
 
-$getMarketPrice = getMarketPrice($pair);
+$getMarketPrice = $Gate->getMarketPrice($pair);
 $bid = $getMarketPrice[0]['highest_bid'];
 $ask = $getMarketPrice[0]['lowest_ask'];
 
-//unable to get balance from api
-$sellQT = $buyQT = $amt; //get quantity from $amt in json data
+
+$getBalances = $Gate->getBalances();
+
+
+foreach($getBalances as $index) {
+    $currency = $index['currency'];
+    $available = $index['available'];
+    
+    if($available > 0) { //check for available balance
+        if($currency == $coin[1]) { //match coin symbol   
+            $coinBalance = $available; 
+            echo $available.' '.$currency.' <br />';
+    
+            $sellQT = $available; 
+            $totalBalance += $sellQT * $bid;
+        }
+        else if($currency == 'USDT') {
+            $USDTBalance = $available; 
+            $totalBalance += $USDTBalance; //add to totalBalance
+            $buyQT = $USDTBalance/$ask; //quantity to buy
+            $buyQT = $buyQT * $percentBalance; 
+        }
+    }
+}
+
+//orders only take 4 decimals
+$buyQT = number_format($buyQT, 4, '.', '');
+$sellQT = number_format($sellQT, 4, '.', '');
+$coinBalance = number_format($coinBalance, 4, '.', '');
+$USDTBalance = number_format($USDTBalance, 4, '.', '');
+$totalBalance = number_format($totalBalance, 4, '.', '');
+
+
+if($amt) { //override amt from json data
+    $buyQT = $sellQT = $amt;
+}
 
 if($live == 1)
     if($data['action'] == 'buy') { //set the orders based on action
