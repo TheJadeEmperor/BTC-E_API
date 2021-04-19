@@ -18,6 +18,8 @@ else {
 
 //list of scripts 
 $exchanges = array(
+    'panic_bittrex',
+    'panic_gate',
     'panic_binance',
     'panic_kucoin_1', 
     'panic_kucoin_2', 
@@ -28,7 +30,7 @@ $exchanges = array(
 
 
 foreach($exchanges as $ex) {
-    echo '<p><a href="curl_panic.php?ex='.$ex.'">'.$ex.'</a></p>'; 
+    //echo '<p><a href="curl_panic.php?ex='.$ex.'">'.$ex.'</a></p>'; 
 
     $dropDown .= '<option value='.$ex.'>'.$ex.'</option>';
 }
@@ -36,11 +38,17 @@ foreach($exchanges as $ex) {
 $exch = $_POST['ex'];
 
 switch($exch) { //URL to call and which exchange to get from log
-    case 'panic_bittrex':  //// Binance /////
+    case 'panic_bittrex':  //// Bittrex /////
         $url = $serverHost.'panic_bittrex.php';
         $url = $localHost.'panic_bittrex.php';
        
-        $ex = 'binance';
+        $ex = 'bittrex';
+        break;
+    case 'panic_gate':  //// Gate /////
+        $url = $serverHost.'panic_gate.php';
+        $url = $localHost.'panic_gate.php';
+        
+        $ex = 'gate';
         break;
     case 'panic_binance':  //// Binance /////
         $url = $serverHost.'panic_binance.php';
@@ -48,19 +56,19 @@ switch($exch) { //URL to call and which exchange to get from log
        
         $ex = 'binance';
         break;
-    case 'panic_kucoin_1':  //// Kucoin36 /////
+    case 'panic_kucoin_1':  //// Kucoin1 /////
         $url = $serverHost.'panic_kucoin.php?sub=kucoin1';
         $url = $localHost.'panic_kucoin.php?sub=kucoin1';
         
         $ex = 'kucoin1';
         break;
-    case 'panic_kucoin_2':  //// Kucoin36 /////
+    case 'panic_kucoin_2':  //// Kucoin2 /////
         $url = $serverHost.'panic_kucoin.php?sub=kucoin2';
         $url = $localHost.'panic_kucoin.php?sub=kucoin2';
         
         $ex = 'kucoin2';
         break;
-    case 'panic_kucoin_3':  //// Kucoin36 /////
+    case 'panic_kucoin_3':  //// Kucoin3 /////
         $url = $serverHost.'panic_kucoin.php?sub=kucoin3';
         $url = $localHost.'panic_kucoin.php?sub=kucoin3';
         
