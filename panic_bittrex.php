@@ -45,27 +45,22 @@ $live = 1; //delete when live
 //connect to Bittrex
 $bittrex = new Client ($bittrex_api_key, $bittrex_api_secret);
 
-$market = 'USDT-ADA';
-$balance = 5; //do not go over this amt in USDT
+$percentBalance = 1; //% of your balance for purchases | 1=100% | 0.5=50%
+$getTicker = $bittrex->getTicker ($pair);
 
-//$action = 'buy';
-//$action = 'sell';
+$sellQT = $buyQT = 0; //default quantity if you don't have the coin
+$getBalances = $bittrex->getBalances();
+$totalBalance = 0;
 
-$getOpenOrders = $bittrex->getOpenOrders($market);
+$properties = get_object_vars($getBalances);
+var_dump($properties);
 
-echo 'getOpenOrders ';
-var_dump($getOpenOrders);
-
-foreach($getOpenOrders as $orderDetails) {
-    echo ' '.$orderDetails->OrderUuid.' ';
-    echo $bittrex->cancel ($orderDetails->OrderUuid);
+if($amt) { //override the amt
+    $buyQT = $sellQT = $amt;
 }
 
-sleep(2);
-
-
-if ($live == 1)
-    $output = $bittrex->useOrderBook ($market, $balance, $dataAction);
+if ($live == 1) 
+    $output = $bittrex->useOrderBook ($pair, $amt, $dataAction);
 
 echo $output;
 

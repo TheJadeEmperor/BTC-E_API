@@ -160,7 +160,7 @@ class Client {
 	 * 	$data['orderBookType'] 
 	 * @return $output
 	 */
-	public function useOrderBook ($market, $balance, $dataAction) {
+	public function useOrderBook ($market, $amt, $dataAction) {
 
 		if($dataAction == 'buy')  
 			$orderBookType = 'sell'; //get order type for order book
@@ -175,36 +175,33 @@ class Client {
 
 			var_dump($orderBook); //view current orderbook
 
-			$QT = $balance/$rate; //quantity of coin to buy or sell
+			$QT = $amt; //quantity of coin to buy or sell
 
-			if ($orderBook->Quantity <= $QT) //if orderbook has less than qt 
-				$QT = $orderBook->Quantity; //
+			if ($orderBook->Quantity <= $QT) //if orderbook has less than QT 
+				$QT = $orderBook->Quantity; //set the QT to what's available
 
-			$cost = $QT * $rate;  //how much this order costs USDT
-
-			if($balance > 0) { //if there is balance remaining
+			if($amt > 0) { //if there is balance remaining
 				if ($dataAction == 'buy') 
 					$limitOrder = $this->buyLimit ($market, $QT, $rate);
 				else if ($dataAction == 'sell')
 					$limitOrder = $this->sellLimit ($market, $QT, $rate);
 		
-				var_dump($limitOrder);
-		
+				//var_dump($limitOrder);
 				$orderId = $limitOrder->uuid; 
 		
-				$balance = $balance - $cost; //substract cost from balance 
-		
-				$output .= 'action: '. $action.' |  bid: '.$bid.' | QT: '.$QT.' | cost: '.$cost.' | balance: '.$balance.' | orderId: '.$orderId.'<br />';
-			}
+				$amt = $amt - $QT; //substract cost from balance 
+				$cost = $QT * $rate;  //how much this order costs USDT
+
+				$output .= 'action: '. $dataAction.' |  bid: '.$bid.' | QT: '.$QT.' | cost: '.$cost.' | amt: '.$amt.' | orderId: '.$orderId.' <br />';
+			} //if($amt > 0)
 			else { //balance limit reached - exit loop
-				$output .= ' end loop';
+				$output .= ' end loop'; 
 				break;
 			}
+		} //foreach($getOrderBook as $orderBook) 
+		//echo $output;
 
-		}
-		echo $output;
-
-		return $orderId;
+		return $output;
 	}
 
 	/**

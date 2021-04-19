@@ -137,7 +137,7 @@ if($_POST) {
         <td>
             <p>ticker <input type="text" name="ticker" value="<?=$ticker?>" /></p>
             <p>action <input type="text" name="action" value="<?=$action?>" /></p>
-            <p>amt <input type="text" name="amt" value="10" /></p>
+            <p>amt <input type="text" name="amt" value="5" /></p>
         </td>
         <td width="10px"></td>
         <td>
