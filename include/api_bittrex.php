@@ -160,11 +160,12 @@ class Client {
 	 * 	$data['orderBookType'] 
 	 * @return $output
 	 */
-	public function useOrderBook ($market, $balance, $orderBookType) {
+	public function useOrderBook ($market, $balance, $dataAction) {
 
-		if($orderBookType == 'buy') 
-			$action = 'sell';
-		else $action = 'buy';
+		if($dataAction == 'buy')  
+			$orderBookType = 'sell'; //get order type for order book
+		else 
+			$orderBookType = 'buy'; //orderBookType is opposite of order type
 
 		//get orderbook getOrderBook ($market, $type, $depth) 
 		$getOrderBook = $this->getOrderBook ($market, $orderBookType, 10);
@@ -182,9 +183,9 @@ class Client {
 			$cost = $QT * $rate;  //how much this order costs USDT
 
 			if($balance > 0) { //if there is balance remaining
-				if ($action == 'buy') 
+				if ($dataAction == 'buy') 
 					$limitOrder = $this->buyLimit ($market, $QT, $rate);
-				else if($action == 'sell')
+				else if ($dataAction == 'sell')
 					$limitOrder = $this->sellLimit ($market, $QT, $rate);
 		
 				var_dump($limitOrder);
@@ -201,6 +202,8 @@ class Client {
 			}
 
 		}
+		echo $output;
+
 		return $orderId;
 	}
 
