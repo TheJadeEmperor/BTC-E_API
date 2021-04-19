@@ -62,7 +62,7 @@ class Kucoin {
     curl_close($curl);
   
     $responseArr['function'] = 'checkBalance()';
-    echo '<pre>'; print_r($responseArr); echo '</pre>';
+    //echo '<pre>'; print_r($responseArr); echo '</pre>';
     return $responseArr;
   }
 
@@ -103,7 +103,7 @@ class Kucoin {
   
     $responseArr['function'] = '-getMarketPrice($currencyPair)';
     $responseArr['currencyPair'] = $currencyPair;
-    echo '<pre>'; print_r($responseArr); echo '</pre>';
+    // echo '<pre>'; print_r($responseArr); echo '</pre>';
     return $responseArr;
   }
   
