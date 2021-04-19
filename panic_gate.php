@@ -88,12 +88,12 @@ if($amt) { //override amt from json data
 
 if($live == 1)
     if($data['action'] == 'buy') { //set the orders based on action
-        $buyOrder = buyOrder('limit', $pair, $buyQT, $ask);
+        $buyOrder = buyOrder('market', $pair, $buyQT, $ask);
         $orderId = $buyOrder['id'];
     }
     else if($data['action'] == 'sell') {
 
-        $sellOrder = sellOrder('limit', $pair, $sellQT, $bid);
+        $sellOrder = sellOrder('market', $pair, $sellQT, $bid);
         $orderId = $sellOrder['id'];
     }
 
