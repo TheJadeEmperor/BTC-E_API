@@ -31,40 +31,73 @@ else if(!in_array($ipAddress, $trustedIPs)) {
 else {
     $live = 1;
 }
+//////////////////////////////
+$live = 1; //delete when live
+//////////////////////////////
+$coin = explode('-', $pair); //USDT-VTHO
+$pair = $coin[1].''.$coin[0]; //VTHOUSDT
 
-$pair = 'VTHOUSDT';
-$getAccount = getAccount(); 
-$getAccount = $getAccount['balances'];
-foreach($getAccount as $num => $coin) {
-    if ($coin['asset'] == 'USDT') {
-        echo 'usdt '.$coin['free'];
-        $usdtValue = $coin['free'];
-    }
-}
+$binance = new Binance($binance_api_key, $binance_api_secret);
+$getAccount = $binance->getAccount();
 
-$getMarketPrice = getMarketPrice($pair);
+
+$getMarketPrice = $binance->getMarketPrice($pair);
+// print_r($getMarketPrice);
 
 $bid = $getMarketPrice['bids'][0][0];
 $ask = $getMarketPrice['asks'][0][0];
 
-$buyQT = $usdtValue / $ask;
+$getAccount = $getAccount['balances'];
+foreach($getAccount as $index) {
+    $currency = $index['asset'];
+    $available = $index['free'];
 
-if ($dataAction == 'buy') {
-    //buy order - market
-    $orderId = buyOrder('MARKET', $pair, $buyQT, $ask);
-} 
-else if ($dataAction == 'sell') {
-    //subtract fee from total amt
-    $fee = 0.001; //0.1%
-    $sellQT = $amt - ($amt * $fee);
+    if($available > 0) { //check for available balance
+        if($currency == $coin[1]) { //match coin symbol   
+            $coinBalance = $available; 
+         
+            $sellQT = $available; 
+            $totalBalance += $sellQT * $bid;
+        }
+        else if($currency == 'USDT') {
+            $USDTBalance = $available; 
+            $totalBalance += $USDTBalance; //add to totalBalance
+            $buyQT = $USDTBalance/$ask; //quantity to buy
+            echo $available.' '.$currency.' <br />';
     
-//echo 'amt: '.$sellQT;
-    //sell order - market
-    $orderId = sellOrder('MARKET', $pair, $sellQT, $bid);
+        }
+    }
 }
+
+//subtract fee from total amt
+$fee = 0.005; //0.5% 
+$sellQT = $sellQT - ($sellQT * $fee); 
+$buyQT = floor($buyQT);
+
+//Fix error: precision is over the maximum defined for this asset
+$bid = number_format($bid, 4, '.', '');
+$ask = number_format($ask, 4, '.', '');
+$buyQT = number_format($buyQT, 1, '.', ''); 
+$sellQT = number_format($sellQT, 1, '.', '');
+
+
+if($amt) { //override amt from json data
+    $buyQT = $sellQT = $amt;
+}
+
+if($live == 1)
+    if ($dataAction == 'buy') { 
+        //buy order - market
+        //$orderId = buyOrder('MARKET', $pair, $buyQT, $ask);
+        $orderId = $binance->buyOrder('MARKET', $pair, $buyQT, $ask);
+    }
+    else if ($dataAction == 'sell') {
+        //echo 'amt: '.$sellQT;
+        // $orderId = sellOrder('MARKET', $pair, $sellQT, $bid);
+        $orderId = $binance->sellOrder('LIMIT', $pair, $sellQT, $bid);
+    }
 
 
 include('include/logInsert.php'); 
-
 
 ?>
