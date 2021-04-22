@@ -250,16 +250,22 @@
 			}
 		});	
 	}
-	
-	function reloadLinksModule(){
 
-		$('#linksModule').load('<?=$linksModule?>');
-	
+	//load links on dashboard
+	function reloadLinksModule() {		
+		$('#linksModule').load('<?=$linksModule?>');		
+		
+		$('#linksModule').html('<img src="include/images/load.gif" id="loading" />')
+
+		$(window).bind('load', function() {
+            $('#linksModule #loading').hide();
+            $('#linksModule').load('<?=$linksModule?>');		
+            $('#linksModule').fadeIn('slow');
+        });	
 	}
  
  
-	function reloadBalanceTable(){
-	
+	function reloadBalanceTable() {
 		$('#balanceTable').load('<?=$loadBalanceTable?>');		
 		
 		$('#balanceTable').html('<img src="include/images/load.gif" id="loading" />')
@@ -276,14 +282,26 @@
 		console.log('reloadBtrexBalance');
 		$('#btrexBalance').load('<?=$loadBtrexBalance?>');	
 		
-		$( "#btrexBalance" ).load( '<?=$loadBtrexBalance?>', function() {
-			console.log( "reloadBtrexBalance" );
-		});
+		$('#btrexBalance').html('<img src="include/images/load.gif" id="loading" />')
+
+		$(window).bind('load', function() {
+			$('#btrexBalance #loading').hide();
+			$('#btrexBalance').load('<?=$loadBtrexBalance?>');		
+			$('#btrexBalance').fadeIn('slow');
+		});	
 	}
 	
 	function kucoinMainBalance() {
 		console.log('kucoinMainBalance');
 		$('#kucoinMainBalance').load('<?=$loadKCMBalance?>');		
+
+		$('#kucoinMainBalance').html('<img src="include/images/load.gif" id="loading" />')
+
+		$(window).bind('load', function() {
+            $('#kucoinMainBalance #loading').hide();
+            $('#kucoinMainBalance').load('<?=$loadKCMBalance?>');		
+            $('#kucoinMainBalance').fadeIn('slow');
+        });	
 	}
 
 	function kucoin1Balance() {
@@ -306,35 +324,8 @@
 		console.log('kucoin5Balance');
 		$('#kucoin5Balance').load('<?=$loadKC5Balance?>');		
 	}
-	
-	
-	function reloadBitmexPositions1() {
-	
-		$('#bitmexPositions').load('<?=$loadBitmexPositions?>');		
-		
-		$('#bitmexPositions').html('<img src="include/images/load.gif" id="loading" />')
 
-		$(window).bind('load', function() {
-            $('#bitmexPositions #loading').hide();
-            $('#bitmexPositions').load('<?=$loadBitmexPositions?>');		
-            $('#bitmexPositions').fadeIn('slow');
-        });	
-	}
-	
-	function reloadBitmexPositions2() {
-	
-		$('#bitmexPositions2').load('<?=$loadBitmexPositions2?>');		
-		
-		$('#bitmexPositions2').html('<img src="include/images/load.gif" id="loading" />')
 
-		$(window).bind('load', function() {
-            $('#bitmexPositions2 #loading').hide();
-            $('#bitmexPositions2').load('<?=$loadBitmexPositions2?>');		
-            $('#bitmexPositions2').fadeIn('slow');
-        });	
-	}
-	
-	
 	function reloadPriceTable() {
 		$('#priceTable').load('<?=$loadPriceTable?>');		
 		
@@ -465,9 +456,6 @@
 
 		$('#counter').counter(60);
 	
-		
-		// reloadNotes(); 
-		
 		reloadPriceTable();
 		
 		reloadAlertsTable();
@@ -481,8 +469,7 @@
 		reloadBitmexPositions1();
 			
 		reloadBitmexPositions2();
-		
-		
+				
 		kucoinMainBalance();
 		kucoin1Balance();
 		kucoin2Balance();
