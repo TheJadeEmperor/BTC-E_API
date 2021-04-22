@@ -45,8 +45,7 @@ $loadKC5Balance = 'load/kucoinBalance.php?page=kucoin5Balance&accessKey='.$acces
 $loadBtrexBalance = 'load/btrexBalance.php?accessKey='.$accessKey;
 
 $linksModule = 'load/linksModule.php?accessKey='.$accessKey;
-
-
+$webhook = 'load/webhook.php?accessKey='.$accessKey;
 
 $loadingImage = '<img src="include/images/load.gif" id="loadingImage" />';
 ?>
@@ -94,7 +93,14 @@ $loadingImage = '<img src="include/images/load.gif" id="loadingImage" />';
         <br />
     </div>
 
-    <div class="col" id="linksModule">
-        <?=$loadingImage?>
+    <div class="col-6">
+
+        <div class="col" id="linksModule">
+            <?=$loadingImage?>
+        </div>
+
     </div>
+
+ 
+
 </div>

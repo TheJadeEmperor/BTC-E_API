@@ -6,7 +6,7 @@ include($dir.'config.php');
 
 //debug mode only
 $server = $_SERVER['SERVER_NAME'];
-if ($server == 'localhost' || $server == 'btcAPI.test') {
+if ($server == 'localhost' || $server == 'btcAPI.test' || $server == 'btcapi.test') {
 	$database = new Database($conn);
     $localHost = 'http://localhost/btcAPI/';
     $serverHost = 'https://code.bestpayingsites.com/';
