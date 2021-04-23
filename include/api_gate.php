@@ -88,9 +88,9 @@ class Gate {
       }
     }
 
-    echo '<pre>';
-    echo '<h1>Get Spot Balance: </h1><br>';
-    print_r($getBalances);
+    //echo '<pre>';
+    //echo '<h1>Get Spot Balance: </h1><br>';
+    //print_r($getBalances);
     return $getBalances;
   }
 
@@ -134,9 +134,9 @@ class Gate {
 
     $responseArr = json_decode($response,true);
 
-    echo '<pre>';
-    echo '<h1>Get Balances: </h1><br>';
-    print_r($responseArr);
+    //echo '<pre>';
+    //echo '<h1>Get Balances: </h1><br>';
+    //print_r($responseArr);
     return $responseArr;
   }
 
@@ -177,9 +177,8 @@ class Gate {
 
     $responseArr = json_decode($response,true);
 
-    echo '<pre>';
-    echo '<h1>Get Market Prices: </h1><br>';
-    print_r($responseArr);
+    // echo '<pre><h1>Get Market Prices: </h1><br>';
+    // print_r($responseArr);
     return $responseArr;
   }
 

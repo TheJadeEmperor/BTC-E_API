@@ -277,7 +277,6 @@
         });	
 	}
 	
-	
 	function reloadBtrexBalance() {
 		console.log('reloadBtrexBalance');
 		$('#btrexBalance').load('<?=$loadBtrexBalance?>');	
@@ -289,8 +288,21 @@
 			$('#btrexBalance').load('<?=$loadBtrexBalance?>');		
 			$('#btrexBalance').fadeIn('slow');
 		});	
+	} 
+
+	function gateBalance() {
+		console.log('gateBalance');
+		$('#gateBalance').load('<?=$gateBalance?>');		
+
+		$('#gateBalance').html('<img src="include/images/load.gif" id="loading" />')
+
+		$(window).bind('load', function() {
+            $('#gateBalance #loading').hide();
+            $('#gateBalance').load('<?=$gateBalance?>');		
+            $('#gateBalance').fadeIn('slow');
+        });	
 	}
-	
+
 	function kucoinMainBalance() {
 		console.log('kucoinMainBalance');
 		$('#kucoinMainBalance').load('<?=$loadKCMBalance?>');		
@@ -465,18 +477,17 @@
 		reloadBalanceTable();
 		
 		cronAutoTrade();
+
+		reloadBtrexBalance();
+		gateBalance();
 		
-		reloadBitmexPositions1();
-			
-		reloadBitmexPositions2();
-				
 		kucoinMainBalance();
 		kucoin1Balance();
 		kucoin2Balance();
 		kucoin3Balance();
 		kucoin4Balance();
 		kucoin5Balance();
-		reloadBtrexBalance();
+
 		reloadLinksModule();
     });
 </script>
