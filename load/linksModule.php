@@ -16,19 +16,19 @@ $loadingImage = '<img src="include/images/load.gif" id="loadingImage" />';
 
         <a href="https://trade.kucoin.com/KCS-USDT" target="_blank">Kucoin Trade</a>
 
-        <br /><br />
+        <br />
 
         <a href="https://www.kucoin.com/account/sub" target="_blank">KC Subaccounts</a>
         </p>
     </div>
     <div class="col-sm-5">
         <p align="left">
-        <a href="http://btcapi.test/dashboard.php" target="_blank">BTC Dashboard Local</a>
+        <a href="http://btcapi.test/dashboard.php" target="_blank">BTC Dashboard Local</a><br />
         <a href="http://code.bestpayingsites.com" target="_blank">BTC Dashboard Live</a>
         
         <br /><br />
 
-        <a href="http://btcapi.test/load/webhook.php" target="_blank">Webhook</a>
+        <a href="http://btcapi.test/load/webhook.php" target="_blank">Webhook Data</a>
         </p>
     
     </div>

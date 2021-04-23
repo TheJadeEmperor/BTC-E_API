@@ -41,7 +41,7 @@ else {
 }
 
 //////////////////////////////
-$live = 1; //delete when live 
+// $live = 1; //delete when live 
 //////////////////////////////
 $Gate = new Gate($gate_key, $gate_secret);
 
@@ -52,35 +52,43 @@ $getMarketPrice = $Gate->getMarketPrice($pair);
 $bid = $getMarketPrice[0]['highest_bid'];
 $ask = $getMarketPrice[0]['lowest_ask'];
 
+echo '<pre><h1>getMarketPrice</h1><br>';
+print_r($getMarketPrice);
+
 $getBalances = $Gate->getBalances();
+
+echo '<pre><h1>Get Spot Balance: </h1><br>';
+print_r($getBalances);
 
 foreach($getBalances as $index) {
     $currency = $index['currency'];
     $available = $index['available'];
-    
+   
     if($available > 0) { //check for available balance
         if($currency == $coin[1]) { //match coin symbol   
             $coinBalance = $available; 
-            echo $available.' '.$currency.' <br />';
+            echo $available.' '.$coin[1].' <br />';
     
             $sellQT = $available; 
             $totalBalance += $sellQT * $bid;
         }
-        else if($currency == 'USDT') {
+        else if ($currency == 'USDT') {
             $USDTBalance = $available; 
             $totalBalance += $USDTBalance; //add to totalBalance
             $buyQT = $USDTBalance/$ask; //quantity to buy
-            $buyQT = $buyQT * $percentBalance; 
         }
     }
 } //foreach($getBalances as $index)
 
+$buyQT = $buyQT - ($buyQT * 0.005); //substract fees
+
 //orders only take 4 decimals
-$buyQT = number_format($buyQT, 4, '.', '');
-$sellQT = number_format($sellQT, 4, '.', '');
+// $buyQT = number_format($buyQT, 4, '.', '');
+// $sellQT = number_format($sellQT, 4, '.', '');
 $coinBalance = number_format($coinBalance, 4, '.', '');
 $USDTBalance = number_format($USDTBalance, 4, '.', '');
 $totalBalance = number_format($totalBalance, 4, '.', '');
+
 
 if($amt) { //override amt from json data
     $buyQT = $sellQT = $amt;
@@ -92,7 +100,6 @@ if($live == 1)
         $orderId = $buyOrder['id'];
     }
     else if($data['action'] == 'sell') {
-
         $sellOrder = sellOrder('limit', $pair, $sellQT, $bid);
         $orderId = $sellOrder['id'];
     }
