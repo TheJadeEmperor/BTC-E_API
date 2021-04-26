@@ -41,7 +41,7 @@ else {
 }
 
 //////////////////////////////
-$live = 1; //delete when live 
+// $live = 1; //delete when live 
 //////////////////////////////
 $Gate = new Gate($gate_key, $gate_secret);
 
