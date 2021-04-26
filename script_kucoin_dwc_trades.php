@@ -84,21 +84,25 @@ $getBalances = checkBalance();
 $totalBalance = 0;
 
 foreach($getBalances['data'] as $index) { //go through each coin you have
-   $available = $index['available'];
+   $type = $index['type'];
+   if ($type == 'trade') //get only balances from trade acct
+        $available = $index['available'];
+   else     
+        $available = 0;     
+   $currency = $index['currency'];
    
-   if($index['currency'] == $coin[1] && $available > 0) { //match coin symbol   
-        $coinBalance = $available; 
-        if($index['available'] > 0) { //check for available balance
-            $sellQT = $index['available']; 
+    if($available > 0) {
+        if($currency == $coin[1]) { //match coin symbol   
+            $coinBalance = $available; 
+            $sellQT = $available; 
             $totalBalance += $sellQT * $bid;
         }
-    }
-
-    if($index['currency'] == 'USDT' && $available > 0) {
-        $USDTBalance = $available; 
-        $totalBalance += $USDTBalance; //add to totalBalance
-        $buyQT = $USDTBalance/$ask; //quantity to buy
-        $buyQT = $buyQT * $percentBalance; 
+        else if ($currency == 'USDT') {
+            $USDTBalance = $available; 
+            $totalBalance += $USDTBalance; //add to totalBalance
+            $buyQT = $USDTBalance/$ask; //quantity to buy
+            $buyQT = $buyQT * $percentBalance; 
+        }
     }
 }
 
