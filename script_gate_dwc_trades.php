@@ -75,6 +75,10 @@ foreach($getBalances as $index) {
         else if ($currency == 'USDT') {
             $USDTBalance = $available; 
             $totalBalance += $USDTBalance; //add to totalBalance
+
+            if ($USDTBalance > 10000) //don't buy more than 10k
+                $USDTBalance = 10000;
+                
             $buyQT = $USDTBalance/$ask; //quantity to buy
         }
     }
@@ -89,10 +93,9 @@ $coinBalance = number_format($coinBalance, 4, '.', '');
 $USDTBalance = number_format($USDTBalance, 4, '.', '');
 $totalBalance = number_format($totalBalance, 4, '.', '');
 
-
 if($amt) { //override amt from json data
     $buyQT = $sellQT = $amt;
-}
+} 
 
 if($live == 1)
     if($data['action'] == 'buy') { //set the orders based on action

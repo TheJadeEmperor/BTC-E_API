@@ -9,7 +9,10 @@ $Gate = new Gate($gate_key, $gate_secret);
 
 $getBalances = $Gate->getBalances();
 
-	$output = '
+$subAccount = 'gateBalance';
+$url = 'https://www.gate.io/myaccount';
+
+$output = '
 	<table class="table">
 	<thead class="thead-default">
 	<tr>
