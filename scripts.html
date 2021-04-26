@@ -1,256 +1,6 @@
 
 <script>
 	
-	function updateAlert(id) {
-		$.ajax({ //Process the form using $.ajax()
-			type        : 'POST', //Method type
-			url         : '<?=$updateAlert?>', //Your form processing file url
-			data        : $('#conditionTable').serialize(), 
-			success     : function(msg) {
-				console.log($('#conditionTable').serialize());
-				console.log(msg);
-				reloadAlertsTable();				
-			}
-		});
-		event.preventDefault(); //Prevent the default submit      
-	}
-	
-	function updateTrade(id) {
-		console.log($('#tradeTable').serialize() );
-		$.ajax({ //Process the form using $.ajax()
-			type        : 'POST', //Method type
-			url         : '<?=$updateTrade?>', //Your form processing file url
-			data        : $('#tradeTable').serialize(), 
-			success     : function(msg) {
-				console.log(msg);
-				$('#btcTrades').load('<?=$loadbtcTrades?>');						
-			}
-		});
-		event.preventDefault(); //Prevent the default submit      
-	}
-	
-	function fillFormAlert(id) {
-
-		var link = "<?=$readAlert?>&id="+id;
-		console.log( link );
-		
-		$.getJSON("<?=$readAlert?>&id="+id, function( data ) {
-		
-			$.each( data, function( key, val ) {
-				if(data.hasOwnProperty(key))
-					$('input[name='+key+']').val(val);
-
-				if(key == 'currency') {						
-					$('select[name="currency"]').find('option:contains("'+val+'")').attr("selected",true);	
-				}
-				
-				if(key == 'on_condition') {					
-					$('select[name="on_condition"]').find('option:contains("'+val+'")').attr("selected",true);	
-				}
-			
-				if(key == 'unit') {
-					$('select[name="unit"]').find('option:contains("'+val+'")').attr("selected",true);	
-				}
-				
-				if(key == 'exchange' || key == 'sent') {
-					$('select[name="'+key+'"]').find('option:contains("'+val+'")').attr("selected",true);	
-				}
-            });
-
-		});
-	}
-	
-	function fillFormTrade(id) {
-
-		$.getJSON("<?=$readTrade?>&trade_id="+id+"", function( data ) {
-			console.log('fillFormTrade: '+data);
-			$.each( data, function( key, val ) {
-					if(data.hasOwnProperty(key))
-						$('input[name='+key+']').val(val);
-
-					if(key == 'id') {
-						$('input[name=trade_id]').val(val);
-					}
-					
-					//select the values for drop down menus
-					if(key == 'trade_currency' || key == 'trade_condition' || key == 'trade_exchange' || key == 'trade_action' || key == 'trade_unit') {
-						$('select[name="'+key+'"]').find('option:contains("'+val+'")').attr("selected",true);		
-					}
-				});
-			});
-	}
-    
-    function deleteAlert(id) {
-	
-		var confirmDelete = confirm("Are you sure you wish to delete alert "+id+"?");
-		
-		if(confirmDelete == true) {
-			$.ajax({
-				type: "GET",
-				url: "<?=$deleteAlert?>&id="+id,
-				success: function() {
-					reloadAlertsTable();
-                    //$('#btcAlerts').load('<?=$loadCronSendAlerts?>');
-                }
-			})
-			$("#conditionTable").dialog("close");
-			event.preventDefault(); 
-			return false;
-		}
-		else {
-			return false;
-		}
-    }
-	    
-	function deleteTrade(id) {
-	
-		var confirmDelete = confirm("Are you sure you wish to delete trade "+id+"?");
-		
-		if(confirmDelete == true) {
-			 $.ajax({
-                type: "GET",
-                url: "<?=$deleteTrade?>&trade_id="+id,
-                success: function() {
-					reloadTradesTable();
-				
-                }
-			})
-			$("#tradeTable").dialog("close");	
-			event.preventDefault(); 
-			return false;
-		}
-		else {
-			return false;
-		}
-    }
-	
-    function createAlert() {
-		$.ajax({
-			type: "POST",
-			url: "<?=$createAlert?>",
-			data: $('#conditionTable').serialize(),
-			success: function(msg) {
-				console.log(msg);
-				reloadAlertsTable();				
-			}
-		});
-    }
-	
-	function createTrade() {
-		$.ajax({
-			type: "POST",
-			url: "<?=$createTrade?>",
-			data: $('#tradeTable').serialize(),
-			success: function(msg) {
-				console.log(msg);				
-				$('#btcTrades').load('<?=$loadbtcTrades?>');						
-			}
-		});
-    }
-	
-	function updateAlertDialog(id) {
-	
-		$("select[name=currency]").remove(); //remove  acct select menu
-		$("#currencyDiv").html('<?=$currencyDropDown?>');	//re-construct the acct menu
-			
-		$("select[name=on_condition]").remove();	//remove on_condition select menu
-		$("#conditionDiv").html('<?=$conditionDropDown?>');	//re-construct the on_condition men
-		
-		$("select[name=unit]").remove();	//remove unit select menu
-		$("#unitDiv").html('<?=$unitDropDown?>');	//re-construct the unit menu
-		
-		$("select[name=exchange]").remove();	//remove exchange menu
-		$("#exchangeDiv").html('<?=$exchangeDropDown?>');	//re-construct the exchange men
-
-		$('select[name=sent]').remove();
-		$('#sentDiv').html('<?=$sentDropDown?>');
-
-		$('button[id=deleteAlert]').remove();
-		$('#alertDeleteDiv').html('<?=$alertDeleteDiv?>');
-		
-			
-		fillFormAlert(id);
-	
-		$( "#deleteAlert" ).click(function() {
-			return deleteAlert(id);
-		});
-		
-		$("#conditionTable").dialog({
-			modal: true,
-			width: 790,
-			position: 'top',
-			show: {
-				effect: "explode",
-				duration: 500
-			},
-			hide: {
-				effect: "explode",
-				duration: 500
-			},
-			buttons: {
-				Save: function () {
-					updateAlert(id);
-					$( this ).dialog( "close" );
-				},
-				Cancel: function() {
-					reloadAlertsTable();
-					$( this ).dialog( "close" );				
-				},                        
-			}
-		});	
-	}
-	
-	function updateTradeDialog(id) {
-
-		$("select[name=trade_currency]").remove(); //remove  acct select menu
-		$("#tradeCurrencyDiv").html('<?=$tradeCurrencyDropDown?>');	//re-construct the acct menu
-			
-		$("select[name=trade_condition]").remove();	//remove on_condition select menu
-		$("#tradeConditionDiv").html('<?=$tradeConditionDropDown?>');	//re-construct the on_condition menu
-		
-		$("select[name=trade_exchange]").remove();	//remove exchange menu
-		$("#tradeExchangeDiv").html('<?=$tradeExchangeDropDown?>');	//re-construct the exchange menu
-
-		$("select[name=trade_action]").remove();	//remove action menu
-		$("#tradeActionDiv").html('<?=$tradeActionDropDown?>');	//re-construct the action menu
-
-		$("select[name=trade_unit]").remove();	//remove action menu
-		$("#tradeUnitDiv").html('<?=$tradeUnitDropDown?>');	//re-construct the unit menu
-
-		$("#deleteTrade").remove(); //remove delete button - prevents the bug of deleting multiple records 
-		$("#deleteTradeButtonDiv").html('<button id="deleteTrade" class="btn btn-danger">Delete</button>'); //re-construct delete button 
-		
-		fillFormTrade(id);
-	
-		$( "#deleteTrade" ).click(function() {
-			return deleteTrade(id);
-		});
-		
-		$("#tradeTable").dialog({
-			modal: true,
-			width: 790,
-			position: 'top',
-			show: {
-				effect: "explode",
-				duration: 500
-			},
-			hide: {
-				effect: "explode",
-				duration: 500
-			},
-			buttons: {
-				Save: function () {
-					updateTrade(id);
-					$( this ).dialog( "close" );
-				},
-				Cancel: function() {						
-					$( this ).dialog( "close" );	
-					$('#btcTrades').load('<?=$loadbtcTrades?>');						
-				},                        
-			}
-		});	
-	}
-
 	//load links on dashboard
 	function reloadLinksModule() {		
 		$('#linksModule').load('<?=$linksModule?>');		
@@ -264,19 +14,6 @@
         });	
 	}
  
- 
-	function reloadBalanceTable() {
-		$('#balanceTable').load('<?=$loadBalanceTable?>');		
-		
-		$('#balanceTable').html('<img src="include/images/load.gif" id="loading" />')
-
-		$(window).bind('load', function() {
-            $('#balanceTable #loading').hide();
-            $('#balanceTable').load('<?=$loadBalanceTable?>');		
-            $('#balanceTable').fadeIn('slow');
-        });	
-	}
-	
 	function reloadBtrexBalance() {
 		console.log('reloadBtrexBalance');
 		$('#btrexBalance').load('<?=$loadBtrexBalance?>');	
@@ -319,165 +56,66 @@
 	function kucoin1Balance() {
 		console.log('kucoin1Balance');
 		$('#kucoin1Balance').load('<?=$loadKC1Balance?>');		
+
+		$('#kucoin1Balance').html('<img src="include/images/load.gif" id="loading" />')
+
+		$(window).bind('load', function() {
+            $('#kucoin1Balance #loading').hide();
+            $('#kucoin1Balance').load('<?=$loadKC1Balance?>');		
+            $('#kucoin1Balance').fadeIn('slow');
+        });		
 	}
 	function kucoin2Balance() {
 		console.log('kucoin2Balance');
 		$('#kucoin2Balance').load('<?=$loadKC2Balance?>');		
+
+		$('#kucoin2Balance').html('<img src="include/images/load.gif" id="loading" />')
+
+		$(window).bind('load', function() {
+            $('#kucoin2Balance #loading').hide();
+            $('#kucoin2Balance').load('<?=$loadKC2Balance?>');		
+            $('#kucoin2Balance').fadeIn('slow');
+        });		
 	}
 	function kucoin3Balance() {
 		console.log('kucoin3Balance');
 		$('#kucoin3Balance').load('<?=$loadKC3Balance?>');		
+
+		$('#kucoin3Balance').html('<img src="include/images/load.gif" id="loading" />')
+
+		$(window).bind('load', function() {
+            $('#kucoin3Balance #loading').hide();
+            $('#kucoin3Balance').load('<?=$loadKC3Balance?>');		
+            $('#kucoin3Balance').fadeIn('slow');
+        });			
 	}
 	function kucoin4Balance() {
 		console.log('kucoin4Balance');
 		$('#kucoin4Balance').load('<?=$loadKC4Balance?>');		
+
+		$('#kucoin4Balance').html('<img src="include/images/load.gif" id="loading" />')
+
+		$(window).bind('load', function() {
+            $('#kucoin4Balance #loading').hide();
+            $('#kucoin4Balance').load('<?=$loadKC4Balance?>');		
+            $('#kucoin4Balance').fadeIn('slow');
+        });					
 	}
 	function kucoin5Balance() {
 		console.log('kucoin5Balance');
 		$('#kucoin5Balance').load('<?=$loadKC5Balance?>');		
-	}
 
-
-	function reloadPriceTable() {
-		$('#priceTable').load('<?=$loadPriceTable?>');		
-		
-		$('#priceTable').html('<img src="include/images/load.gif" id="loading" />')
+		$('#kucoin5Balance').html('<img src="include/images/load.gif" id="loading" />')
 
 		$(window).bind('load', function() {
-            $('#priceTable #loading').hide();
-            $('#priceTable').load('<?=$loadPriceTable?>');		
-            $('#priceTable').fadeIn('slow');
-        });
-	}
-		
-	function reloadAlertsTable() {
-		$('#cronSendAlerts').load('<?=$loadCronSendAlerts?>');		
-		
-		$('#cronSendAlerts').html('<img src="include/images/load.gif" id="loading" />')
-
-		$(window).bind('load', function() {
-            $('#cronSendAlerts #loading').hide();
-            $('#cronSendAlerts').load('<?=$loadCronSendAlerts?>');		
-            $('#cronSendAlerts').fadeIn('slow');
-        });
+            $('#kucoin5Balance #loading').hide();
+            $('#kucoin5Balance').load('<?=$loadKC5Balance?>');		
+            $('#kucoin5Balance').fadeIn('slow');
+        });					
 	}
 	
-	function reloadTradesTable() {
-		$('#btcTrades').load('<?=$loadbtcTrades?>');
-		
-		$('#btcTrades').html('<img src="include/images/load.gif" id="loading" />')
-		
-		$(window).bind('load', function() {
-			$('#btcTrades #loading').hide();
-			$('#btcTrades').load('<?=$loadbtcTrades?>');		
-			$('#btcTrades').fadeIn('slow');
-		});
-	}
-		
-	function cronAutoTrade() {
-	
-		$('#cronAutoTrade').load('<?=$loadCronAutoTrade?>');
-		
-		$('#cronAutoTrade').html('<img src="include/images/load.gif" id="loading" />')
-		
-		$(window).bind('load', function() {
-			$('#cronAutoTrade #loading').hide();
-			$('#cronAutoTrade').load('<?=$loadCronAutoTrade?>');		
-			$('#cronAutoTrade').fadeIn('slow');
-		});
-	}
-	
-
     $(document).ready(function () {
 		
-		//hide pop up forms			
-		$("#conditionTable").hide();
-		$("#tradeTable").hide();		
-		$("#accountBalance").hide();		
-		
-		$("#until_date").datepicker();
-							
-		$(".createButton").click(function() {
-
-			console.log('createbutton');
-			$("#conditionTable").dialog({
-				modal: true,
-				width: 790,
-				position: 'top',
-				show: {
-					effect: "explode",
-					duration: 500
-				},
-				hide: {
-					effect: "explode",
-					duration: 500
-				},
-				buttons: {
-					Save: function() {
-						createAlert();
-						$(this).dialog("close");
-					},
-					Cancel: function() {
-						$(this).dialog("close");
-					}
-				}
-			})
-		});
-		
-		$(".tradeButton").click(function() {
-			$("#tradeTable").dialog({
-				modal: true,
-				width: 790,
-				position: 'top',
-				show: {
-					effect: "explode",
-					duration: 500
-				},
-				hide: {
-					effect: "explode",
-					duration: 500
-				},
-				buttons: {
-					Save: function() {
-						createTrade();
-						$(this).dialog("close");
-					},
-					Cancel: function() {
-						$(this).dialog("close");
-					}
-				}
-			})
-		});	
-	
-		$.fn.counter = function (num) {
-			var i = 1;
-			self = $(this).html(i);	//console.log(self);
-			
-			var interval = setInterval(function () {
-			
-				self.html(++i);
-				if (i >= num) {
-							
-					//clearInterval(interval);
-					i = 0;
-					reloadPriceTable();
-					cronAutoTrade();
-				} 
-			}, 1000);
-		};
-
-		$('#counter').counter(60);
-	
-		reloadPriceTable();
-		
-		reloadAlertsTable();
-		
-		reloadTradesTable();
-
-		reloadBalanceTable();
-		
-		cronAutoTrade();
-
 		reloadBtrexBalance();
 		gateBalance();
 		
