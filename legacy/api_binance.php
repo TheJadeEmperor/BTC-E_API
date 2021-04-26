@@ -67,6 +67,18 @@ class Binance {
     return $responseArr;
   }
 
+  public function exchangeInfo($symbol) {
+     
+    $responseArr = $this->sendRequest('GET', 'api/v3/exchangeInfo');
+    
+    // echo '<pre><h1>exchangeInfo</h1><br>';
+    // $responseArr['function'] = 'exchangeInfo';
+    // print_r($responseArr);
+    return $responseArr;
+  }
+  
+
+
   public function getAccount() {
     // get account information, make sure API key and secret are set
     $responseArr = $this->signedRequest('GET', 'api/v3/account');
@@ -83,9 +95,8 @@ class Binance {
     $responseArr = array();
     $responseArr['balances'] = $balancesArr;
     
-    echo '<pre>';
-    echo '<h1>Get Account: </h1><br>';
-    $responseArr['function'] = '--getAccount';
+    echo '<pre><h1>Get Account: </h1><br>';
+    $responseArr['function'] = 'getAccount';
     print_r($responseArr);
     return $responseArr;
   }
@@ -174,12 +185,6 @@ class Binance {
     return $responseArr;
   }
 }
-
-// Put API key and secret values in the below function
-
-// $binance = new Binance($key, $secret);
-// $response = $binance->getAccount();
-
 
 // $getMarketPrice = getMarketPrice('VTHOUSDT');
 
