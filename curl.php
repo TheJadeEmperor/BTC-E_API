@@ -29,8 +29,7 @@ $exchanges = array(
 );
 
 foreach($exchanges as $ex) {
-    echo '<p><a href="curl.php?ex='.$ex.'">'.$ex.'</a></p>'; 
-
+    
     $dropDown .= '<option value='.$ex.'>'.$ex.'</option>';
 }
 
@@ -133,6 +132,8 @@ if($_POST) {
 }
 
 ?>
+<p><a href="curl_panic.php">curl_panic</a></p>
+
 <form method="POST">
     <table>
     <tr>

@@ -131,6 +131,8 @@ if($_POST) {
 }
 
 ?>
+<p><a href="curl.php">curl</a></p>
+
 <form method="POST">
     <table>
     <tr>
