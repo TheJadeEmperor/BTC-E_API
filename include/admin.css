@@ -1,7 +1,8 @@
 body, container {	
 	background-attachment: fixed;
 	background-repeat: repeat-x;
-	background-color: #FFFFFF;
+	background-color: #f8f8ff;
+	color: #FFF;
 	text-align: center;
 	margin: 0px;
 }
@@ -10,12 +11,15 @@ p {
 	font-family: Tahoma, Geneva, sans-serif;
 	font-size: 14px;
 	font-weight: 100;
+	text-align: left;
 }
 
 .col h2 {
 	background-color: #eceeef;
 	padding: 20px;
+	color: #9c9d9e
 }
+
 
 .clickable {
 	cursor: pointer;

@@ -3,6 +3,10 @@ include('include/functions.php');
 include('include/config.php');
 session_start();
 
+if($_SESSION['admin']) {
+    header('Location: dashboard.php');
+}
+
 $err = '';
 if($_POST['login']) {
     if($_POST['username'] == $dashboard_user && $_POST['password'] == $dashboard_pw) {
