@@ -113,11 +113,25 @@
             $('#kucoin5Balance').fadeIn('slow');
         });					
 	}
+	function competeModule() {
+		console.log('competeModule');
+		$('#competeModule').load('<?=$competeModule?>');		
+
+		$('#competeModule').html('<img src="include/images/load.gif" id="loading" />')
+
+		$(window).bind('load', function() {
+            $('#competeModule #loading').hide();
+            $('#competeModule').load('<?=$competeModule?>');		
+            $('#competeModule').fadeIn('slow');
+        });					
+	}
 	
     $(document).ready(function () {
 		
 		reloadBtrexBalance();
 		gateBalance();
+		reloadLinksModule();
+		competeModule();
 		
 		kucoinMainBalance();
 		kucoin1Balance();
@@ -126,6 +140,5 @@
 		kucoin4Balance();
 		kucoin5Balance();
 
-		reloadLinksModule();
     });
 </script>

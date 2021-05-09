@@ -32,6 +32,7 @@ $loadKC5Balance = 'load/kucoinBalance.php?page=kucoin5Balance&accessKey='.$acces
 
 $linksModule = 'load/linksModule.php?accessKey='.$accessKey;
 $webhook = 'load/webhook.php?accessKey='.$accessKey;
+$competeModule = 'load/competeModule.php?accessKey='.$accessKey;
 
 $loadingImage = '<img src="include/images/load.gif" id="loadingImage" />';
 ?>
@@ -115,6 +116,10 @@ $loadingImage = '<img src="include/images/load.gif" id="loadingImage" />';
 
     <div class="col-6">
         <div class="col" id="linksModule">
+            <?=$loadingImage?>
+        </div>
+
+        <div class="col" id="competeModule">
             <?=$loadingImage?>
         </div>
     </div>
