@@ -37,7 +37,7 @@ $dir = 'include/'
 </head>
 <center>
 <p>&nbsp;</p>
-<p>Admin Login</p>
+<h2>Admin Login</h2>
 
 <?=$err ?>
 <form method=POST>
@@ -60,7 +60,7 @@ $dir = 'include/'
                 </tr>
                 <tr>
                     <td colspan="2" align="center">
-                        <p><input type="submit" name="login" value=" Login to Admin Panel " class="btn info"></p>
+                        <input type="submit" name="login" value=" Login to Admin Panel " class="btn info">
                     </td>
                 </tr>
             </table>

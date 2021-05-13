@@ -46,7 +46,7 @@ foreach($getBalances as $index) {
         }
 
         if ($USDTBalance > 1) //do not show small balances
-        $output .= '<tr><td><a href="https://www.gate.io/en/trade/'.$currency.'_USDT">'.$currency.'</a></td><td>'.$available.'</td><td>'.$bid.'</td><td>'.$USDTBalance.'</td></tr>';
+        $output .= '<tr><td><a href="https://www.gate.io/en/trade/'.$currency.'_USDT" target="_BLANK">'.$currency.'</a></td><td>'.$available.'</td><td>'.$bid.'</td><td>'.$USDTBalance.'</td></tr>';
   }
 } //foreach($getBalances as $index)
 

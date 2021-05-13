@@ -22,6 +22,8 @@ $loadingImage = '<img src="include/images/load.gif" id="loadingImage" />';
         <p><a href="http://btcapi.test/dashboard.php" target="_blank">BTC Dashboard Local</a></p>
 
         <p><a href="http://code.bestpayingsites.com" target="_blank">BTC Dashboard Live</a></p>
+
+        <p><a href="https://www.pionex.com/en-US/trade/GT_USDT/pionex.v2" target="_blank">Pionex</a>
          
     </div>
 </div>
