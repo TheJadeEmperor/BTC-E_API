@@ -7,6 +7,9 @@ include($dir.'api_bittrex.php');
 include($dir.'functions.php');
 include($dir.'config.php');
 
+if($_GET['accessKey'] != $accessKey) {
+	echo "Wrong access key"; exit;
+}
 
 //get gate balance
 $Gate = new Gate($gate_key, $gate_secret);
@@ -21,6 +24,12 @@ $pair = 'KCS-USDT';
 $getKCS = $KC3->getMarketPrice($pair);
 $bidKCS['KCS_USDT'] = $getKCS['data']['bestBid'];
 
+function format_balance($balance) {
+	$balance = number_format($balance, 4, '.', ',');
+	$balance = '$'.$balance;
+
+	return $balance;
+}
 
 function getKCSubBalance ($class, $thisCurrency) {
 	
@@ -71,9 +80,6 @@ if(!empty($balanceBittrex)) {
 			$lastFormat = 1; //usdt has no price
 			$usdtValue = $currencyBalance; 
 		}
-		else if ($currency == 'ADA') {
-			$bittrexAdaAmt = $currencyBalance;
-		}
 		else { //all other coins 
 			$currencyPair = 'USDT-'.$currency; //ticker pair
 			$coinTicker = $bittrex->getTicker($currencyPair);
@@ -89,7 +95,7 @@ if(!empty($balanceBittrex)) {
 	 
 	$totalBTCFormat	= number_format($totalBTC, 4);
 	$totalUSDTFormat = number_format($totalUSD, 2);
-	 
+	// echo '<'.$totalUSDTFormat.'>';
 } //if(!empty($balance))
 
 
@@ -121,38 +127,49 @@ $gateBalance = $totalBalance;
 
 $kevlar['ADA_amt'] = 131000;
 $kevlar['ADA_bal'] = $kevlar['ADA_amt'] * $bidKCS['ADA_USDT'];
-
+$kevlar['ADA_bal'] = format_balance($kevlar['ADA_bal']);
 
 //16000 15505 
 $ironborn['ADA_amt'] = $totalUSD / $bidKCS['ADA_USDT']; //get from bittrex api
 $ironborn['ADA_bal'] = $ironborn['ADA_amt'] * $bidKCS['ADA_USDT'];
+$ironborn['ADA_bal'] = format_balance($ironborn['ADA_bal']);
+// echo $totalUSDTFormat;
 
 $kevlar['VET_amt'] = 140627;
 $kevlar['VET_bal'] = $kevlar['VET_amt'] * $bidKCS['VET_USDT'];
+$kevlar['VET_bal'] = format_balance($kevlar['VET_bal']);
 
 $ironborn1['VET_amt'] = $KC1Balance; //KC1 balance
 $ironborn1['VET_bal'] = $ironborn1['VET_amt'] * $bidKCS['VET_USDT'];
+$ironborn1['VET_bal'] = format_balance($ironborn1['VET_bal']);
 
 $ironborn2['VET_amt'] = $KC2Balance; //KC2 balance
 $ironborn2['VET_bal'] = $ironborn2['VET_amt'] * $bidKCS['VET_USDT'];
+$ironborn2['VET_bal'] = '$'.$ironborn2['VET_bal'];
 
 $ironbornT['VET_amt'] = $ironborn1['VET_amt'] + $ironborn2['VET_amt'];
 $ironbornT['VET_bal'] = $ironborn1['VET_bal'] + $ironborn2['VET_bal'];
+$ironbornT['VET_bal'] = format_balance($ironbornT['VET_bal']);
 
 $kevlar['KEY_amt'] = 2889871;
 $kevlar['KEY_bal'] = $kevlar['KEY_amt'] * $bidKCS['KEY_USDT'];
+$kevlar['KEY_bal'] = format_balance($kevlar['KEY_bal']);
 
 $ironborn['KCS_amt'] = $KC3Balance; //kc3
 $ironborn['KCS_bal'] = $ironborn['KCS_amt'] * $bidKCS['KCS_USDT'];
+$ironborn['KCS_bal'] = format_balance($ironborn['KCS_bal']);
 
 $kevlar['DOGE_amt'] = 87708; 
 $kevlar['DOGE_bal'] = $kevlar['DOGE_amt'] * $bidKCS['DOGE_USDT'];
+$kevlar['DOGE_bal'] = format_balance($kevlar['DOGE_bal']);
 
-
-$kevlar['BTC_amt'] = 1;
+$kevlar['BTC_amt'] = 1; 
 $kevlar['BTC_bal'] = $kevlar['BTC_amt'] * $bidKCS['BTC_USDT'];
+$kevlar['BTC_bal'] = format_balance($kevlar['BTC_bal']);
+
 
 $ironborn['Pionex_bal'] = 2600;
+$ironborn['Pionex_bal'] = format_balance($ironborn['Pionex_bal']);
 
 ?>
 <h2>Compete <img src="include/images/refresh.png" class="clickable" onclick="javascript:competeModule()" width="25px" /></h2>

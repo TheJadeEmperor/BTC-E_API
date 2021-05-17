@@ -1,4 +1,12 @@
 <?php 
+$dir = '../include/';
+include($dir.'functions.php');
+include($dir.'config.php');
+session_start();
+
+if(!isset($_SESSION['admin']))//if not logged in, redirect back to login page
+    header('Location: ../index.php'); 
+
 if ($_POST['submit']) {
 
     $action = $_POST['action'];
