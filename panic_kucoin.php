@@ -67,7 +67,7 @@ else {
     $live = 1;
 }
 //////////////////////////////
-// $live = 1; //delete when live
+$live = 1; //delete when live
 //////////////////////////////
 $coin = explode('-', $pair); //USDT-XRP
 $pair = $coin[1].'-'.$coin[0]; //XRP-USDT
@@ -88,11 +88,11 @@ $totalBalance = 0;
 
 foreach($getBalances['data'] as $index) { //go through each coin you have
     $type = $index['type'];
+    $currency = $index['currency'];
     if ($type == 'trade') //get only balances from trade acct
          $available = $index['available'];
     else     
          $available = 0;
-    $currency = $index['currency'];
     
      if($available > 0) {
          if($currency == $coin[1]) { //match coin symbol   

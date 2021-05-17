@@ -25,7 +25,7 @@ catch(Exception $e){
     <table class="table">
         <thead class="thead-default">
         <tr>
-            <th colspan="8">Bittrex Balance <img src="include/images/refresh.png" class="clickable" onclick="javascript:reloadBtrexBalance()" width="25px" /> </th>
+            <th colspan="8"><a href="https://bittrex.com/Market/Index?MarketName=USDT-ADA" target="_BLANK">Bittrex Balance</a> <img src="include/images/refresh.png" class="clickable" onclick="javascript:reloadBtrexBalance()" width="25px" /> </th>
         </tr>
         <tr>
             <th>Currency</th><th>Balance</th><th>Price</th><th>BTC Value</th><th>USDT</th>

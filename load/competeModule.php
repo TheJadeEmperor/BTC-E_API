@@ -47,12 +47,12 @@ function getKCSubBalance ($class, $thisCurrency) {
 }
 
 $KC1Balance = getKCSubBalance($KC1, 'VET');
-$KC2Balance = getKCSubBalance($KC2, 'VET');
+$KC2Balance = getKCSubBalance($KC2, 'SHIB');
 $KC3Balance = getKCSubBalance($KC3, 'KCS');
 
 
 $currencyPairs = array(
-	'ADA_USDT', 'VET_USDT', 'KEY_USDT', 'DOGE_USDT', 'BTC_USDT'
+	'ADA_USDT', 'VET_USDT', 'KEY_USDT', 'DOGE_USDT', 'BTC_USDT', 'SHIB_USDT'
 );
 
 foreach($currencyPairs as $pair) {
@@ -141,14 +141,15 @@ $kevlar['VET_bal'] = format_balance($kevlar['VET_bal']);
 
 $ironborn1['VET_amt'] = $KC1Balance; //KC1 balance
 $ironborn1['VET_bal'] = $ironborn1['VET_amt'] * $bidKCS['VET_USDT'];
-$ironborn1['VET_bal'] = format_balance($ironborn1['VET_bal']);
 
 $ironborn2['VET_amt'] = $KC2Balance; //KC2 balance
-$ironborn2['VET_bal'] = $ironborn2['VET_amt'] * $bidKCS['VET_USDT'];
-$ironborn2['VET_bal'] = '$'.$ironborn2['VET_bal'];
+$ironborn2['VET_bal'] = $ironborn2['VET_amt'] * $bidKCS['SHIB_USDT'];
 
 $ironbornT['VET_amt'] = $ironborn1['VET_amt'] + $ironborn2['VET_amt'];
 $ironbornT['VET_bal'] = $ironborn1['VET_bal'] + $ironborn2['VET_bal'];
+
+$ironborn1['VET_bal'] = format_balance($ironborn1['VET_bal']);
+$ironborn2['VET_bal'] = format_balance($ironborn2['VET_bal']);
 $ironbornT['VET_bal'] = format_balance($ironbornT['VET_bal']);
 
 $kevlar['KEY_amt'] = 2889871;
@@ -201,13 +202,13 @@ $ironborn['Pionex_bal'] = format_balance($ironborn['Pionex_bal']);
 		<tr>
 			<td></td>
 			<td>Total</td><td>Total</td>
-			<td>VET-1</td>
-			<td>VET-2</td>
+			<td>KC1 - VET</td>
+			<td>KC2 - SHIB</td>
 		</tr>
 		<tr>
 			<td>VET</td>
 			<td><?=$kevlar['VET_amt'] ?> </td>
-			<td><?=$ironbornT['VET_amt'] ?>  </td>
+			<td> </td>
 			<td><?=$ironborn1['VET_amt'] ?>  </td>
 			<td><?=$ironborn2['VET_amt'] ?>  </td>
 		</tr>
