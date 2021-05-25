@@ -76,8 +76,8 @@ foreach($getBalances as $index) {
             $USDTBalance = $available; 
             $totalBalance += $USDTBalance; //add to totalBalance
 
-            if ($USDTBalance > 10000) //don't buy more than 10k
-                $USDTBalance = 10000;
+            if ($USDTBalance > 15000) //don't buy more than 15k
+                $USDTBalance = 15000;
                 
             $buyQT = $USDTBalance/$ask; //quantity to buy
         }
