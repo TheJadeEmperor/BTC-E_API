@@ -18,7 +18,6 @@ else {
 
 //list of scripts 
 $exchanges = array(
-    'script_binance_dwc_trades', 
     'script_gate_dwc_trades', 
     'script_bittrex_dwc_trades', 
     'script_kucoin1_dwc_trades', 
@@ -65,12 +64,6 @@ switch($exch) { //URL to call and which exchange to get from log
         $url = $localHost.'script_kucoin_dwc_trades.php';
 
         $ex = 'kucoin1';
-        break;
-    case 'script_binance_dwc_trades': //// Binance ////
-        $url = $serverHost.'script_binance_dwc_trades.php';
-        $url = $localHost.'script_binance_dwc_trades.php';
-
-        $ex = 'binance';
         break;
     case 'script_bittrex_dwc_trades':  //// Bittrex ////
         $url = $serverHost.'script_bittrex_dwc_trades.php';

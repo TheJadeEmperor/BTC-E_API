@@ -20,7 +20,6 @@ else {
 $exchanges = array(
     'panic_bittrex',
     'panic_gate',
-    'panic_binance',
     'panic_kucoin_1', 
     'panic_kucoin_2', 
     'panic_kucoin_3', 
@@ -49,12 +48,6 @@ switch($exch) { //URL to call and which exchange to get from log
         $url = $localHost.'panic_gate.php';
         
         $ex = 'gate';
-        break;
-    case 'panic_binance':  //// Binance /////
-        $url = $serverHost.'panic_binance.php';
-        $url = $localHost.'panic_binance.php';
-       
-        $ex = 'binance';
         break;
     case 'panic_kucoin_1':  //// Kucoin1 /////
         $url = $serverHost.'panic_kucoin.php?sub=kucoin1';

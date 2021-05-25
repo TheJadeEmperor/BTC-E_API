@@ -118,7 +118,8 @@ $loadingImage = '<img src="include/images/load.gif" id="loadingImage" />';
         <div class="col" id="linksModule">
             <?=$loadingImage?>
         </div>
-
+        
+        <br />
         <div class="col" id="competeModule">
             <?=$loadingImage?>
         </div>
