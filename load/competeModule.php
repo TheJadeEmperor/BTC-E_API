@@ -46,13 +46,12 @@ function getKCSubBalance ($class, $thisCurrency) {
 	}
 }
 
-$KC1Balance = getKCSubBalance($KC1, 'VET');
-$KC2Balance = getKCSubBalance($KC2, 'SHIB');
+$KC1Balance = getKCSubBalance($KC1, 'KCS');
+$KC2Balance = getKCSubBalance($KC2, 'ADA');
 $KC3Balance = getKCSubBalance($KC3, 'KCS');
 
-
 $currencyPairs = array(
-	'ADA_USDT', 'VET_USDT', 'KEY_USDT', 'DOGE_USDT', 'BTC_USDT', 'SHIB_USDT'
+	'ADA_USDT', 'VET_USDT', 'MATIC_USDT', 'DOGE_USDT', 'BTC_USDT'
 );
 
 foreach($currencyPairs as $pair) {
@@ -123,54 +122,58 @@ foreach($getBalances as $index) {
   }
 } //foreach($getBalances as $index)
 $gateBalance = $totalBalance;
-
+$gateBalance = format_balance($gateBalance);
 
 $kevlar['ADA_amt'] = 131000;
 $kevlar['ADA_bal'] = $kevlar['ADA_amt'] * $bidKCS['ADA_USDT'];
+$kevlar['total_bal'] += $kevlar['ADA_bal'];
 $kevlar['ADA_bal'] = format_balance($kevlar['ADA_bal']);
 
-//16000 15505 
+//22000 23000
 $ironborn['ADA_amt'] = $totalUSD / $bidKCS['ADA_USDT']; //get from bittrex api
 $ironborn['ADA_bal'] = $ironborn['ADA_amt'] * $bidKCS['ADA_USDT'];
 $ironborn['ADA_bal'] = format_balance($ironborn['ADA_bal']);
-// echo $totalUSDTFormat;
 
-$kevlar['VET_amt'] = 140627;
+//VET vs KCS
+$kevlar['VET_amt'] = 418101.7669886;
 $kevlar['VET_bal'] = $kevlar['VET_amt'] * $bidKCS['VET_USDT'];
+$kevlar['total_bal'] += $kevlar['VET_bal'];
 $kevlar['VET_bal'] = format_balance($kevlar['VET_bal']);
 
-$ironborn1['VET_amt'] = $KC1Balance; //KC1 balance
-$ironborn1['VET_bal'] = $ironborn1['VET_amt'] * $bidKCS['VET_USDT'];
+$ironborn1['KCS_amt'] = $KC1Balance; //KC1 balance
+$ironborn1['KCS_bal'] = $ironborn1['KCS_amt'] * $bidKCS['KCS_USDT'];
 
-$ironborn2['VET_amt'] = $KC2Balance; //KC2 balance
-$ironborn2['VET_bal'] = $ironborn2['VET_amt'] * $bidKCS['SHIB_USDT'];
+$ironborn2['ADA_amt'] = $KC2Balance; //KC2 balance
+$ironborn2['ADA_bal'] = $ironborn2['ADA_amt'] * $bidKCS['ADA_USDT'];
 
-$ironbornT['VET_amt'] = $ironborn1['VET_amt'] + $ironborn2['VET_amt'];
-$ironbornT['VET_bal'] = $ironborn1['VET_bal'] + $ironborn2['VET_bal'];
+$ironborn3['KCS_amt'] = $KC3Balance; //KC3 balance
+$ironborn3['KCS_bal'] = $ironborn3['KCS_amt'] * $bidKCS['KCS_USDT'];
 
-$ironborn1['VET_bal'] = format_balance($ironborn1['VET_bal']);
-$ironborn2['VET_bal'] = format_balance($ironborn2['VET_bal']);
-$ironbornT['VET_bal'] = format_balance($ironbornT['VET_bal']);
+$ironbornT['KCS_amt'] = $ironborn1['KCS_amt'] + $ironborn3['KCS_amt']; //T balance
+$ironbornT['KCS_bal'] = $ironborn1['KCS_bal'] + $ironborn3['KCS_bal'];
 
-$kevlar['KEY_amt'] = 2889871;
-$kevlar['KEY_bal'] = $kevlar['KEY_amt'] * $bidKCS['KEY_USDT'];
-$kevlar['KEY_bal'] = format_balance($kevlar['KEY_bal']);
 
-$ironborn['KCS_amt'] = $KC3Balance; //kc3
-$ironborn['KCS_bal'] = $ironborn['KCS_amt'] * $bidKCS['KCS_USDT'];
-$ironborn['KCS_bal'] = format_balance($ironborn['KCS_bal']);
+//format balances
+$ironborn1['KCS_bal'] = format_balance($ironborn1['KCS_bal']);
+$ironborn2['ADA_bal'] = format_balance($ironborn2['ADA_bal']);
+$ironborn3['KCS_bal'] = format_balance($ironborn3['KCS_bal']);
+$ironbornT['KCS_bal'] = format_balance($ironbornT['KCS_bal']);
 
-$kevlar['DOGE_amt'] = 87708; 
+
+$kevlar['DOGE_amt'] = 93117; 
 $kevlar['DOGE_bal'] = $kevlar['DOGE_amt'] * $bidKCS['DOGE_USDT'];
+$kevlar['total_bal'] += $kevlar['DOGE_bal'];
 $kevlar['DOGE_bal'] = format_balance($kevlar['DOGE_bal']);
 
 $kevlar['BTC_amt'] = 1; 
 $kevlar['BTC_bal'] = $kevlar['BTC_amt'] * $bidKCS['BTC_USDT'];
+$kevlar['total_bal'] += $kevlar['BTC_bal'];
 $kevlar['BTC_bal'] = format_balance($kevlar['BTC_bal']);
-
 
 $ironborn['Pionex_bal'] = 2600;
 $ironborn['Pionex_bal'] = format_balance($ironborn['Pionex_bal']);
+
+$kevlar['total_bal'] = format_balance($kevlar['total_bal']);
 
 ?>
 <h2>Compete <img src="include/images/refresh.png" class="clickable" onclick="javascript:competeModule()" width="25px" /></h2>
@@ -201,38 +204,38 @@ $ironborn['Pionex_bal'] = format_balance($ironborn['Pionex_bal']);
 		</tr>
 		<tr>
 			<td></td>
-			<td>Total</td><td>Total</td>
-			<td>KC1 - VET</td>
-			<td>KC2 - SHIB</td>
+			<td>VET</td>
 		</tr>
 		<tr>
 			<td>VET</td>
 			<td><?=$kevlar['VET_amt'] ?> </td>
-			<td> </td>
-			<td><?=$ironborn1['VET_amt'] ?>  </td>
-			<td><?=$ironborn2['VET_amt'] ?>  </td>
 		</tr>
 		<tr>
 			<td><?=$bidKCS['VET_USDT'] ?></td>
 			<td><?=$kevlar['VET_bal'] ?>  </td>
-			<td><?=$ironbornT['VET_bal'] ?>  </td>
-			<td><?=$ironborn1['VET_bal'] ?>  </td>
-			<td><?=$ironborn2['VET_bal'] ?>  </td>
+			<td> </td>
 		</tr>
 		<tr>
 			<td><br /></td>
 		</tr>
 		<tr>
-			<td>Key</td>
-			<td><?=$kevlar['KEY_amt'] ?>  </td>
-			<td>KCS</td>
-			<td><?=$ironborn['KCS_amt'] ?>  </td>	 
+			<td></td>
+			<td>Total</td>
+			<td>KC1</td>
+			<td>KC3</td>
 		</tr>
 		<tr>
-			<td><?=$bidKCS['KEY_USDT'] ?> </td>
-			<td><?=$kevlar['KEY_bal'] ?> </td>
+			<td>KCS</td>
+			<td><?=$ironbornT['KCS_amt'] ?> </td>
+			<td><?=$ironborn1['KCS_amt'] ?> </td>
+			<td><?=$ironborn3['KCS_amt'] ?></td>
+			<td></td>
+		</tr>
+		<tr>
 			<td><?=$bidKCS['KCS_USDT'] ?> </td>
-			<td><?=$ironborn['KCS_bal'] ?> </td> 	
+			<td><?=$ironbornT['KCS_bal'] ?> </td>
+			<td><?=$ironborn1['KCS_bal'] ?> </td> 
+			<td><?=$ironborn3['KCS_bal'] ?> </td> 
 		</tr>
 		<tr>
 			<td><br /></td>
@@ -253,13 +256,20 @@ $ironborn['Pionex_bal'] = format_balance($ironborn['Pionex_bal']);
 			<td>BTC</td>
 			<td>1</td>
 			<td>Old Man</td>
-			<td>40000</td>	
+			<td>30000</td>	
 			<td>Pionex</td>
-			<td>2400</td>	  
+			<td>2500</td>	  
 		</tr>
 		<tr>
 			<td><?=$bidKCS['BTC_USDT'] ?></td>
 			<td><?=$kevlar['BTC_bal'] ?></td>
+		</tr>
+		<tr>
+			<td><br /></td>
+		</tr>
+		<tr>
+			<td>Total</td>
+			<td><?=$kevlar['total_bal'] ?></td>
 		</tr>
 		</table>
     </div>

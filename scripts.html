@@ -1,6 +1,5 @@
 
-<script>
-	
+<script>	
 	//load links on dashboard
 	function reloadLinksModule() {		
 		$('#linksModule').load('<?=$linksModule?>');		
@@ -89,6 +88,7 @@
             $('#kucoin3Balance').fadeIn('slow');
         });			
 	}
+	
 	function kucoin4Balance() {
 		console.log('kucoin4Balance');
 		$('#kucoin4Balance').load('<?=$loadKC4Balance?>');		
@@ -101,18 +101,7 @@
             $('#kucoin4Balance').fadeIn('slow');
         });					
 	}
-	function kucoin5Balance() {
-		console.log('kucoin5Balance');
-		$('#kucoin5Balance').load('<?=$loadKC5Balance?>');		
-
-		$('#kucoin5Balance').html('<img src="include/images/load.gif" id="loading" />')
-
-		$(window).bind('load', function() {
-            $('#kucoin5Balance #loading').hide();
-            $('#kucoin5Balance').load('<?=$loadKC5Balance?>');		
-            $('#kucoin5Balance').fadeIn('slow');
-        });					
-	}
+	
 	function competeModule() {
 		console.log('competeModule');
 		$('#competeModule').load('<?=$competeModule?>');		
@@ -137,8 +126,7 @@
 		kucoin1Balance();
 		kucoin2Balance();
 		kucoin3Balance();
-		kucoin4Balance();
-		kucoin5Balance();
-
+	//	kucoin4Balance();
+	
     });
 </script>

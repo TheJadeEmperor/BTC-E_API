@@ -107,8 +107,6 @@ $loadingImage = '<img src="include/images/load.gif" id="loadingImage" />';
         <div id="kucoin2Balance"><?=$loadingImage?></div>
 
         <div id="kucoin3Balance"><?=$loadingImage?></div>
-
-        <div id="kucoin4Balance"><?=$loadingImage?></div>
         
         <div id="gateBalance"><?=$loadingImage?></div>
         <br />
