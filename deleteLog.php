@@ -6,7 +6,7 @@ include($dir.'config.php');
 
 //localhost only
 $server = $_SERVER['SERVER_NAME'];
-if ($server == 'localhost' || $server == 'btcAPI.test') {
+if ($server == 'localhost' || $server == 'btcapi.test') {
     $localHost = 'http://localhost/btcAPI/';
 }
 else {
