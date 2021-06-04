@@ -40,7 +40,7 @@ else {
     $live = 1;
 }
 //////////////////////////////
-$live = 1; //delete when live
+//$live = 1; //delete when live
 //////////////////////////////
 //connect to Bittrex
 $bittrex = new Client ($bittrex_api_key, $bittrex_api_secret);
@@ -66,18 +66,30 @@ foreach($getBalances as $index) { //go through each coin you have
     if($index->Currency == $coin[1]) { //match coin symbol
         $coinBalance = $available; 
         $sellQT = $available; 
-        $sellQT = $sellQT * $percentBalance;
-        $totalBalance += $sellQT * $bid;
-    }
+       // $sellQT = $sellQT * $percentBalance;
+        $totalBalance += $sellQT * $bid; 
 
-    if($index->Currency == 'USDT') {
+        //echo ' old sell QT '.$sellQT.' | ';
+        //don't sell more than 15k 
+        $USDTValue = $sellQT * $bid;
+        
+        if ($USDTValue > 15000) 
+            $sellQT = 15000/$bid; 
+
+//        echo 'USDTValue: '.$USDTValue.' | new sell QT '.$sellQT.' | ';
+    }
+    else if($index->Currency == 'USDT') {
         $USDTBalance = $available; 
         $totalBalance += $USDBalance; //add to totalBalance
+
+        if ($USDTBalance > 15000) //don't buy more than 15k
+            $USDTBalance = 15000; 
+
         $buyQT = $USDTBalance/$ask; //quantity to buy
         $buyQT = $buyQT - $buyQT * $fee; //subtract taker or maker fee
-        $buyQT = $buyQT * $percentBalance; 
+        //$buyQT = $buyQT * $percentBalance; 
     }
-}
+} //foreach($getBalances as $index)
 
 if($amt) { //override the amt
     $buyQT = $sellQT = $amt;
@@ -95,7 +107,7 @@ if($live == 1)
         $sellLimit = $bittrex->sellLimit ($pair, $sellQT, $bid);
         $orderId = $sellLimit->uuid; 
         
-    }  //var_dump($sellLimit);
+    } // var_dump($sellLimit);
 
 
 include('include/logInsert.php'); 
