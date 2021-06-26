@@ -34,16 +34,27 @@ function format_balance($balance) {
 function getKCSubBalance ($class, $thisCurrency) {
 	
 	$getBalances = $class->checkBalance();
-//echo'<pre>';print_r($getBalances);
 
 	foreach($getBalances['data'] as $index) { 
 		$available = $index['available'];
 		$currency = $index['currency'];
-		if ($currency == $thisCurrency && $available > 0) {
-			//echo ''.$currency.' '.$available.' | ';
-			return $available;
+
+		if ($currency == $thisCurrency && $available > 1) {
+			$return = $available;
+			return $return; 
 		}
-	}
+		else if ($currency == 'USDT') {
+			
+			$getPrices = $class->getMarketPrice('KCS-USDT');
+			$ask = $getPrices['data']['bestAsk'];
+		
+			$buyAmt = $available / $ask; 
+			$return = $buyAmt;
+			//echo ' usdt avail '. $available.' ask '.$ask.' $buyAmt '.$buyAmt ; 
+		}
+	} //foreach($getBalances['data'] as $index)
+	
+	return $return; 
 }
 
 $KC1Balance = getKCSubBalance($KC1, 'KCS');
@@ -135,7 +146,7 @@ $ironborn['ADA_bal'] = $ironborn['ADA_amt'] * $bidKCS['ADA_USDT'];
 $ironborn['ADA_bal'] = format_balance($ironborn['ADA_bal']);
 
 //VET vs KCS
-$kevlar['VET_amt'] = 418101.7669886;
+$kevlar['VET_amt'] = 434503;
 $kevlar['VET_bal'] = $kevlar['VET_amt'] * $bidKCS['VET_USDT'];
 $kevlar['total_bal'] += $kevlar['VET_bal'];
 $kevlar['VET_bal'] = format_balance($kevlar['VET_bal']);
@@ -187,7 +198,7 @@ $kevlar['total_bal'] = format_balance($kevlar['total_bal']);
 		<tr>
 			<td></td>
 			<td>Kevlar</td>
-			<td>Ironborn </td>
+			<td>Ironborn (G: 25000) </td>
 		</tr>
 		<tr>
 			<td>ADA</td>
@@ -221,8 +232,8 @@ $kevlar['total_bal'] = format_balance($kevlar['total_bal']);
 		<tr>
 			<td></td>
 			<td>Total</td>
-			<td>KC1</td>
-			<td>KC3</td>
+			<td>KC1 (G: 2500)</td>
+			<td>KC3 (G: 3000)</td>
 		</tr>
 		<tr>
 			<td>KCS</td>

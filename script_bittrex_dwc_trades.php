@@ -51,6 +51,7 @@ $getTicker = $bittrex->getTicker ($pair);
 $bid = $getTicker->Bid; //for sells
 $ask = $getTicker->Ask; //for buys
 $fee = 0.004; //get fee from api
+$maxTrade = 13000; //max amt in usdt per trade
 
 $sellQT = $buyQT = 0; //default quantity if you don't have the coin
 $getBalances = $bittrex->getBalances();
@@ -73,8 +74,8 @@ foreach($getBalances as $index) { //go through each coin you have
         //don't sell more than 15k 
         $USDTValue = $sellQT * $bid;
         
-        if ($USDTValue > 15000) 
-            $sellQT = 15000/$bid; 
+        if ($USDTValue > $maxTrade) 
+            $sellQT = $maxTrade/$bid; 
 
 //        echo 'USDTValue: '.$USDTValue.' | new sell QT '.$sellQT.' | ';
     }
@@ -82,8 +83,8 @@ foreach($getBalances as $index) { //go through each coin you have
         $USDTBalance = $available; 
         $totalBalance += $USDBalance; //add to totalBalance
 
-        if ($USDTBalance > 15000) //don't buy more than 15k
-            $USDTBalance = 15000; 
+        if ($USDTBalance > $maxTrade) //don't buy more than this amt
+            $USDTBalance = $maxTrade; 
 
         $buyQT = $USDTBalance/$ask; //quantity to buy
         $buyQT = $buyQT - $buyQT * $fee; //subtract taker or maker fee
