@@ -41,7 +41,8 @@ catch(Exception $e){
             $btcTicker = $bittrex->getTicker('USDT-BTC');
             $btcPrice = $btcTicker->Last;
             
-            if($currency == 'BTXCRD') continue; //invalid market
+            if($currency == 'BTXCRD' || $currency == 'USD') continue; //invalid market
+//            echo $currency.' ';
             if($currency == 'BTC' ) {
                 $currencyPair = 'USDT-BTC';
                 $lastFormat = $bittrex_btc_usd_raw; //formatted price

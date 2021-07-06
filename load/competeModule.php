@@ -58,7 +58,7 @@ function getKCSubBalance ($class, $thisCurrency) {
 }
 
 $KC1Balance = getKCSubBalance($KC1, 'KCS');
-$KC2Balance = getKCSubBalance($KC2, 'ADA');
+$KC2Balance = getKCSubBalance($KC2, 'KCS');
 $KC3Balance = getKCSubBalance($KC3, 'KCS');
 
 $currencyPairs = array(
@@ -154,19 +154,19 @@ $kevlar['VET_bal'] = format_balance($kevlar['VET_bal']);
 $ironborn1['KCS_amt'] = $KC1Balance; //KC1 balance
 $ironborn1['KCS_bal'] = $ironborn1['KCS_amt'] * $bidKCS['KCS_USDT'];
 
-$ironborn2['ADA_amt'] = $KC2Balance; //KC2 balance
-$ironborn2['ADA_bal'] = $ironborn2['ADA_amt'] * $bidKCS['ADA_USDT'];
+$ironborn2['KCS_amt'] = $KC2Balance; //KC2 balance
+$ironborn2['KCS_bal'] = $ironborn2['KCS_amt'] * $bidKCS['KCS_USDT'];
 
 $ironborn3['KCS_amt'] = $KC3Balance; //KC3 balance
 $ironborn3['KCS_bal'] = $ironborn3['KCS_amt'] * $bidKCS['KCS_USDT'];
 
 $ironbornT['KCS_amt'] = $ironborn1['KCS_amt'] + $ironborn3['KCS_amt']; //T balance
-$ironbornT['KCS_bal'] = $ironborn1['KCS_bal'] + $ironborn3['KCS_bal'];
+$ironbornT['KCS_bal'] = $ironborn1['KCS_bal'] +  $ironborn2['KCS_bal'] + $ironborn3['KCS_bal'];
 
 
 //format balances
 $ironborn1['KCS_bal'] = format_balance($ironborn1['KCS_bal']);
-$ironborn2['ADA_bal'] = format_balance($ironborn2['ADA_bal']);
+$ironborn2['KCS_bal'] = format_balance($ironborn2['KCS_bal']);
 $ironborn3['KCS_bal'] = format_balance($ironborn3['KCS_bal']);
 $ironbornT['KCS_bal'] = format_balance($ironbornT['KCS_bal']);
 
@@ -232,13 +232,15 @@ $kevlar['total_bal'] = format_balance($kevlar['total_bal']);
 		<tr>
 			<td></td>
 			<td>Total</td>
-			<td>KC1 (G: 2500)</td>
-			<td>KC3 (G: 3000)</td>
+			<td>KC1 (G: 2200)</td>
+			<td>KC2 (G: 1100)</td>
+			<td>KC3 (G: 2700)</td>
 		</tr>
 		<tr>
 			<td>KCS</td>
 			<td><?=$ironbornT['KCS_amt'] ?> </td>
 			<td><?=$ironborn1['KCS_amt'] ?> </td>
+			<td><?=$ironborn2['KCS_amt'] ?> </td>
 			<td><?=$ironborn3['KCS_amt'] ?></td>
 			<td></td>
 		</tr>
@@ -246,6 +248,7 @@ $kevlar['total_bal'] = format_balance($kevlar['total_bal']);
 			<td><?=$bidKCS['KCS_USDT'] ?> </td>
 			<td><?=$ironbornT['KCS_bal'] ?> </td>
 			<td><?=$ironborn1['KCS_bal'] ?> </td> 
+			<td><?=$ironborn2['KCS_bal'] ?> </td> 
 			<td><?=$ironborn3['KCS_bal'] ?> </td> 
 		</tr>
 		<tr>
