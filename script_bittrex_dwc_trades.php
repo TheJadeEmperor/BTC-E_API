@@ -51,7 +51,7 @@ $getTicker = $bittrex->getTicker ($pair);
 $bid = $getTicker->Bid; //for sells
 $ask = $getTicker->Ask; //for buys
 $fee = 0.004; //get fee from api
-$maxTrade = 13000; //max amt in usdt per trade
+$maxTrade = 14000; //max amt in usdt per trade
 
 $sellQT = $buyQT = 0; //default quantity if you don't have the coin
 $getBalances = $bittrex->getBalances();

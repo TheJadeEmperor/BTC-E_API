@@ -51,6 +51,7 @@ $pair = $coin[1].'_'.$coin[0]; //GT_USDT
 $getMarketPrice = $Gate->getMarketPrice($pair);
 $bid = $getMarketPrice[0]['highest_bid'];
 $ask = $getMarketPrice[0]['lowest_ask'];
+$maxTrade = 15000; //max amt in usdt per trade
 
 echo '<pre><h1>getMarketPrice</h1><br>';
 print_r($getMarketPrice);
@@ -76,8 +77,8 @@ foreach($getBalances as $index) {
             $USDTBalance = $available; 
             $totalBalance += $USDTBalance; //add to totalBalance
 
-            if ($USDTBalance > 15000) //don't buy more than 15k
-                $USDTBalance = 15000;
+            if ($USDTBalance > $maxTrade) //don't buy more than maxTrade
+                $USDTBalance = $maxTrade;
                 
             $buyQT = $USDTBalance/$ask; //quantity to buy
         }
